@@ -128,7 +128,7 @@
   {
     // attempt to load a file into the database
     NSArray *filesToOpen = [sheet filenames];
-    [default_file_text setStringValue: [[filesToOpen objectAtIndex: 0] lastPathComponent]];
+    [default_file_text setStringValue: [filesToOpen objectAtIndex: 0]];
    }
 }
 
