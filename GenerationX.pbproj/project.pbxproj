@@ -197,6 +197,7 @@
 				089C165CFE840E0CC02AAC07,
 				F5EF7E760230AE44016DB74F,
 				F5EE77F7024E434D0154BE47,
+				F531325203F0B57001B1BC2F,
 				F5ED4442025D1C4E01F8E4C9,
 				F5ED29B10263DDAF017FBCAC,
 				F53E630D03843FB601045C00,
@@ -253,14 +254,14 @@
 				29B9732DFDCFA39411CA2CEA,
 			);
 			buildSettings = {
-				DEBUGGING_SYMBOLS = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
-				OPTIMIZATION_CFLAGS = "-O3";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = GenerationX;
+				PROFILING_CODE = YES;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = app;
@@ -353,6 +354,7 @@
 				F5C2F82503830F67015ADBC2,
 				F5C2F82803830FC8015ADBC2,
 				F5480E52038431F401EE11C9,
+				F531325803F0B61001B1BC2F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,6 +396,7 @@
 				F53E630F03843FB601045C00,
 				F53E63120384403001045C00,
 				F52B8C9203E9E89F0160306E,
+				F531325403F0B57001B1BC2F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -428,6 +431,7 @@
 				F5C2F82403830F66015ADBC2,
 				F5C2F82903830FC8015ADBC2,
 				F5480E51038431F401EE11C9,
+				F531325703F0B61001B1BC2F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -757,6 +761,49 @@
 		};
 		F52B8C9203E9E89F0160306E = {
 			fileRef = F52B8C8E03E9E89F0160306E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F531325203F0B57001B1BC2F = {
+			children = (
+				F531325303F0B57001B1BC2F,
+			);
+			isa = PBXVariantGroup;
+			name = FileStatistics.nib;
+			path = "";
+			refType = 4;
+		};
+		F531325303F0B57001B1BC2F = {
+			isa = PBXFileReference;
+			name = English;
+			path = English.lproj/FileStatistics.nib;
+			refType = 4;
+		};
+		F531325403F0B57001B1BC2F = {
+			fileRef = F531325203F0B57001B1BC2F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F531325503F0B61001B1BC2F = {
+			isa = PBXFileReference;
+			path = FileStatsController.m;
+			refType = 4;
+		};
+		F531325603F0B61001B1BC2F = {
+			isa = PBXFileReference;
+			path = FileStatsController.h;
+			refType = 4;
+		};
+		F531325703F0B61001B1BC2F = {
+			fileRef = F531325503F0B61001B1BC2F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F531325803F0B61001B1BC2F = {
+			fileRef = F531325603F0B61001B1BC2F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1232,6 +1279,8 @@
 				F5F938F7022F087D018132C7,
 				F5ED41A5024817DA01F36DB6,
 				F5ED41A6024817DA01F36DB6,
+				F531325603F0B61001B1BC2F,
+				F531325503F0B61001B1BC2F,
 			);
 			isa = PBXGroup;
 			name = "Other GUI";
