@@ -13,6 +13,7 @@
     IBOutlet NSButton*    sort_events_button;
     
     IBOutlet NSTextField* html_title;    
+    IBOutlet NSTextField* html_email;    
     IBOutlet NSColorWell* html_back_color;
     IBOutlet NSColorWell* html_text_color;
     IBOutlet NSButton*    html_timestamp;
@@ -41,6 +42,8 @@
 // HTML
 - (NSString*) HTMLTitle;
 - (void) setHTMLTitle: (NSString*) t;
+- (NSString*) HTMLEmail;
+- (void) setHTMLEmail: (NSString*) t;
 - (NSString*) HTMLBackColor;
 - (void) setHTMLBackColor: (NSString*) t;
 - (NSString*) HTMLTextColor;

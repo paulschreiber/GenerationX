@@ -34,6 +34,8 @@
   // HTML prefs
   if( ![preferences stringForKey: @"HTML_TITLE"] )
     [defaults setObject: [@"GenerationX" stringByExpandingTildeInPath] forKey: @"HTML_TITLE"];
+  if( ![preferences stringForKey: @"HTML_EMAIL"] )
+    [defaults setObject: @"" forKey: @"HTML_EMAIL"];
   if( ![preferences stringForKey: @"HTML_BACK_COLOR"] )
     [defaults setObject: [@"FFFFFF" stringByExpandingTildeInPath] forKey: @"HTML_BACK_COLOR"];
   if( ![preferences stringForKey: @"HTML_TEXT_COLOR"] )
@@ -43,7 +45,15 @@
    
   [preferences registerDefaults: defaults];
   
+  // load the nib and set up some GUI stuff
   [NSBundle loadNibNamed: @"Preferences" owner:self];
+//  [NSColorPanel setPickerMask: NSColorPanelColorListModeMask];
+  [NSColorPanel setPickerMode: NSColorListModeColorPanel];
+  [[NSColorPanel sharedColorPanel] attachColorList: [NSColorList colorListNamed: @"Web Safe Colors"]];
+  
+  //
+  // get saved values
+  //
   [default_file_text setStringValue: [preferences stringForKey: @"DEFAULT_FILE"]];
   [user_name_text setStringValue: [preferences stringForKey: @"USER_NAME"]];
   [auto_save_text setStringValue: [[NSNumber numberWithInt: [preferences integerForKey: @"AUTO_SAVE"]] stringValue]];
@@ -65,6 +75,7 @@
 
   // HTML
   [html_title setStringValue: [preferences stringForKey: @"HTML_TITLE"]];
+  [html_email setStringValue: [preferences stringForKey: @"HTML_EMAIL"]];
 //  [html_back_color setColor: 
 //    [NSColor Color[preferences stringForKey: @"HTML_BACK_COLOR"]]];
 //  [html_text_color setColor: [preferences stringForKey: @"HTML_TEXT_COLOR"]];
@@ -137,12 +148,7 @@
     
   // HTML
   [[PreferencesController sharedPrefs] setHTMLTitle: [html_title stringValue]];
-NSColor* c = [[html_back_color color] colorUsingColorSpaceName: nil];
-NSColor* d = [[html_text_color color] colorUsingColorSpaceName: nil];
-NSLog( @"---" );
-NSLog( [c localizedColorNameComponent] );
-NSLog( [d localizedColorNameComponent] );
-NSLog( @"---" );
+  [[PreferencesController sharedPrefs] setHTMLEmail: [html_email stringValue]];
 
   if( [html_timestamp state] == NSOnState )
     [[PreferencesController sharedPrefs] setHTMLTimestamp: true];
@@ -227,6 +233,10 @@ NSLog( @"---" );
   [preferences setBool: my_sort forKey: @"SORT_EVENTS"];
 }
 
+//
+// HTML Prefs
+//
+
 - (NSString*) HTMLTitle
 {
   return [preferences stringForKey: @"HTML_TITLE"];
@@ -235,6 +245,16 @@ NSLog( @"---" );
 - (void) setHTMLTitle: (NSString*) t
 {
   [preferences setObject: t forKey: @"HTML_TITLE"];
+}
+
+- (NSString*) HTMLEmail
+{
+  return [preferences stringForKey: @"HTML_EMAIL"];
+}
+
+- (void) setHTMLEmail: (NSString*) t
+{
+  [preferences setObject: t forKey: @"HTML_EMAIL"];
 }
 
 - (NSString*) HTMLBackColor;

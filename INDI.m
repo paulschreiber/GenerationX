@@ -8,6 +8,8 @@
 
 #import "INDI.h"
 #import "GCFile.h"
+#import "HTMLController.h"
+#import "GenXUtil.h"
 
 @implementation INDI
 
@@ -669,16 +671,27 @@
   NSArray* children;
   NSArray* notes = [self valuesOfSubfieldsWithType: @"NOTE"];
   int i, j;
+  NSMutableString* result = [[NSMutableString alloc] init];
   
-  NSMutableString* result = [[NSMutableString alloc] initWithString: @"<html>\n"];
-  [result appendString: @"<head><title>GenerationX "];
-  [result appendString: [[NSDate date] description]];
-  [result appendString: @"</title></head>\n"];
-  [result appendString: @"<body bgcolor=FFFFFF>\n"];
-  [result appendString: @"<center><font size=+5>G</font><font size=+2>enerationX</font><br>\n<i>"];
-  [result appendString: [[NSDate date] description]];
-  [result appendString: @"</i>\n<p>"];
-  [result appendString: @"<table border=0 width=600 cellpadding=10><tr><td bgcolor=CCCCCC>\n<b>"];
+  [result setString: [HTMLController HTMLHeader]];
+  [result appendString: @"<body>\n<table border=0 width=600 cellpadding=10><tr><td bgcolor=#CCCCCC><font size=+2>"];
+  [result appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
+  [result appendString: @"</font>\n<br>\n<i>"];
+  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+    [result appendString: [[NSDate date] description]];
+  [result appendString: @"</i>\n"];
+  [result appendString: @"<tr><td>\n"];
+  [result appendString: @"<a href=\"../index.html\">Home</a>"];
+  if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+  {
+    [result appendString: @" |\n"];
+    [result appendString: @"<a href=\"mailto: "];
+    [result appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+    [result appendString: @"\">Contact</a>\n"];
+  }
+  [result appendString: @"\n"];
+  [result appendString: @"\n"];
+  [result appendString: @"<tr><td bgcolor=CCCCCC>\n<b>"];
   [result appendString: [self fullName]];
   [result appendString: @"</b>\n<tr><td>\n"];
   [result appendString: @"<b>Born: </b>"];
@@ -747,14 +760,47 @@
       [result appendString: @"\n</ul>\n"];
     }
   }
+  [result appendString: @"<p>\n"];
   for( i = 0; i < [notes count]; i++ )
   {
-    [result appendString: @"<p><b>Note:</b><br>\n"];
+    [result appendString: @"<b>Note:</b>\n"];
     [result appendString: [notes objectAtIndex: i]];
-    [result appendString: @"\n"];
+    [result appendString: @"<br>\n"];
   }
-  [result appendString: @"\n"];
-  [result appendString: @"\n"];
+  [result appendString: @"<tr><td bgcolor=\"#CCCCCC\"><b>Events</b><tr><td>\n"];
+  
+  GCField* gc_tmp;
+  i = 0;
+  while( gc_tmp = [self eventAtIndex: i] )
+  {
+    if( ![[gc_tmp fieldType] isEqualToString: @"BIRT"]
+     && ![[gc_tmp fieldType] isEqualToString: @"DEAT"]
+     && ![[gc_tmp fieldType] isEqualToString: @"FAMS"]
+     && ![[gc_tmp fieldType] isEqualToString: @"FAMC"] )
+    {
+      [result appendString: @"<b>"];
+      [result appendString: [[GenXUtil sharedUtil] eventStringFromGEDCOM: [gc_tmp fieldType]]];
+      tmp = [gc_tmp fieldValue];
+      if( ![tmp isEqualToString: @""] )
+      {
+        [result appendString: @" - "];
+        [result appendString: tmp];
+      }
+      if( tmp = [gc_tmp valueOfSubfieldWithType: @"DATE"] )
+      {
+        [result appendString: @":</b> "];
+        [result appendString: tmp];
+      }
+      if( tmp = [gc_tmp valueOfSubfieldWithType: @"PLAC"] )
+      {
+        [result appendString: @" ("];
+        [result appendString: tmp];
+        [result appendString: @")"];
+      }
+      [result appendString: @"<br>\n"];
+    }
+    i++;
+  }
   [result appendString: @"\n"];
   [result appendString: @"\n"];
   [result appendString: @"\n"];

@@ -14,6 +14,45 @@
   return shared_html;
 }
 
++ (NSString*) HTMLHeader
+{
+  NSMutableString* result = [[NSMutableString alloc] init];
+
+  [result setString: @"<html><head><title>"];
+  [result appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
+  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+  {
+    [result appendString: @" "];
+    [result appendString: [[NSDate date] description]];
+  }
+  [result appendString: @"</title>\n"];
+  [result appendString: @"<style type=\"text/css\"><!--\n"];
+  [result appendString: @"body{\n"];
+  [result appendString: @"  background: #"];
+  [result appendString: [[PreferencesController sharedPrefs] HTMLBackColor]];
+  [result appendString: @";\n"];
+  [result appendString: @"  font-family: sans-serif;\n"];
+  [result appendString: @"  font-size: 12px;\n"];
+  [result appendString: @"  color: #"];
+  [result appendString: [[PreferencesController sharedPrefs] HTMLTextColor]];
+  [result appendString: @";\n"];
+  [result appendString: @"}\n"];
+  [result appendString: @"td{\n"];
+//  [result appendString: @"  background: #"];
+//  [result appendString: [[PreferencesController sharedPrefs] HTMLBackColor]];
+//  [result appendString: @";\n"];
+  [result appendString: @"  font-family: sans-serif;\n"];
+  [result appendString: @"  font-size: 12px;\n"];
+  [result appendString: @"  color: #"];
+  [result appendString: [[PreferencesController sharedPrefs] HTMLTextColor]];
+  [result appendString: @";\n"];
+  [result appendString: @"}\n"];
+  [result appendString: @"--></style>\n"];
+  [result appendString: @"</head>\n"];
+  
+  return result;
+}
+
 - (HTMLController*) initNib
 {
   [NSBundle loadNibNamed: @"HTML" owner:self];
@@ -35,45 +74,37 @@
 - (BOOL) exportHTML: (NSString*) my_dir
 {
   BOOL result = true;
-  NSString* html_path = [my_dir stringByAppendingString: @"/index.html"];
+  BOOL is_dir;
+  NSMutableString* html_path = [[NSMutableString alloc] initWithString:
+    [my_dir stringByAppendingString: @"/index.html"]];
   NSString* alpha = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   NSString* prefix;
   NSString* title = [[PreferencesController sharedPrefs] HTMLTitle];
+  NSMutableArray* surnames = [ged surnames];
+  NSFileManager* manager = [NSFileManager defaultManager];
   int i = 0;
 //  NSFileHandle* html_file = [NSFileHandle fileHandleForWritingAtPath: html_path];
  
-  NSMutableString* html_text = [[NSMutableString alloc] initWithString: @"<html><head><title>GenerationX "];
+  NSMutableString* html_text = [[NSMutableString alloc] init];
   
   NSModalSession modal = [NSApp beginModalSessionForWindow: window];
   [NSApp runModalSession: modal];
+  
+  [surnames sortUsingSelector: @selector( compare: )];
 
-  // first the index type pages
-  [html_text appendString: [[NSDate date] description]];
-  [html_text appendString: @"</title>\n"];
-  [html_text appendString: @"<style type=\"text/css\"><!--\n"];
-  [html_text appendString: @"body{\n"];
-  [html_text appendString: @"  background: #"];
-  [html_text appendString: [[PreferencesController sharedPrefs] HTMLBackColor]];
-  [html_text appendString: @";\n"];
-  [html_text appendString: @"  font-family: sans-serif;\n"];
-  [html_text appendString: @"  font-size: 12px;\n"];
-  [html_text appendString: @"  color: #"];
-  [html_text appendString: [[PreferencesController sharedPrefs] HTMLTextColor]];
-  [html_text appendString: @";\n"];
-  [html_text appendString: @"}\n"];
-  [html_text appendString: @"\n"];
-  [html_text appendString: @"\n"];
-  [html_text appendString: @"\n"];
-  [html_text appendString: @"--></style>\n"];
-  [html_text appendString: @"</head>\n<body>\n\n"];
-  [html_text appendString: @"<center><font size=+2>"];
+  // index.html
+  [html_text setString: [HTMLController HTMLHeader]];
+  [html_text appendString: @"<body>\n\n"];
+  [html_text appendString: @"<table border=0 width=600 cellpadding=10>"];
+  [html_text appendString: @"<tr><td bgcolor=\"#CCCCCC\"><font size=+2>"];
   [html_text appendString: title];
   [html_text appendString: @"</font>\n<br>\n<i>"];
   if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
     [html_text appendString: [[NSDate date] description]];
-  [html_text appendString: @"</i></center>\n<p>\n"];
-  [html_text appendString: [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
-  [html_text appendString: @" individuals in this database:\n<p><center>\n"];
+  [html_text appendString: @"</i>\n<tr><td>\n"];
+  [html_text appendString: @"<a href=\"surnames/index.html\">All surnames</a> |\n"];
+//  [html_text appendString: @"<p>\n"];
+
   [header setStringValue: @"Building Index Pages"];
 //  [progress setDoubleValue: 1.0];
   [window displayIfNeeded];
@@ -94,17 +125,81 @@
       return false;
     }
   }
+  [html_text appendString: @"<p>\n"];
+  [html_text appendString: [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
+  [html_text appendString: @" individual records in this database<br>\n"];
+  [html_text appendString: [[NSNumber numberWithInt: [ged numFamilies]] stringValue]];
+  [html_text appendString: @" family records in this database\n<br>\n"];
+  [html_text appendString: [[NSNumber numberWithInt: [surnames count]] stringValue]];
+  [html_text appendString: @" surnames in this database\n"];
+  if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+  {
+    [html_text appendString: @"<p><a href=\"mailto: "];
+    [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+    [html_text appendString: @"\">Contact the owner of this database</a>\n"];
+  }
   [html_text appendString: @"\n"];
   [html_text appendString: @"\n"];
   [html_text appendString: @"\n"];
   [html_text appendString: @"\n"];
   [html_text appendString: @"\n"];
-  [html_text appendString: @"\n"];
-  [html_text appendString: @"</body></html>\n"];
+  [html_text appendString: @"</table></body></html>\n"];
     
   if( ![html_text writeToFile: html_path atomically: true] )
     result = false;
 
+  // surnames/index.html
+  [html_path setString: [my_dir stringByAppendingString: @"/surnames"]];
+
+  if( !( [manager fileExistsAtPath: html_path isDirectory: &is_dir] && is_dir ) )
+    [manager createDirectoryAtPath: html_path attributes: nil];
+
+  [html_path appendString: @"/index.html"];
+  
+  [html_text setString: [HTMLController HTMLHeader]];
+  [html_text appendString: @"<body>\n<table border=0 width=600 cellpadding=10><tr><td bgcolor=#CCCCCC><font size=+2>"];
+  [html_text appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
+  [html_text appendString: @"</font>\n<br>\n<i>"];
+  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+    [html_text appendString: [[NSDate date] description]];
+  [html_text appendString: @"</i>\n<tr><td>\n"];
+  [html_text appendString: @"<a href=\"../index.html\">Home</a>\n"];
+  if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+  {
+    [html_text appendString: @" | <a href=\"mailto: "];
+    [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+    [html_text appendString: @"\">Contact</a><p>\n"];
+  }
+  // for each surname in the database
+  for( i = 0; i < [surnames count]; i++ )
+  {
+    // put it's link on the index page
+    [html_text appendString: @"<a href=\"\n"];
+    if( [[surnames objectAtIndex: i] isEqualToString: @"?"] )
+      [html_text appendString: @"unknown"];
+    else
+      [html_text appendString: [surnames objectAtIndex: i]];
+    [html_text appendString: @".html\">\n"];
+    if( [[surnames objectAtIndex: i] isEqualToString: @"?"] )
+      [html_text appendString: @"unknown"];
+    else
+      [html_text appendString: [surnames objectAtIndex: i]];
+    [html_text appendString: @"</a><br>\n"];
+  }
+  [html_text appendString: @"\n"];
+  [html_text appendString: @"</table></body></html>\n"];
+
+  if( ![html_text writeToFile: html_path atomically: true] )
+    result = false;
+  
+  // surname pages
+  if( ![self buildSurnamePages: my_dir] )
+  {
+    [NSApp endModalSession: modal];
+    [window orderOut: self];
+    return false;
+  }    
+  
   // and now the INDI pages
   if( ![self buildINDIPages: my_dir] )
   {
@@ -126,17 +221,26 @@
   NSString* alpha = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   NSString* stripped_label;
   NSMutableArray* indi_array = [ged indisWithPrefix: my_prefix];
-  NSMutableString* html_text = [[NSMutableString alloc] initWithString: @"<html><head><title>GenerationX "];
+  NSMutableString* html_text = [[NSMutableString alloc] init];
   NSMutableString* html_path = [[NSMutableString alloc] initWithString: my_dir];
   [html_path appendString: @"/INDI_"];
   [html_path appendString: my_prefix];
   [html_path appendString: @".html"];
 
-  [html_text appendString: [[NSDate date] description]];
-  [html_text appendString: @"</title></head>\n<body bgcolor=FFFFFF>\n\n"];
-  [html_text appendString: @"<center><font size=+5>G</font><font size=+2>enerationX</font>\n<br>\n<i>"];
-  [html_text appendString: [[NSDate date] description]];
-  [html_text appendString: @"</i>\n<p>\n"];
+  [html_text setString: [HTMLController HTMLHeader]];
+  [html_text appendString: @"<body>\n<table border=0 width=600 cellpadding=10><tr><td bgcolor=#CCCCCC><font size=+2>"];
+  [html_text appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
+  [html_text appendString: @"</font>\n<br>\n<i>"];
+  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+    [html_text appendString: [[NSDate date] description]];
+  [html_text appendString: @"</i>\n<tr><td>\n"];
+  [html_text appendString: @"<a href=\"index.html\">Home</a>\n"];
+  if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+  {
+    [html_text appendString: @" | <a href=\"mailto: "];
+    [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+    [html_text appendString: @"\">Contact</a><p>\n"];
+  }
   for( i = 0; i < [alpha length]; i++ )
   {
     prefix = [[alpha substringFromIndex: i] substringToIndex: 1];
@@ -146,7 +250,7 @@
     [html_text appendString: prefix];
     [html_text appendString: @"</a>\n"];
   }
-  [html_text appendString: @"<p><table border=0 width=600 cellpadding=10><tr><td valign=top>"];
+  [html_text appendString: @"<p><tr><td valign=top>"];
   
   [indi_array sortUsingSelector: @selector(compare:)];
   for( i = 0; i < [indi_array count]; i++ )
@@ -186,26 +290,15 @@
   BOOL is_dir;
   NSFileManager* manager = [NSFileManager defaultManager];
   NSString* stripped_label;
-//  NSMutableArray* indi_array = [ged indisWithPrefix: my_prefix];
-    NSMutableString* html_text = [[NSMutableString alloc] initWithString: @"<html><head><title>GenerationX "];
-//  NSMutableString* indi_text = [[NSMutableString alloc] init];
   NSMutableString* indi_path = [[NSMutableString alloc] init];
   NSMutableString* html_path = [[NSMutableString alloc] initWithString: my_dir];
   int num_indi = [ged numIndividuals];
   
   [html_path appendString: @"/INDI"];
-//  [html_path appendString: my_prefix];
-
-  [html_text appendString: [[NSDate date] description]];
-  [html_text appendString: @"</title></head>\n<body bgcolor=FFFFFF>\n\n"];
-  [html_text appendString: @"<center><font size=+5>G</font><font size=+2>enerationX</font>\n<br>\n<i>"];
-  [html_text appendString: [[NSDate date] description]];
-  [html_text appendString: @"</i>\n<p><table border=0>\n"];
 
   if( !( [manager fileExistsAtPath: indi_path isDirectory: &is_dir] && is_dir ) )
     [manager createDirectoryAtPath: html_path attributes: nil];
     
-//  [indi_array sortUsingSelector: @selector(compare:)];
   [header setStringValue: @"Building Individual Pages"];
   for( i = 0; i < num_indi; i++ )
   {
@@ -223,6 +316,73 @@
       return false;
   }
   
+  return true;
+}
+
+- (BOOL) buildSurnamePages: (NSString*) my_dir
+{
+  NSMutableArray* surnames = [ged surnames];
+  NSMutableArray* indis = [[NSMutableString alloc] init];
+  NSMutableString* html_path = [[NSMutableString alloc] initWithString: my_dir];
+  NSMutableString* html_text = [[NSMutableString alloc] init];
+  NSString* title = [[PreferencesController sharedPrefs] HTMLTitle];
+  NSString* surname, *stripped_label;
+  INDI* indi;
+  int i, j;
+
+  [header setStringValue: @"Building Surname Pages"];
+
+  [surnames sortUsingSelector: @selector( compare: )];
+
+  for( i = 0; i < [surnames count]; i++ )
+  {
+    surname = [surnames objectAtIndex: i];
+    indis = [ged indisWithNameContaining: surname];
+    
+    [html_path setString: my_dir];
+    [html_path appendString: @"/surnames/"];
+    if( [surname isEqualToString: @"?"] )
+      [html_path appendString: @"unknown"];
+    else
+      [html_path appendString: surname];
+    [html_path appendString: @".html"];
+
+    [html_text setString: [HTMLController HTMLHeader]];
+    [html_text appendString: @"<body>\n\n"];
+    [html_text appendString: @"<table border=0 width=600 cellpadding=10>"];
+    [html_text appendString: @"<tr><td bgcolor=\"#CCCCCC\"><font size=+2>"];
+    [html_text appendString: title];
+    [html_text appendString: @"</font>\n<br>\n<i>"];
+    if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+      [html_text appendString: [[NSDate date] description]];
+    [html_text appendString: @"</i>\n<tr><td>\n"];
+    [html_text appendString: @"<a href=\"../index.html\">Home</a>\n"];
+    if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+    {
+      [html_text appendString: @" | <a href=\"mailto: "];
+      [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+      [html_text appendString: @"\">Contact</a><p>\n"];
+    }
+    for( j = 0; j < [indis count]; j++ )
+    {
+      indi = [indis objectAtIndex: j];
+      stripped_label = [[[indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
+      
+      [html_text appendString: @"<a href=\"../INDI/\n"];
+      [html_text appendString: stripped_label];
+      [html_text appendString: @".html\">"];
+      [html_text appendString: [indi fullName]];
+      [html_text appendString: @"</a><br>\n"];
+      [html_text appendString: @"\n"];
+    }
+    [html_text appendString: @"\n"];
+    [html_text appendString: @"\n"];
+    [html_text appendString: @"</table></body></html>\n"];
+
+    if( ![html_text writeToFile: html_path atomically: true] )
+      return false;
+  }
+
   return true;
 }
 

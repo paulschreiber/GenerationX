@@ -45,6 +45,7 @@
 - (FAM*) famWithLabel: (NSString*) my_label;
 - (GCField*) otherWithLabel: (NSString*) my_label;
 - (INDI*) indiWithFullName: (NSString*) my_name;
+- (NSMutableArray*) surnames;
 - (NSMutableArray*) indisWithNameContaining: (NSString*) my_name;
 - (NSMutableArray*) indisWithPrefix: (NSString*) my_prefix;
 - (NSMutableArray*) famsWithFather: (NSString*) my_husb Mother: (NSString*) my_wife;

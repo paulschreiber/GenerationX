@@ -252,6 +252,22 @@
   return nil;
 }
 
+- (NSMutableArray*) surnames
+{
+  NSMutableArray* result = [[NSMutableArray alloc] init];
+  GCField* gc_tmp;
+  int i;
+  
+  for( i = 0; i < [individuals count]; i++ )
+  {
+    gc_tmp = [individuals objectAtIndex: i];
+    if( ![result containsObject: [gc_tmp lastName]] )
+      [result addObject: [gc_tmp lastName]];
+  }
+  
+  return result;
+}
+
 - (NSMutableArray*) indisWithNameContaining: (NSString*) my_name
 {
   NSMutableArray* result = [[NSMutableArray alloc] init];

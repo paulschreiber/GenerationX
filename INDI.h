@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "GCField.h"
-//#import "GCFile.h"
 
 @interface INDI : GCField
 {

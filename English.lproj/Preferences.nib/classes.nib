@@ -9,6 +9,7 @@
                 "auto_save_text" = id; 
                 "default_file_text" = id; 
                 "html_back_color" = id; 
+                "html_email" = id; 
                 "html_text_color" = id; 
                 "html_timestamp" = id; 
                 "html_title" = id; 

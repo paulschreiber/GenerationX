@@ -14,11 +14,14 @@
 }
 
 + (HTMLController*) sharedHTML;
++ (NSString*) HTMLHeader;
+
 - (HTMLController*) initNib;
 - (NSWindow*) window;
 - (void) setGED: (GCFile*) my_ged;
 - (BOOL) exportHTML: (NSString*) my_dir;
 - (BOOL) buildINDIIndexPage: (NSString*) my_prefix: (NSString*) my_dir;
 - (BOOL) buildINDIPages: (NSString*) my_dir;
+- (BOOL) buildSurnamePages: (NSString*) my_dir;
 
 @end
