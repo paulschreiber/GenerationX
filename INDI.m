@@ -847,19 +847,21 @@
   NSDate* date1, *date2;
   NSString* date1_str, *date2_str;
 
-  if( (date1_str = [[self subfieldWithType: @"BIRTH"] valueOfsubfieldWithType: @"DATE"])
-   && (date2_str = [[a subfieldWithType: @"BIRTH"] valueOfsubfieldWithType: @"DATE"]) )
+  if( (date1_str = [[self subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"])
+   && (date2_str = [[a subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"]) )
   {
     date1 = [NSDate dateWithNaturalLanguageString: date1_str];
     date2 = [NSDate dateWithNaturalLanguageString: date2_str];
     return [date1 compare: date2];
   }
-  else if( date1_str = [[self subfieldWithType: @"BIRTH"] valueOfsubfieldWithType: @"DATE"] )
+  else if( date1_str = [[self subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"] )
     return NSOrderedAscending;
-  else if( date2_str = [[a subfieldWithType: @"BIRTH"] valueOfsubfieldWithType: @"DATE"] )
+  else if( date2_str = [[a subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"] )
     return NSOrderedDescending;
   else
+  {
     return NSOrderedSame;
+  }
 }
 
 @end
