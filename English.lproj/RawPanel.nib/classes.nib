@@ -1,12 +1,13 @@
 {
     IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            CLASS = FileStatsController; 
+            ACTIONS = {handleDeleteFieldButton = id; handleNewFieldButton = id; }; 
+            CLASS = RawPanelController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"stats_header" = id; "stats_text" = id; "stats_window" = id; }; 
+            OUTLETS = {"raw_outline" = id; "raw_panel" = id; }; 
             SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        }
     ); 
     IBVersion = 1; 
 }
