@@ -794,6 +794,88 @@
     didEndSelector: @selector(refreshGUI) contextInfo: nil];
 }
 
+- (void) handleDeleteEvent:(id) sender
+{
+  if( current_event )
+  {
+    //
+    // Generic Events
+    //
+    if( [[current_event fieldType] isEqualToString: @"BURI"]
+    || [[current_event fieldType] isEqualToString: @"CREM"]
+    || [[current_event fieldType] isEqualToString: @"BIRT"]
+    || [[current_event fieldType] isEqualToString: @"DEAT"]
+    || [[current_event fieldType] isEqualToString: @"BAPM"]
+    || [[current_event fieldType] isEqualToString: @"BARM"]
+    || [[current_event fieldType] isEqualToString: @"BASM"]
+    || [[current_event fieldType] isEqualToString: @"BLES"]
+    || [[current_event fieldType] isEqualToString: @"CHRA"]
+    || [[current_event fieldType] isEqualToString: @"CONF"]
+    || [[current_event fieldType] isEqualToString: @"FCOM"]
+    || [[current_event fieldType] isEqualToString: @"ORDN"]
+    || [[current_event fieldType] isEqualToString: @"NATU"]
+    || [[current_event fieldType] isEqualToString: @"EMIG"]
+    || [[current_event fieldType] isEqualToString: @"IMMI"]
+    || [[current_event fieldType] isEqualToString: @"CENS"]
+    || [[current_event fieldType] isEqualToString: @"PROB"]
+    || [[current_event fieldType] isEqualToString: @"WILL"]
+    || [[current_event fieldType] isEqualToString: @"GRAD"]
+    || [[current_event fieldType] isEqualToString: @"RETI"]
+    || [[current_event fieldType] isEqualToString: @"MARR"]
+   || [[current_event fieldType] isEqualToString: @"ANUL"]
+   || [[current_event fieldType] isEqualToString: @"DIV"]
+   || [[current_event fieldType] isEqualToString: @"DIVF"]
+   || [[current_event fieldType] isEqualToString: @"ENGA"]
+   || [[current_event fieldType] isEqualToString: @"MARB"]
+   || [[current_event fieldType] isEqualToString: @"MARC"]
+   || [[current_event fieldType] isEqualToString: @"MARL"]
+   || [[current_event fieldType] isEqualToString: @"MARS"]
+    || [[current_event fieldType] isEqualToString: @"EVEN"] )
+    {
+      [current_record removeSubfield: current_event];
+      [self refreshGUI];
+    }
+    //
+    // FAMC Events
+    //
+    else if( [[current_event fieldType] isEqual: @"ADOP"]
+    || [[current_event fieldType] isEqual: @"CHR"] )
+    {
+      NSString* tmp;
+      GCField* gc_tmp;
+      // if the event has a FAMC, remove the FAMC's linke to this INDI
+      if( tmp = [current_event valueOfSubfieldWithType: @"FAMC"] )
+      {
+        if( gc_tmp = [ged famWithLabel: tmp] )
+          [gc_tmp removeSubfieldWithType: @"CHIL" Value: [current_record fieldValue]];
+      }
+      // delete the event
+      [current_record removeSubfield: current_event];
+      [self refreshGUI];
+    }
+    //
+    // MARR Event
+    //
+    else if( [[current_event fieldType] isEqual: @"FAMS"] )
+    {
+      NSBeginAlertSheet( @"Are you sure?", @"I'm sure", @"Cancel", nil,
+        main_window, self, @selector( deleteMarriagePanelDidEnd:returnCode:contextInfo: ), nil, nil,
+        @"You are about to delete all information about this marriage. Are you sure you want to do this?" );
+    }
+  }
+}
+
+- (void)deleteMarriagePanelDidEnd:(NSOpenPanel *)sheet
+  returnCode:(int)returnCode
+  contextInfo:(void  *)contextInfo
+{
+  if( returnCode == NSAlertDefaultReturn )
+  {
+    [ged removeRecord: [ged famWithLabel: [current_event fieldValue]]];
+    [self refreshGUI];
+  }
+}
+
 //
 // Reports
 //
@@ -1062,6 +1144,14 @@
    || [[current_event fieldType] isEqualToString: @"GRAD"]
    || [[current_event fieldType] isEqualToString: @"RETI"]
    || [[current_event fieldType] isEqualToString: @"MARR"]
+   || [[current_event fieldType] isEqualToString: @"ANUL"]
+   || [[current_event fieldType] isEqualToString: @"DIV"]
+   || [[current_event fieldType] isEqualToString: @"DIVF"]
+   || [[current_event fieldType] isEqualToString: @"ENGA"]
+   || [[current_event fieldType] isEqualToString: @"MARB"]
+   || [[current_event fieldType] isEqualToString: @"MARC"]
+   || [[current_event fieldType] isEqualToString: @"MARL"]
+   || [[current_event fieldType] isEqualToString: @"MARS"]
    || [[current_event fieldType] isEqualToString: @"EVEN"] )
   {
     [[GenericEventController sharedEvent] setField: current_event];
@@ -1626,7 +1716,7 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   if( [[tabViewItem identifier] isEqual: @"INDI"] )
     [self handleIndiMode: indi_list];
   if( [[tabViewItem identifier] isEqual: @"FAM"] )
-    [self handleFamMode: indi_list];
+    [self handleFamMode: fam_list];
   if( [[tabViewItem identifier] isEqual: @"PED"] )
     [self handlePedigreeMode: indi_list];
   if( [[tabViewItem identifier] isEqual: @"DEC"] )

@@ -39,6 +39,7 @@
                 handleAncestorsReport = id; 
                 handleBugReport = id; 
                 handleCheckVersion = id; 
+                handleDeleteEvent = id; 
                 handleDeleteRecord = id; 
                 handleDescendantMode = id; 
                 handleDescendantReport = id; 

@@ -118,6 +118,7 @@
 - (void) handleAllHTML:(id) sender;
 
 - (void) handleAddOtherEvent:(id) sender;
+- (void) handleDeleteEvent:(id) sender;
 - (void) addEvent:(NSString*) type;
 - (void) handleNewRecord:(id) sender;
 - (void) handleEditRecord:(id) sender;
