@@ -39,13 +39,13 @@
  
   // HTML
   if( ![preferences stringForKey: @"HTML_TITLE"] )
-    [defaults setObject: [@"GenerationX" stringByExpandingTildeInPath] forKey: @"HTML_TITLE"];
+    [defaults setObject: @"GenerationX" forKey: @"HTML_TITLE"];
   if( ![preferences stringForKey: @"HTML_EMAIL"] )
     [defaults setObject: @"" forKey: @"HTML_EMAIL"];
   if( ![preferences stringForKey: @"HTML_BACK_COLOR"] )
-    [defaults setObject: [@"FFFFFF" stringByExpandingTildeInPath] forKey: @"HTML_BACK_COLOR"];
+    [defaults setObject: @"FFFFFF" forKey: @"HTML_BACK_COLOR"];
   if( ![preferences stringForKey: @"HTML_TEXT_COLOR"] )
-    [defaults setObject: [@"000000" stringByExpandingTildeInPath] forKey: @"HTML_TEXT_COLOR"];
+    [defaults setObject: @"000000" forKey: @"HTML_TEXT_COLOR"];
   if( ![preferences stringForKey: @"HTML_TIMESTAMP"] )
     [defaults setObject: [NSNumber numberWithBool: true] forKey: @"HTML_TIMESTAMP"];
    
