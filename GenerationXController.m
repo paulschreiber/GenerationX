@@ -589,6 +589,7 @@
   {
     if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
       [main_tabs selectTabViewItemAtIndex: 1];
+    [recordListDataSource refreshFams];
     [indi_event_menu setEnabled: false];
     [fam_event_menu setEnabled: true];
     [indiListController showDrawer: NO];

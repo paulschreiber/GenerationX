@@ -264,12 +264,18 @@ descending: (BOOL) sortDescending;
 
 - (INDI*) indiAtIndex: (int) index
 {
-  return [displayed_indi objectAtIndex: index];
+  if( [displayed_indi count] > 0 )
+    return [displayed_indi objectAtIndex: index];
+  
+  return nil;
 }
 
 - (FAM*) famAtIndex: (int) index
 {
-  return [displayed_fam objectAtIndex: index];
+  if( [displayed_fam count] > 0 )
+    return [displayed_fam objectAtIndex: index];
+  
+  return nil;
 }
 
 // 
