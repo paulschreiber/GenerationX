@@ -61,6 +61,7 @@
             ACTIONS = {
                 handleAllHTML = id; 
                 handleAncestorsGEDCOM = id; 
+                handleAncestorsReport = id; 
                 handleBugReport = id; 
                 handleCheckVersion = id; 
                 handleDeleteRecord = id; 
