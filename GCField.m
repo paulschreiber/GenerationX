@@ -66,6 +66,26 @@
     return @"";
 }
 
+- (NSString*) textValue
+{
+  NSMutableString* result = [[NSMutableString alloc] initWithString: [self fieldValue]];
+  int i = 0;
+  
+  for( i = 0; i < num_subfields; i++ )
+    if( [[[subfields objectAtIndex: i] fieldType] isEqualToString: @"CONT"] )
+    {
+      [result appendString: @"\n"];
+      [result appendString: [[subfields objectAtIndex: i] fieldValue]];
+    }
+    else if( [[[subfields objectAtIndex: i] fieldType] isEqualToString: @"CONC"] )
+    {
+      [result appendString: @" "];
+      [result appendString: [[subfields objectAtIndex: i] fieldValue]];
+    }
+    
+  return result;
+}
+
 - (int) fieldLevel
 {
   return level;
@@ -125,6 +145,20 @@
   }
   
   return nil;
+}
+
+- (NSMutableArray*) subfieldsWithType: (NSString*) my_type
+{
+  NSMutableArray* result = [[NSMutableArray alloc] init];
+  int i = 0;
+  
+  for( i = 0; i < num_subfields; i++ )
+  {
+    if( [[[subfields objectAtIndex: i] fieldType] isEqual: my_type] )
+      [result addObject: [subfields objectAtIndex: i]];
+  }
+  
+  return result;
 }
 
 // return the values of all subfield of this field

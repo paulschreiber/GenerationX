@@ -766,7 +766,7 @@
   return result;
 }
 
-// compare 2 fields for sorting by surname
+// Compare 2 fields for sorting by surname and givenname
 - (NSComparisonResult) compare: (id) my_field
 {
   if( [[self lastName] isEqual: [my_field lastName]] )

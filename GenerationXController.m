@@ -9,27 +9,257 @@
 #import "DescendantOutlineData.h"
 #import "MergeController.h"
 #import "HTMLController.h"
+#import "ImageViewerController.h"
+#import "NoteViewerController.h"
 #import "INDI.h"
 #import "FAM.h"
 
+#import "AboutBox.h"
+
 @implementation GenerationXController
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-  NSString* data_file;
-  int minutes;
-  NSMutableString* tmp = [[NSMutableString alloc] init];
 
-  // set up auto-save
+// Set up  auto-save
+- (void)setupAutosave
+{
+  int minutes;
+
   minutes = [[PreferencesController sharedPrefs] autoSave];
   if( minutes > 0 )
   {
-    auto_save_timer = [NSTimer scheduledTimerWithTimeInterval: ( minutes * 60 )
+    autoSaveTimer = [NSTimer scheduledTimerWithTimeInterval: ( minutes * 60 )
                        target: self
                        selector: @selector(handleSaveFile:)
                        userInfo: nil repeats: true];
   }
+}
+
+// Set up GUI
+//
+// This method is called from applicationDidFinishLaunching
+- (void)setupGUI
+{
+  // start up in indi view mode
+  [main_tabs selectTabViewItemAtIndex: 0];
   
+  // Setup the indi drawer
+  [indiListController setupDrawerGui];
+  
+  // Setup the fam drawer
+  [famListController setupDrawerGui];
+  [famListController showDrawer: NO];
+
+  // Setup the event drawer
+  [event_list setTag: 2];
+  [event_list setDelegate: self];
+//  [event_list setNextResponder: self];
+  [event_drawer setParentWindow: main_window];
+  [event_drawer setPreferredEdge: NSMaxXEdge];
+
+  // Setup the toolbar
+  [self setupToolbar];
+//  [indi_image setContinuous: false];
+//  [indi_image sendActionOn: NSLeftMouseUp];
+
+  // Setup the menubar
+  [indi_event_menu setEnabled: true];
+  [fam_event_menu setEnabled: false];
+    
+//  [ped_father setTarget: self];
+//  [ped_father sendActionOn: NSLeftMouseUp];
+//  [ped_father setAction: @selector(handlePedigreeClick:)];
+}
+
+- (void) updateIndiViewWithIndi: (INDI*)thisIndi
+{
+  GCField* gc_tmp;
+  NSImage* image = [NSImage alloc];
+
+  [indi_name setStringValue: [thisIndi fullName]];
+  [indi_info setStringValue: [thisIndi textSummary: ged]];
+
+// BCH
+  // images stuff
+  [[ImageViewerController sharedViewer] setRecord: thisIndi];
+// BCH
+  // note viewer stuff
+  [[NoteViewerController sharedViewer] setField: thisIndi];
+
+  if( gc_tmp = [thisIndi subfieldWithType: @"OBJE"] )
+  {
+    [indi_image setImage:
+      [image initWithContentsOfFile:
+        [gc_tmp valueOfSubfieldWithType: @"FILE"]]];
+  }
+  else
+    [indi_image setImage: nil];
+}
+
+- (void) updateFamViewWithFam: (FAM*)thisFam
+{
+  GCField* gc_tmp;
+  NSImage* image = [NSImage alloc];
+
+  [fam_info setStringValue: [thisFam textSummary: ged]];
+
+// BCH  
+  // images stuff
+  [[ImageViewerController sharedViewer] setRecord: thisFam];
+// BCH  
+  // note viewer stuff
+  [[NoteViewerController sharedViewer] setField: thisFam];
+  
+  if( gc_tmp = [thisFam subfieldWithType: @"OBJE"] )
+  {
+    [fam_image setImage:
+      [image initWithContentsOfFile:
+        [gc_tmp valueOfSubfieldWithType: @"FILE"]]];
+  }
+  else
+    [fam_image setImage: nil];
+}
+
+- (void) updatePedigreeViewWithIndi: (INDI*)thisIndi
+{
+  INDI* tmp_indi;
+  NSMutableString* tmp = [[NSMutableString alloc] init];
+
+    [ped_root setStringValue: @""];
+    [ped_father setStringValue: @""];
+    [ped_pgf setStringValue: @""];
+    [ped_pgm setStringValue: @""];
+    [ped_ppgf setStringValue: @""];
+    [ped_ppgm setStringValue: @""];
+    [ped_pmgf setStringValue: @""];
+    [ped_pmgm setStringValue: @""];
+    [ped_mother setStringValue: @""];
+    [ped_mgf setStringValue: @""];
+    [ped_mgm setStringValue: @""];
+    [ped_mpgf setStringValue: @""];
+    [ped_mpgm setStringValue: @""];
+    [ped_mmgf setStringValue: @""];
+    [ped_mmgm setStringValue: @""];
+    
+    [tmp setString: [thisIndi fullName]];
+    [tmp appendString: @"\n"];
+    [tmp appendString: [thisIndi lifespan]];
+    [ped_root setStringValue: tmp];
+  
+    if( tmp_indi = [thisIndi father: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_father setStringValue: tmp];
+    }
+    if( tmp_indi = [[thisIndi father: ged] father: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_pgf setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi father: ged] father: ged] father: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_ppgf setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi father: ged] father: ged] mother: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_ppgm setStringValue: tmp];
+    }
+    if( tmp_indi = [[thisIndi father: ged] mother: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_pgm setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi father: ged] mother: ged] father: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_pmgf setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi father: ged] mother: ged] mother: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_pmgm setStringValue: tmp];
+    }
+    if( tmp_indi = [thisIndi mother: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_mother setStringValue: tmp];
+    }
+    if( tmp_indi = [[thisIndi mother: ged] father: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_mgf setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi mother: ged] father: ged] father: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_mpgf setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi mother: ged] father: ged] mother: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_mpgm setStringValue: tmp];
+    }
+    if( tmp_indi = [[thisIndi mother: ged] mother: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_mgm setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi mother: ged] mother: ged] father: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_mmgf setStringValue: tmp];
+    }
+    if( tmp_indi = [[[thisIndi mother: ged] mother: ged] mother: ged] )
+    {
+      [tmp setString: [tmp_indi fullName]];
+      [tmp appendString: @"\n"];
+      [tmp appendString: [tmp_indi lifespan]];
+      [ped_mmgm setStringValue: tmp];
+    }
+    
+}
+
+- (void) updateDescendantsViewWithIndi: (INDI*)thisIndi
+{
+    [dec_name setStringValue:
+      [@"Descendants of " stringByAppendingString: [thisIndi fullName]]];
+    [[DescendantOutlineData sharedDescendant] setData: thisIndi: ged];
+    [dec_outline setDataSource: [DescendantOutlineData sharedDescendant]];
+    [dec_outline reloadData];
+}
+
+// Load data file
+- (void)loadDataFile
+{
+  NSString* data_file;
+
   // try and load a default data file
   data_file = [[PreferencesController sharedPrefs] defaultFile];
   if( [NSFileHandle fileHandleForReadingAtPath: data_file] )
@@ -40,66 +270,69 @@
     // if it didn't load ask the user to specify a file
     [self doOpenFile];
 
-  if( [[PreferencesController sharedPrefs] sortRecords] )
-    [ged sortData];
-    
-  // start up in indi view mode
-  [indi_list setTag: 0];
-  [indi_list setDelegate: self];
-  [indi_list setNextResponder: self];
-  [indi_drawer setParentWindow: main_window];
-  [indi_drawer setPreferredEdge: NSMinXEdge];
-  [indi_drawer openOnEdge: NSMinXEdge];
+/*BCH What for?  if( [[PreferencesController sharedPrefs] sortRecords] )
+    [ged sortData];*/
+}
+
+// Set up data source
+- (void)setupDataSource
+{
+  [recordListDataSource release];
+  recordListDataSource = [[RecordListDataSource alloc] initWithGED: ged];
+  [indiListController setListDataSource: recordListDataSource];
+  [famListController setListDataSource: recordListDataSource];
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+  NSNotificationCenter*		appNotificationCenter;
+
+  // Register the current object as an observer
+  appNotificationCenter = [NSNotificationCenter defaultCenter];
+  [appNotificationCenter 	addObserver: self
+                            selector: @selector( handleIndiSelectionChanged: )
+                            name: @"GenXIndiSelected"
+                            object: nil];
+  [appNotificationCenter 	addObserver: self
+                            selector: @selector( handleFamSelectionChanged: )
+                            name: @"GenXFamSelected"
+                            object: nil];
+  [appNotificationCenter 	addObserver: self
+                            selector: @selector( handleNoteAddition: )
+                            name: @"GenXNoteAdded"
+                            object: nil];
+  [appNotificationCenter 	addObserver: self
+                            selector: @selector( handleNoteAddition: )
+                            name: @"GenXContentChange"
+                            object: nil];
+
+  // Set up auto-save
+  [self setupAutosave];
   
-  [fam_list setTag: 1];
-  [fam_list setDelegate: self];
-  [fam_list setNextResponder: self];
-  [fam_drawer setParentWindow: main_window];
-  [fam_drawer setPreferredEdge: NSMinXEdge];
-  [fam_drawer close];
-
-  [event_list setTag: 2];
-  [event_list setDelegate: self];
-  [event_list setNextResponder: self];
-  [event_drawer setParentWindow: main_window];
-  [event_drawer setPreferredEdge: NSMaxXEdge];
-
-  [self setupToolbar];
-//  [indi_image setContinuous: false];
-//  [indi_image sendActionOn: NSLeftMouseUp];
-
-  [indi_event_menu setEnabled: true];
-  [fam_event_menu setEnabled: false];
-    
-//  [ped_father setTarget: self];
-//  [ped_father sendActionOn: NSLeftMouseUp];
-//  [ped_father setAction: @selector(handlePedigreeClick:)];
+  // Load data
+  [self loadDataFile];
   
-  [tmp setString:
-    [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
-  [tmp appendString: @" of "];
-  [tmp appendString:
-    [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
-  [tmp appendString: @" INDI records"];
-  [displayed_indi_text setStringValue: tmp];
-
-  [tmp setString:
-    [[NSNumber numberWithInt: [ged numFamilies]] stringValue]];
-  [tmp appendString: @" of "];
-  [tmp appendString:
-    [[NSNumber numberWithInt: [ged numFamilies]] stringValue]];
-  [tmp appendString: @" FAM records"];
-  [displayed_fam_text setStringValue: tmp];
-
-  record_data_source = [[RecordListDataSource alloc] initWithGED: ged];
-  [record_data_source setSort: [[PreferencesController sharedPrefs] sortFiltered]];
-  [indi_list setDataSource: record_data_source];  
-  [fam_list setDataSource: record_data_source];
-  [self handleSelectIndi: indi_list];
+  // Center main window
+  [main_window center];
+  
+  // Set up GUI
+  [self setupGUI];
+  
+  // Set up data source
+  [self setupDataSource];
+  
+  // Init selection
+  [self handleIndiSelectionChanged: nil];
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
+  NSNotificationCenter*		appNotificationCenter;
+
+  // Unregister the current object as an observer
+  appNotificationCenter = [NSNotificationCenter defaultCenter];
+  [appNotificationCenter 	removeObserver: self];
+
   if( [ged needSave] )
   {
     // ask if we should save the data to file
@@ -155,275 +388,130 @@
   }
 }
 
+// Accessors
+- (NSWindow*) mainWindow
+{
+  return main_window;
+}
+
+- (GCFile*) gedFile
+{
+  return ged;
+}
+
+- (GCField*) currentRecord
+{
+  return current_record;
+}
+
+// Refresh GUI
+//
+// This method is called when the content of the ged file is updated :
+// when a record is added, modified or deleted
+//
+// Steps :
+//	- sort data inside ged object
+//	- refresh data source
+//	- refresh lists
+//	- update GUI from selection
 - (void) refreshGUI
 {
+/*BCH What for ? The records are sorted in the recordListDataSource
   if( [[PreferencesController sharedPrefs] sortRecords] )
-    [ged sortData];
-  
+    [ged sortData];*/
+      
   if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
   {
-    [record_data_source refreshINDI];
-    [self handleSelectIndi: indi_list];
-    [indi_list reloadData];
+    [recordListDataSource refreshIndis];
+    [self handleIndiSelectionChanged: nil];
+    [indiListController reloadData];
   }
   else
   {
-    [record_data_source refreshFAM];
-    [self handleSelectFam: fam_list];
-    [fam_list reloadData];
+    [recordListDataSource refreshFams];
+    [self handleFamSelectionChanged: nil];
+    [famListController reloadData];
   }
 
   [event_list reloadData];
 }
 
-// handles events from the list of INDI records
-- (IBAction)handleSelectIndi:(id)sender
+// Handle changes in the indi selection
+- (void)handleIndiSelectionChanged:(NSNotification *)aNotification
 {
-  INDI* selected;
-  INDI* tmp_indi;
-  NSMutableString* tmp = [[NSMutableString alloc] init];
-  GCField* gc_tmp;
-  NSImage* image = [NSImage alloc];
+  id		notificationSender = [aNotification object];
+  INDI*		selectedIndi = [indiListController selection];
 
-  // if nothing is selected
-  if( [sender selectedRow] == -1 )
+  if( selectedIndi )
   {
-    [indi_name setStringValue: @""];
-    [indi_info setStringValue: @""];
+    // Indi list
+    if( notificationSender != indiListController )
+    {
+      [indiListController setSelection: selectedIndi];
+    }
 
-    return;
-  }
-  
-  // right now, all 3 individual related view modes
-  // are refreshed. This could be made more efficient
-  // by only refreshing the currently active mode
-  // the bulk of this code is for refreshing the
-  // pedigree of the selected person
-  selected = [record_data_source indiAtIndex: [sender selectedRow]];
-  if( selected )
-  {
     // INDI View Mode
-    [indi_name setStringValue: [selected fullName]];
-    [indi_info setStringValue: [selected textSummary: ged]];
-    if( gc_tmp = [selected subfieldWithType: @"OBJE"] )
-    {
-      [indi_image setImage:
-        [image initWithContentsOfFile:
-        [gc_tmp valueOfSubfieldWithType: @"FILE"]]];
-    }
-    else
-      [indi_image setImage: nil];
-    
+    [self updateIndiViewWithIndi: selectedIndi];
+        
     // PED view mode
-    [ped_root setStringValue: @""];
-    [ped_father setStringValue: @""];
-    [ped_pgf setStringValue: @""];
-    [ped_pgm setStringValue: @""];
-    [ped_ppgf setStringValue: @""];
-    [ped_ppgm setStringValue: @""];
-    [ped_pmgf setStringValue: @""];
-    [ped_pmgm setStringValue: @""];
-    [ped_mother setStringValue: @""];
-    [ped_mgf setStringValue: @""];
-    [ped_mgm setStringValue: @""];
-    [ped_mpgf setStringValue: @""];
-    [ped_mpgm setStringValue: @""];
-    [ped_mmgf setStringValue: @""];
-    [ped_mmgm setStringValue: @""];
-    
-    [tmp setString: [selected fullName]];
-    [tmp appendString: @"\n"];
-    [tmp appendString: [selected lifespan]];
-    [ped_root setStringValue: tmp];
-  
-    if( tmp_indi = [selected father: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_father setStringValue: tmp];
-    }
-    if( tmp_indi = [[selected father: ged] father: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_pgf setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected father: ged] father: ged] father: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_ppgf setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected father: ged] father: ged] mother: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_ppgm setStringValue: tmp];
-    }
-    if( tmp_indi = [[selected father: ged] mother: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_pgm setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected father: ged] mother: ged] father: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_pmgf setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected father: ged] mother: ged] mother: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_pmgm setStringValue: tmp];
-    }
-    if( tmp_indi = [selected mother: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_mother setStringValue: tmp];
-    }
-    if( tmp_indi = [[selected mother: ged] father: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_mgf setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected mother: ged] father: ged] father: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_mpgf setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected mother: ged] father: ged] mother: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_mpgm setStringValue: tmp];
-    }
-    if( tmp_indi = [[selected mother: ged] mother: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_mgm setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected mother: ged] mother: ged] father: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_mmgf setStringValue: tmp];
-    }
-    if( tmp_indi = [[[selected mother: ged] mother: ged] mother: ged] )
-    {
-      [tmp setString: [tmp_indi fullName]];
-      [tmp appendString: @"\n"];
-      [tmp appendString: [tmp_indi lifespan]];
-      [ped_mmgm setStringValue: tmp];
-    }
-    
+    [self updatePedigreeViewWithIndi: selectedIndi];
+
     // DEC view mode
-    [dec_name setStringValue:
-      [@"Descendants of " stringByAppendingString: [selected fullName]]];
-    [[DescendantOutlineData sharedDescendant] setData: selected: ged];
-    [dec_outline setDataSource: [DescendantOutlineData sharedDescendant]];
-    [dec_outline reloadData];
+    [self updateDescendantsViewWithIndi: selectedIndi];
   
-    [[RawPanelController sharedRawPanel] setDataField: selected];
-    current_record = selected;
+    // RawPanel
+    [[RawPanelController sharedRawPanel] setDataField: selectedIndi];
+    
+    // Current indi and event
+    current_record = selectedIndi;
     current_event = nil;
-  }
-
-  if( [[PreferencesController sharedPrefs] sortEvents] )
-    [current_record sortEvents];
-  [event_list setDataSource: current_record];
-}
-
-- (void) handleFilter:(id) sender
-{
-  NSMutableString* tmp = [[NSMutableString alloc] init];
-//DEBUG
-// NSLog( @"handleFiler" );
-
-  if( sender == indi_filter_text || sender == indi_filter_button )
-  {
-    [record_data_source setIndiFilter: [indi_filter_text stringValue]];
-    [indi_list reloadData];
-    [self handleSelectIndi: indi_list];
-  
-    [tmp setString:
-      [[NSNumber numberWithInt: [record_data_source numIndiDisplayed]] stringValue]];
-    [tmp appendString: @" of "];
-    [tmp appendString:
-      [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
-    [tmp appendString: @" INDI records"];
-    [displayed_indi_text setStringValue: tmp];
-  }
-  else if( sender == fam_filter_text || sender == fam_filter_button )
-  {
-    [record_data_source setFamFilter: [fam_filter_text stringValue]];
-    [fam_list reloadData];
-    [self handleSelectFam: fam_list];
-  
-    [tmp setString:
-      [[NSNumber numberWithInt: [record_data_source numFamDisplayed]] stringValue]];
-    [tmp appendString: @" of "];
-    [tmp appendString:
-      [[NSNumber numberWithInt: [ged numFamilies]] stringValue]];
-    [tmp appendString: @" FAM records"];
-    [displayed_fam_text setStringValue: tmp];
-  }
-}
-
-// family view mode is pretty basic
-- (IBAction)handleSelectFam:(id)sender
-{
-  FAM* selected;
-  GCField* gc_tmp;
-  NSImage* image = [NSImage alloc];
-
-  // if nothing is selected
-  if( [sender selectedRow] == -1 )
-  {
-    [indi_name setStringValue: @""];
-    [indi_info setStringValue: @""];
-
-    return;
-  }
-  
-  selected = [record_data_source famAtIndex: [sender selectedRow]];
-  
-  [fam_info setStringValue: [selected textSummary: ged]];
-
-  if( gc_tmp = [selected subfieldWithType: @"OBJE"] )
-  {
-    [fam_image setImage:
-      [image initWithContentsOfFile:
-      [gc_tmp valueOfSubfieldWithType: @"FILE"]]];
+    if( [[PreferencesController sharedPrefs] sortEvents] )
+      [current_record sortEvents];
+    [event_list setDataSource: current_record];
   }
   else
-    [fam_image setImage: nil];
-  
-  [[RawPanelController sharedRawPanel] setDataField: selected];
-  current_record = selected;
-  current_event = nil;
+  {
+    [indi_name setStringValue: @""];
+    [indi_info setStringValue: @""];
+  }
+}
 
-  if( [[PreferencesController sharedPrefs] sortEvents] )
-    [current_record sortEvents];
-  [event_list setDataSource: current_record];
+// Handle changes in the fam selection
+- (void)handleFamSelectionChanged:(NSNotification *)aNotification
+{
+  id		notificationSender = [aNotification object];
+  FAM*		selectedFam = [famListController selection];
+
+  if( selectedFam )
+  {
+    // Indi list
+    if( notificationSender != famListController )
+    {
+      [famListController setSelection: selectedFam];
+    }
+
+    // FAM View Mode
+    [self updateFamViewWithFam: selectedFam];
+            
+    // Current fam and event
+    current_record = selectedFam;
+    current_event = nil;
+    if( [[PreferencesController sharedPrefs] sortEvents] )
+      [current_record sortEvents];
+    [event_list setDataSource: current_record];
+  }
+  else
+  {
+    [indi_name setStringValue: @""];
+    [indi_info setStringValue: @""];
+  }
+}
+
+// Handle note addition
+- (void)handleNoteAddition:(NSNotification *)aNotification
+{
+//BCH
+  [[NoteViewerController sharedViewer] setField: current_record];
 }
 
 - (IBAction)handleSelectEvent:(id)sender
@@ -450,15 +538,15 @@
       [main_tabs selectTabViewItemAtIndex: 0];
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-    [fam_drawer close: self];
-    [indi_drawer open: self];
-    [self handleSelectIndi: indi_list];
+    [famListController showDrawer: NO];
+    [indiListController showDrawer: YES];
+    [self handleIndiSelectionChanged: nil];
     
 //    fam_event_menu = [event_menu submenu];
 //    [event_menu setSubmenu: indi_event_menu];
   }
   else
-    [indi_drawer toggle: self];
+    [indiListController toggleDrawer];
 }
 
 - (void) handleFamMode:(id) sender 
@@ -471,15 +559,15 @@
       [main_tabs selectTabViewItemAtIndex: 1];
     [indi_event_menu setEnabled: false];
     [fam_event_menu setEnabled: true];
-    [indi_drawer close: self];
-    [fam_drawer open: self];
-    [self handleSelectFam: fam_list];
+    [indiListController showDrawer: NO];
+    [famListController showDrawer: YES];
+    [self handleFamSelectionChanged: nil];
 
 //    fam_event_menu = [event_menu submenu];
 //    [event_menu setSubmenu: fam_event_menu];
   }
   else
-    [fam_drawer toggle: self];
+    [famListController toggleDrawer];
 }
 
 - (void) handlePedigreeMode:(id) sender 
@@ -492,18 +580,17 @@
       [main_tabs selectTabViewItemAtIndex: 2];
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-    [indi_drawer open: self];
-    [fam_drawer close: self];
-    [self handleSelectIndi: indi_list];
+    [indiListController showDrawer: YES];
+    [famListController showDrawer: NO];
+    [self handleIndiSelectionChanged: nil];
   }
   else
-    [indi_drawer toggle: self];
+    [indiListController toggleDrawer];
 }
 
 - (void) handlePedigreeClick:(id) sender
 {
   INDI* indi;
-  int i;
   
   if( [[sender title] isEqualToString: @"f"] )
     indi = [(INDI*)current_record father: ged];
@@ -534,20 +621,7 @@
   else if( [[sender title] isEqualToString: @"mmgm"] )
     indi = [[[(INDI*)current_record mother: ged] mother: ged] mother: ged];
   
-  i = [record_data_source indexForIndi: indi];
-  // if we fail the first time, the record we're looking for may be filtered out
-  // so unfilter it
-  if( i == -1 )
-  {
-    [record_data_source setIndiFilter: @""];
-    [indi_list reloadData];
-    i = [record_data_source indexForIndi: indi];
-  }
-  if( i != -1 )
-  {
-    [indi_list selectRow: i byExtendingSelection: false];
-    [indi_list scrollRowToVisible: i];
-  }
+  [indiListController setSelection: indi];
 }
 
 - (void) handleImageClick: (id) sender
@@ -569,325 +643,18 @@
       [main_tabs selectTabViewItemAtIndex: 3];
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-    [indi_drawer open: self];
-    [fam_drawer close: self];
-    [self handleSelectIndi: indi_list];
+    [indiListController showDrawer: YES];
+    [famListController showDrawer: NO];
+    [self handleIndiSelectionChanged: nil];
   }
   else
-    [indi_drawer toggle: self];
+    [indiListController toggleDrawer];
 }
 
-//
-// INDI Events
-//
-- (void) handleAddChristening:(id) sender
+// Handle AboutBox menu event
+- (IBAction)showAboutBox:(id)sender
 {
-  GCField* tmp = [current_record addSubfield: @"CHR": @""];
-  [[EventWithFAMCController sharedEvent] setField: tmp: current_record: ged];
-  [NSApp beginSheet: [[EventWithFAMCController sharedEvent] window]
-    modalForWindow: main_window
-    modalDelegate: self
-    didEndSelector: @selector(rerfeshGUI) contextInfo: nil];
-}
-
-- (void) handleAddBaptism:(id) sender
-{
-  [self addEvent: @"BAPM"];
-}
-
-- (void) handleAddBlessing:(id) sender
-{
-  [self addEvent: @"BLESS"];
-}
-
-- (void) handleAddConfirmation:(id) sender
-{
-  [self addEvent: @"CONF"];
-}
-
-- (void) handleAddBarmitzvah:(id) sender
-{
-  [self addEvent: @"BARM"];
-}
-
-- (void) handleAddBasmitzvah:(id) sender
-{
-  [self addEvent: @"BASM"];
-}
-
-- (void) handleAddFirstCommunion:(id) sender
-{
-  [self addEvent: @"FCOM"];
-}
-
-- (void) handleAddAdultChristening:(id) sender
-{
-  [self addEvent: @"CHRA"];
-}
-
-- (void) handleAddOrdination:(id) sender
-{
-  [self addEvent: @"ORDN"];
-}
-
-- (void) handleAddAdoption:(id) sender
-{
-  GCField* tmp = [current_record addSubfield: @"ADOP": @""];
-  [[EventWithFAMCController sharedEvent] setField: tmp: current_record: ged];
-  [NSApp beginSheet: [[EventWithFAMCController sharedEvent] window]
-    modalForWindow: main_window
-    modalDelegate: self
-    didEndSelector: @selector(refreshGUI) contextInfo: nil];
-}
-
-- (void) handleAddEmigration:(id) sender
-{
-  [self addEvent: @"EMIG"];
-}
-
-- (void) handleAddImmigration:(id) sender
-{
-  [self addEvent: @"IMMI"];
-}
-
-- (void) handleAddNaturalization:(id) sender
-{
-  [self addEvent: @"NATU"];
-}
-
-- (void) handleAddGraduation:(id) sender
-{
-  [self addEvent: @"GRAD"];
-}
-
-- (void) handleAddRetirement:(id) sender
-{
-  [self addEvent: @"RETI"];
-}
-
-- (void) handleAddProbate:(id) sender
-{
-  [self addEvent: @"PROB"];
-}
-
-- (void) handleAddWill:(id) sender
-{
-  [self addEvent: @"WILL"];
-}
-
-- (void) handleAddCremation:(id) sender
-{
-  [self addEvent: @"CREM"];
-}
-
-- (void) handleAddBurial:(id) sender
-{
-  [self addEvent: @"BURI"];
-}
-
-- (void) handleAddOtherEvent:(id) sender
-{
-  [self addEvent: @"EVEN"];
-}
-
-//
-// FAM Events
-//
-- (void) handleAddEngagement:(id) sender
-{
-  [self addEvent: @"ENGA"];
-}
-
-- (void) handleAddDivorce:(id) sender
-{
-  [self addEvent: @"DIV"];
-}
-
-- (void) handleAddAnnulment:(id) sender
-{
-  [self addEvent: @"ANUL"];
-}
-
-- (void) handleAddMarriageBann:(id) sender
-{
-  [self addEvent: @"MARB"];
-}
-
-- (void) handleAddMarriageSettlement:(id) sender
-{
-  [self addEvent: @"MARS"];
-}
-
-- (void) handleAddMarriageContract:(id) sender
-{
-  [self addEvent: @"MARC"];
-}
-
-- (void) handleAddMarriageLicense:(id) sender
-{
-  [self addEvent: @"MARL"];
-}
-
-- (void) handleAddDivorceFiling:(id) sender
-{
-  [self addEvent: @"DIVF"];
-}
-
-//
-// FAM & INDI events
-- (void) handleAddMarriage:(id) sender
-{
-  if( [[current_record fieldType] isEqual: @"INDI"] )
-  {
-    [[AddMarriageController sharedAddMarr] prepForDisplay: ged: nil: current_record];
-    [NSApp beginSheet: [[AddMarriageController sharedAddMarr] window]
-      modalForWindow: main_window
-      modalDelegate: self
-      didEndSelector: @selector(refreshGUI) contextInfo: nil];
-  }
-  else if( [[current_record fieldType] isEqual: @"FAM"] )
-    [self addEvent: @"MARR"];
-}
-
-- (void) handleAddNote:(id) sender
-{
-  [[NoteController sharedNote] setField: current_record];
-  [NSApp beginSheet: [[NoteController sharedNote] window]
-    modalForWindow: main_window
-    modalDelegate: self
-    didEndSelector: nil contextInfo: nil];
-}
-
-- (void) handleAddImage:(id) sender
-{
-  NSOpenPanel* open;
-  NSArray *fileTypes = [NSArray arrayWithObjects:
-    @"jpg", @"JPG", @"gif", @"GIF", @"bmp", @"BMP", @"tiff", @"TIFF", nil];
-  
-  // display a standard open dialog
-  open = [NSOpenPanel openPanel];
-  [open setAllowsMultipleSelection:false];
-  [open beginSheetForDirectory:NSHomeDirectory()
-    file:nil  types:fileTypes
-    modalForWindow: main_window modalDelegate: self
-    didEndSelector: @selector(doAddImage:returnCode:contextInfo:) contextInfo: nil];
-}
-
-- (void)doAddImage:(NSOpenPanel *)sheet
-  returnCode:(int)returnCode
-  contextInfo:(void  *)contextInfo
-{
-  GCField* gc_tmp;
-  NSString* file = [sheet filename];
-  
-  if (returnCode == NSOKButton)
-  {
-    [current_record setNeedSave: true];
-    gc_tmp = [current_record addSubfield: @"OBJE": @""];
-    if( [file hasSuffix: @".jpg"] || [file hasSuffix: @"JPG"] )
-      [gc_tmp addSubfield: @"FORM": @"jpeg"];
-    else if( [file hasSuffix: @".gif"] || [file hasSuffix: @"GIF"] )
-      [gc_tmp addSubfield: @"FORM": @"gif"];
-    else if( [file hasSuffix: @".bmp"] || [file hasSuffix: @"BMP"] )
-      [gc_tmp addSubfield: @"FORM": @"bmp"];
-    else if( [file hasSuffix: @".tiff"] || [file hasSuffix: @"TIFF"] )
-      [gc_tmp addSubfield: @"FORM": @"tiff"];
-    [gc_tmp addSubfield: @"FILE": file];
-  }
-  
-  [self handleSelectIndi: indi_list];
-}
-
-- (void) addEvent:(NSString*) type
-{
-  GCField* tmp = [current_record addSubfield: type: @""];
-  [[GenericEventController sharedEvent] setField: tmp];
-  [NSApp beginSheet: [[GenericEventController sharedEvent] window]
-    modalForWindow: main_window
-    modalDelegate: self
-    didEndSelector: @selector(refreshGUI) contextInfo: nil];
-}
-
-- (void) handleDeleteEvent:(id) sender
-{
-  if( current_event )
-  {
-    //
-    // Generic Events
-    //
-    if( [[current_event fieldType] isEqualToString: @"BURI"]
-    || [[current_event fieldType] isEqualToString: @"CREM"]
-    || [[current_event fieldType] isEqualToString: @"BIRT"]
-    || [[current_event fieldType] isEqualToString: @"DEAT"]
-    || [[current_event fieldType] isEqualToString: @"BAPM"]
-    || [[current_event fieldType] isEqualToString: @"BARM"]
-    || [[current_event fieldType] isEqualToString: @"BASM"]
-    || [[current_event fieldType] isEqualToString: @"BLES"]
-    || [[current_event fieldType] isEqualToString: @"CHRA"]
-    || [[current_event fieldType] isEqualToString: @"CONF"]
-    || [[current_event fieldType] isEqualToString: @"FCOM"]
-    || [[current_event fieldType] isEqualToString: @"ORDN"]
-    || [[current_event fieldType] isEqualToString: @"NATU"]
-    || [[current_event fieldType] isEqualToString: @"EMIG"]
-    || [[current_event fieldType] isEqualToString: @"IMMI"]
-    || [[current_event fieldType] isEqualToString: @"CENS"]
-    || [[current_event fieldType] isEqualToString: @"PROB"]
-    || [[current_event fieldType] isEqualToString: @"WILL"]
-    || [[current_event fieldType] isEqualToString: @"GRAD"]
-    || [[current_event fieldType] isEqualToString: @"RETI"]
-    || [[current_event fieldType] isEqualToString: @"MARR"]
-   || [[current_event fieldType] isEqualToString: @"ANUL"]
-   || [[current_event fieldType] isEqualToString: @"DIV"]
-   || [[current_event fieldType] isEqualToString: @"DIVF"]
-   || [[current_event fieldType] isEqualToString: @"ENGA"]
-   || [[current_event fieldType] isEqualToString: @"MARB"]
-   || [[current_event fieldType] isEqualToString: @"MARC"]
-   || [[current_event fieldType] isEqualToString: @"MARL"]
-   || [[current_event fieldType] isEqualToString: @"MARS"]
-    || [[current_event fieldType] isEqualToString: @"EVEN"] )
-    {
-      [current_record removeSubfield: current_event];
-      [self refreshGUI];
-    }
-    //
-    // FAMC Events
-    //
-    else if( [[current_event fieldType] isEqual: @"ADOP"]
-    || [[current_event fieldType] isEqual: @"CHR"] )
-    {
-      NSString* tmp;
-      GCField* gc_tmp;
-      // if the event has a FAMC, remove the FAMC's linke to this INDI
-      if( tmp = [current_event valueOfSubfieldWithType: @"FAMC"] )
-      {
-        if( gc_tmp = [ged famWithLabel: tmp] )
-          [gc_tmp removeSubfieldWithType: @"CHIL" Value: [current_record fieldValue]];
-      }
-      // delete the event
-      [current_record removeSubfield: current_event];
-      [self refreshGUI];
-    }
-    //
-    // MARR Event
-    //
-    else if( [[current_event fieldType] isEqual: @"FAMS"] )
-    {
-      NSBeginAlertSheet( @"Are you sure?", @"I'm sure", @"Cancel", nil,
-        main_window, self, @selector( deleteMarriagePanelDidEnd:returnCode:contextInfo: ), nil, nil,
-        @"You are about to delete all information about this marriage. Are you sure you want to do this?" );
-    }
-  }
-}
-
-- (void)deleteMarriagePanelDidEnd:(NSOpenPanel *)sheet
-  returnCode:(int)returnCode
-  contextInfo:(void  *)contextInfo
-{
-  if( returnCode == NSAlertDefaultReturn )
-  {
-    [ged removeRecord: [ged famWithLabel: [current_event fieldValue]]];
-    [self refreshGUI];
-  }
+  [[AboutBox sharedInstance] showPanel];
 }
 
 //
@@ -1233,6 +1000,16 @@
     [event_drawer openOnEdge: NSMaxXEdge];
 }
 
+- (void) handleImagesToolbar:(id) sender
+{
+  [[[ImageViewerController sharedViewer] window] makeKeyAndOrderFront: self];
+}
+
+- (void) handleNotesToolbar:(id) sender
+{
+  [[[NoteViewerController sharedViewer] window] makeKeyAndOrderFront: self];
+}
+
 //
 // File interaction methods
 //
@@ -1301,15 +1078,15 @@
   // create an empty database and hook it up to the GUI
   ged = [ged init];
 
-  [record_data_source setGED: ged];
-  [record_data_source setGED: ged];
-  [indi_list setDataSource: record_data_source];
-  [fam_list setDataSource: record_data_source];
-  [fam_drawer close];
-  [indi_drawer openOnEdge: NSMinXEdge];
+  [recordListDataSource setGED: ged];
+  
+  [indiListController setListDataSource: recordListDataSource];
+  [famListController setListDataSource: recordListDataSource];
+  [famListController showDrawer: NO];
+  [indiListController showDrawer: YES];
   [main_tabs selectTabViewItemAtIndex: 0];
   [self refreshGUI];
-  [self handleSelectIndi: indi_list];
+//BCH  [self handleIndiSelectionChanged: nil];
 }
 
 - (void) handleMergeFile:(id) sender
@@ -1404,7 +1181,6 @@
   returnCode:(int)returnCode
   contextInfo:(void  *)contextInfo
 {
-  NSMutableString* tmp = [[NSMutableString alloc] init];
   if (returnCode == NSOKButton)
   {
     // attempt to load a file into the database
@@ -1435,31 +1211,16 @@
     [self doNewFile];
   }
 
-  [tmp setString:
-    [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
-  [tmp appendString: @" of "];
-  [tmp appendString:
-    [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
-  [tmp appendString: @" INDI records"];
-  [displayed_indi_text setStringValue: tmp];
+  [recordListDataSource setGED: ged];
+  [recordListDataSource setIndiFilter: @""];
+  [recordListDataSource setFamFilter: @""];
 
-  [tmp setString:
-    [[NSNumber numberWithInt: [ged numFamilies]] stringValue]];
-  [tmp appendString: @" of "];
-  [tmp appendString:
-    [[NSNumber numberWithInt: [ged numFamilies]] stringValue]];
-  [tmp appendString: @" FAM records"];
-  [displayed_fam_text setStringValue: tmp];
-
-  [indi_filter_text setStringValue: @""];
-  [fam_filter_text setStringValue: @""];
-  [record_data_source setGED: ged];
-  [record_data_source setIndiFilter: @""];
-  [record_data_source setFamFilter: @""];
-  [indi_list setDataSource: record_data_source];
-  [fam_list setDataSource: record_data_source];
+  [indiListController setSelection: nil];
+  [indiListController setListDataSource: recordListDataSource];
+  [famListController setSelection: nil];
+  [famListController setListDataSource: recordListDataSource];
   [self refreshGUI];
-  [self handleSelectIndi: indi_list];
+//BCH  [self handleIndiSelectionChanged: nil];
 }
 
 - (void)savePanelDidEnd:(NSOpenPanel *)sheet
@@ -1520,8 +1281,8 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
 }
 
 - (NSToolbarItem *) toolbar: (NSToolbar *)toolbar
-  itemForItemIdentifier: (NSString *) itemIdent
-  willBeInsertedIntoToolbar:(BOOL) willBeInserted
+  itemForItemIdentifier: (NSString *)itemIdent
+  willBeInsertedIntoToolbar: (BOOL)willBeInserted
 {
   // Required delegate method   Given an item identifier, self method returns an item 
   // The toolbar will use self method to obtain toolbar items that can be displayed
@@ -1529,8 +1290,7 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc]
                                initWithItemIdentifier: itemIdent]
                                autorelease];
-    
-/*
+/*    
   if ([itemIdent isEqual: IndiToolbarItemIdentifier])
   {
     // Set the text label to be displayed in the toolbar and customization palette 
@@ -1709,17 +1469,9 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
 - (void) tableViewSelectionDidChange:(NSNotification *)notification
 {
   if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
-    [self handleSelectIndi: indi_list];
+    [self handleIndiSelectionChanged: nil];
   else
-    [self handleSelectFam: fam_list];
-}
-
-//
-// NSTextField delegate methods
-//
-- (void)controlTextDidEndEditing:(NSNotification *)aNotification
-{
-  [self handleFilter: [aNotification object]];
+    [self handleFamSelectionChanged: nil];
 }
 
 //

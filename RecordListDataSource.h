@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TableSortInfo.h"
 #import "GCFile.h"
 #import "INDI.h"
 
@@ -27,13 +28,18 @@
 - (void) setIndiFilter: (NSString*) my_filter;
 - (void) setFamFilter: (NSString*) my_filter;
 - (void) setSort: (BOOL) my_sort;
+- (void) sortIndisUsingFieldId: (id)fieldId descending: (BOOL) sortDescending;
+- (void) sortFamsUsingFieldId: (id)fieldId descending: (BOOL) sortDescending;
 - (void) refresh;
-- (void) refreshINDI;
-- (void) refreshFAM;
+- (void) refreshIndis;
+- (void) refreshFams;
 - (INDI*) indiAtIndex: (int) index;
 - (FAM*) famAtIndex: (int) index;
 - (int) indexForIndi: (INDI*) indi;
+- (int) indexForFam: (FAM*) indi;
 - (int) numIndiDisplayed;
+- (int) numIndiAll;
 - (int) numFamDisplayed;
+- (int) numFamAll;
 
 @end

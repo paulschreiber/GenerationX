@@ -22,6 +22,7 @@
 - (id)init: (int) my_level : (NSString*) my_type : (NSString*) my_value;
 - (NSString*) fieldValue;
 - (NSString*) fieldType;
+- (NSString*) textValue;
 - (BOOL) needSave;
 - (void) setFieldType: (NSString*) my_type;
 - (void) setFieldValue: (NSString*) my_value;
@@ -31,6 +32,7 @@
 - (GCField*) subfieldAtIndex: (int) index;
 - (GCField*) eventAtIndex: (int) index;
 - (GCField*) subfieldWithType: (NSString*) my_type;
+- (NSMutableArray*) subfieldsWithType: (NSString*) my_type;
 - (NSMutableArray*) valuesOfSubfieldsWithType: (NSString*) my_type;
 - (NSString*) valueOfSubfieldWithType: (NSString*) my_type;
 - (GCField*) lastField;

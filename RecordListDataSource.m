@@ -50,8 +50,6 @@
 - (void) setIndiFilter: (NSString*) my_filter
 {
   int i;
-//DEBUG
-// NSLog( @"setFilter" );
   
   [indi_filter release];
   indi_filter = [my_filter retain];
@@ -63,20 +61,20 @@
       [displayed_indi addObject: [ged indiAtIndex: i]];
   else
   {
+    // Case insensitive comparison of lastname
     for( i = 0; i < [ged numIndividuals]; i++ )
-      if( [[[ged indiAtIndex: i] lastName] hasPrefix: indi_filter] )
+      if( [[[[ged indiAtIndex: i] lastName] lowercaseString] hasPrefix: [indi_filter lowercaseString]] )
         [displayed_indi addObject: [ged indiAtIndex: i]];
-        
-    if( sort )
-      [displayed_indi sortUsingSelector: @selector(compare:)];
+
+//BCH
+/*    if( sort )
+      [displayed_indi sortUsingSelector: @selector(compare:)];*/
   }
 }
 
 - (void) setFamFilter: (NSString*) my_filter
 {
   int i;
-//DEBUG
-// NSLog( @"setFilter" );
   
   [fam_filter release];
   fam_filter = [my_filter retain];
@@ -87,12 +85,15 @@
     for( i = 0; i < [ged numFamilies]; i++ )
       [displayed_fam addObject: [ged famAtIndex: i]];
   else
+    // Case insensitive comparison
     for( i = 0; i < [ged numFamilies]; i++ )
-      if( [[[[ged famAtIndex: i] husband: ged]  lastName] hasPrefix: fam_filter]
-       || [[[[ged famAtIndex: i] wife: ged]  lastName] hasPrefix: fam_filter] )
+      if( [[[[[ged famAtIndex: i] husband: ged]  lastName] lowercaseString] hasPrefix: fam_filter]
+       || [[[[[ged famAtIndex: i] wife: ged]  lastName] lowercaseString] hasPrefix: fam_filter] )
         [displayed_fam addObject: [ged famAtIndex: i]];
 }
 
+// Make the content of displayed_indi and displayed_fam
+// coherent with the filters and sort orders
 - (void) refresh
 {
   int i;
@@ -108,9 +109,6 @@
     for( i = 0; i < [ged numIndividuals]; i++ )
       if( [[[ged indiAtIndex: i] lastName] hasPrefix: indi_filter] )
         [displayed_indi addObject: [ged indiAtIndex: i]];
-
-    if( sort )
-      [displayed_indi sortUsingSelector: @selector(compare:)];
   }
         
   if( [fam_filter isEqual: @""] )
@@ -123,7 +121,7 @@
         [displayed_fam addObject: [ged famAtIndex: i]];
 }
 
-- (void) refreshINDI
+- (void) refreshIndis
 {
   int i;
   
@@ -143,7 +141,7 @@
   }
 }
 
-- (void) refreshFAM
+- (void) refreshFams
 {
   int i;
   
@@ -157,6 +155,81 @@
       if( [[[[ged famAtIndex: i] husband: ged] lastName] hasPrefix: fam_filter]
        || [[[[ged famAtIndex: i] wife: ged] lastName] hasPrefix: fam_filter] )
         [displayed_fam addObject: [ged famAtIndex: i]];
+}
+
+
+static int compareIndisUsingSortInfo( id p1, id p2, void* context )
+{
+  TableSortInfo*	sortInfo = context;
+  NSString*			columnId = [sortInfo columnId];
+  BOOL				descending = [sortInfo descending];
+  INDI*				indi1 = p1;
+  INDI*				indi2 = p2;
+  int				result;
+
+  if( [columnId isEqualToString: @"givenName"] )
+  {
+    if( descending )
+      result =  [[indi2 firstName] caseInsensitiveCompare: [indi1 firstName]];
+    else
+      result =  [[indi1 firstName] caseInsensitiveCompare: [indi2 firstName]];
+  }
+  else if( [columnId isEqualToString: @"surname"] )
+  {
+    if( descending )
+      result =  [[indi2 lastName] caseInsensitiveCompare: [indi1 lastName]];
+    else
+      result =  [[indi1 lastName] caseInsensitiveCompare: [indi2 lastName]];
+  }
+  
+  return result;
+}
+
+- (void) sortIndisUsingFieldId: (id)fieldId
+descending: (BOOL) sortDescending;
+{
+  TableSortInfo*	sortInfo =
+    [[TableSortInfo alloc] initWithColumnId: fieldId withDescending: sortDescending withGCFile: ged];
+  [displayed_indi sortUsingFunction: compareIndisUsingSortInfo context: sortInfo];
+  [sortInfo release];
+}
+
+
+static int compareFamsUsingSortInfo( id p1, id p2, void* context )
+{
+  TableSortInfo*	sortInfo = context;
+  NSString*			columnId = [sortInfo columnId];
+  BOOL				descending = [sortInfo descending];
+  GCFile*			gcFile = [sortInfo gcFile];
+  FAM*				fam1 = p1;
+  FAM*				fam2 = p2;
+  int				result;
+
+  if( [columnId isEqualToString: @"husband"] )
+  {
+    if( descending )
+      result =  [[[fam2 husband: gcFile] lastName] caseInsensitiveCompare: [[fam1 husband: gcFile] lastName]];
+    else
+      result =  [[[fam1 husband: gcFile] lastName] caseInsensitiveCompare: [[fam2 husband: gcFile] lastName]];
+  }
+  else if( [columnId isEqualToString: @"wife"] )
+  {
+    if( descending )
+      result =  [[[fam2 wife: gcFile] lastName] caseInsensitiveCompare: [[fam1 wife: gcFile] lastName]];
+    else
+      result =  [[[fam1 wife: gcFile] lastName] caseInsensitiveCompare: [[fam2 wife: gcFile] lastName]];
+  }
+  
+  return result;
+}
+
+- (void) sortFamsUsingFieldId: (id)fieldId
+descending: (BOOL) sortDescending;
+{
+  TableSortInfo*	sortInfo =
+    [[TableSortInfo alloc] initWithColumnId: fieldId withDescending: sortDescending withGCFile: ged];
+  [displayed_fam sortUsingFunction: compareFamsUsingSortInfo context: sortInfo];
+  [sortInfo release];
 }
 
 - (void) setSort: (BOOL) my_sort
@@ -174,7 +247,7 @@
   return [displayed_fam objectAtIndex: index];
 }
 
-// assume argument is a [INDI fullName]
+// 
 - (int) indexForIndi: (INDI*) indi
 {
   int i;
@@ -187,10 +260,23 @@
   return -1;
 }
 
+// 
+- (int) indexForFam: (FAM*) fam
+{
+  int i;
+  for( i = 0; i < [displayed_fam count]; i++ )
+  {
+    if( [[displayed_fam objectAtIndex: i] isEqual: fam] )
+      return i;
+  }
+  
+  return -1;
+}
+
 //
 // NSTableDataSource methods
 //
-- (int)numberOfRowsInTableView:(NSTableView*)aTableView
+- (int)numberOfRowsInTableView: (NSTableView*)aTableView
 {
   if( [aTableView tag] == 0 )
     return [displayed_indi count];
@@ -198,35 +284,51 @@
     return [displayed_fam count];
 }
 
-- (id)tableView:(NSTableView *)aTableView
-  objectValueForTableColumn:(NSTableColumn *)aTableColumn
-  row:(int)rowIndex
+- (id)tableView: (NSTableView *)aTableView
+  objectValueForTableColumn: (NSTableColumn *)aTableColumn
+  row: (int)rowIndex
 {
-  NSMutableString* result = [[NSMutableString alloc] init];
-  INDI* tmp;
+  NSMutableString* 	result = [[NSMutableString alloc] init];
+  NSString* 		columnId = [aTableColumn identifier];
+  INDI* 			indi;
   
   if( [aTableView tag] == 0 )
   {
-    [result setString: [[displayed_indi objectAtIndex: rowIndex] lastName]];
-    [result appendString: @", "];
-    [result appendString:
-             [[displayed_indi objectAtIndex: rowIndex] firstName]];
-  }
-  else
-  {
-    if( tmp = [[displayed_fam objectAtIndex: rowIndex] husband: ged] )
-      [result setString: [tmp lastName]];
-    else
-      [result setString: @"?"];
-    if( tmp = [[displayed_fam objectAtIndex: rowIndex] wife: ged] )
+    // First column
+    if( [columnId isEqualToString: @"givenName"] )
     {
-      [result appendString: @"/"];
-      [result appendString: [tmp lastName]];
+      indi = [displayed_indi objectAtIndex: rowIndex];
+      [result setString: [indi firstName]];
     }
-    else
-      [result appendString: @"/?"];
+    // Second column
+    else if( [columnId isEqualToString: @"surname"] )
+    {
+      indi = [displayed_indi objectAtIndex: rowIndex];
+      [result setString: [indi lastName]];
+    }
   }
-    
+  else if( [aTableView tag] == 1 )
+  {
+    // First column
+    if( [columnId isEqualToString: @"wife"] )
+    {
+      indi = [[displayed_fam objectAtIndex: rowIndex] wife: ged];
+      if( indi )
+        [result setString: [indi lastName]];
+      else
+        [result setString: @"?"];
+    }
+    // Second column
+    else if( [columnId isEqualToString: @"husband"] )
+    {
+      indi = [[displayed_fam objectAtIndex: rowIndex] husband: ged];
+      if( indi )
+        [result setString: [indi lastName]];
+      else
+        [result setString: @"?"];
+    }      
+  }
+  
   return result;
 }
 
@@ -235,9 +337,19 @@
   return [displayed_indi count];
 }
 
+- (int) numIndiAll
+{
+  return [ged numIndividuals];
+}
+
 - (int) numFamDisplayed
 {
   return [displayed_fam count];
+}
+
+- (int) numFamAll
+{
+  return [ged numFamilies];
 }
 
 @end

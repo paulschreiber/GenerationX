@@ -56,10 +56,17 @@
 
 - (void) handleOk: (id) sender
 {
+  NSNotificationCenter*		appNotificationCenter;
+
   [[NoteController sharedNote] process];
   
   [note_window orderOut: self];
   [[NSApplication sharedApplication] endSheet: [[NoteController sharedNote] window]];
+  
+  // Send a notification to the notification center
+  appNotificationCenter = [NSNotificationCenter defaultCenter];
+  [appNotificationCenter 	postNotificationName: @"GenXNoteAdded"
+                            object: self];
 }
 
 - (void) handleCancel: (id) sender
