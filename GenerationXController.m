@@ -522,6 +522,9 @@
     // FAM View Mode
     [self updateFamViewWithFam: selectedFam];
             
+    // RawPanel
+    [[RawPanelController sharedRawPanel] setDataField: selectedFam];
+
     // Current fam and event
     current_record = selectedFam;
     current_event = nil;
