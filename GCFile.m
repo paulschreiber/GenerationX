@@ -422,6 +422,7 @@
     indi_lastname = [tmp_indi lastName];
     if( [indi_lastname isEqual: @"?"] )
     {
+      NSMutableString* indi_name = [[NSMutableString alloc] init];
       name_scanner = [NSScanner scannerWithString:
                      [tmp_indi valueOfSubfieldWithType: @"NAME"]];
                      
@@ -430,7 +431,6 @@
       //gc_tmp = [tmp_indi addSubfield: @"SURN": indi_lastname];
       //pmh This works for export but it does not show on the display!!!!
       //pmh Therefore fetch the originale NAME in NEW var and append to it
-      NSMutableString* indi_name = [[NSMutableString alloc] init];
       [name_scanner scanUpToString: @"/"
         intoString: &tmp];      
       
