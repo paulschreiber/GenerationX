@@ -74,7 +74,7 @@
   NSMutableArray* result = [[NSMutableArray alloc] init];
   int i = 0;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
   {    if( [[[subfields objectAtIndex: i] fieldType] isEqual: @"FAMS"] 
      && [my_ged famWithLabel: [[subfields objectAtIndex: i] fieldValue]] )
       [result addObject: [my_ged famWithLabel: [[subfields objectAtIndex: i] fieldValue]]];

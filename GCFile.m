@@ -110,32 +110,32 @@
 
 - (int) numRecords
 {
-  return (num_indi + num_fam + num_other);;
+  return ([individuals count] + [families count] + [other_fields count]);
 }
 
 - (int) numFamilies
 {
-  return num_fam;
+  return [families count];
 }
 
 - (int) numOthers
 {
-  return num_other;
+  return [other_fields count];
 }
 
 - (int) numIndividuals
 {
-  return num_indi;
+  return [individuals count];
 }
 
 - (GCField*) recordAtIndex: (int) index
 {
-  if( index < num_indi )
+  if( index < [individuals count] )
     return [individuals objectAtIndex: index];
-  else if( index < ( num_indi + num_fam ) )
-    return [families objectAtIndex: (index - num_indi)];
+  else if( index < ( [individuals count] + [families count] ) )
+    return [families objectAtIndex: (index - [individuals count])];
   else
-    return [other_fields objectAtIndex: (index - (num_indi + num_fam))];
+    return [other_fields objectAtIndex: (index - ([individuals count] + [families count]))];
 }
 
 - (INDI*) indiAtIndex: (int) index
@@ -149,7 +149,7 @@
   int i, j;
   j = 0;
   
-  for( i = 0; i < num_indi; i++ )
+  for( i = 0; i < [individuals count]; i++ )
   {
     if( [[[individuals objectAtIndex: i] sex] isEqual: @"M"] )
     {
@@ -169,7 +169,7 @@
   int i, j;
   j = 0;
   
-  for( i = 0; i < num_indi; i++ )
+  for( i = 0; i < [individuals count]; i++ )
   {
     if( [[[individuals objectAtIndex: i] sex] isEqual: @"F"] )
     {
@@ -215,7 +215,7 @@
   int i = 0;
   INDI* result;
   
-  for( i = 0; i < num_indi; i++ )
+  for( i = 0; i < [individuals count]; i++ )
   {
     result = [individuals objectAtIndex: i];
     if( [[result fieldValue] isEqual: my_label] )
@@ -231,7 +231,7 @@
   int i = 0;
   FAM* result;
   
-  for( i = 0; i < num_fam; i++ )
+  for( i = 0; i < [families count]; i++ )
   {
     result = [families objectAtIndex: i];
     if( [[result fieldValue] isEqual: my_label] )
@@ -247,7 +247,7 @@
   int i = 0;
   GCField* result;
   
-  for( i = 0; i < num_other; i++ )
+  for( i = 0; i < [other_fields count]; i++ )
   {
     result = [other_fields objectAtIndex: i];
     if( [[result fieldValue] isEqual: my_label] )
@@ -286,7 +286,7 @@
     return result;
   
   // for each persoon
-  for( i = 0; i < num_indi; i++ )
+  for( i = 0; i < [individuals count]; i++ )
   {
     tmp_indi = [individuals objectAtIndex: i];
     
@@ -316,7 +316,7 @@
   INDI* tmp_indi;
   int i = 0;
 
-  for( i = 0; i < num_indi; i++ )
+  for( i = 0; i < [individuals count]; i++ )
   {
     tmp_indi = [individuals objectAtIndex: i];
     
@@ -335,7 +335,7 @@
   int i = 0;
   INDI* result;
   
-  for( i = 0; i < num_indi; i++ )
+  for( i = 0; i < [individuals count]; i++ )
   {
     result = [individuals objectAtIndex: i];
     if( [[result fullName] isEqual: my_name] )
@@ -355,7 +355,7 @@
   int i, j, k;
   BOOL match;
   
-  for( i = 0; i < num_fam; i++ )
+  for( i = 0; i < [families count]; i++ )
   {
     tmp_husb = [[families objectAtIndex: i] husband: self];
     tmp_wife = [[families objectAtIndex: i] wife: self];
@@ -421,7 +421,7 @@
   NSScanner* name_scanner;
   NSString* tmp;
   
-  for( i = 0; i < num_indi; i++ ) {
+  for( i = 0; i < [individuals count]; i++ ) {
     tmp_indi = [individuals objectAtIndex: i];
     //[indi_lastname setString: [tmp_indi lastName]];
     indi_lastname = [tmp_indi lastName];
@@ -551,7 +551,7 @@
     INDI* record = my_field;
     
     // first delete all references to the record
-    for( i = 0; i < num_fam; i++ )
+    for( i = 0; i < [families count]; i++ )
     {
       tmp = [families objectAtIndex: i];
       [tmp removeSubfieldWithType: @"HUSB" Value: [record fieldValue]];
@@ -574,7 +574,7 @@
     FAM* record = my_field;
     
     // first delete all references to the record
-    for( i = 0; i < num_indi; i++ )
+    for( i = 0; i < [individuals count]; i++ )
     {
       tmp = [individuals objectAtIndex: i];
       [tmp removeSubfieldWithType: @"FAMS" Value: [record fieldValue]];
@@ -620,9 +620,9 @@
 // sort the list of INDI records alphabetically by surname
 - (void) sortData
 {
-  if( num_indi > 0 )
+  if( [individuals count] > 0 )
     [individuals sortUsingSelector: @selector(compare:)];
-  if( num_fam > 0 )
+  if( [families count] > 0 )
     [families sortUsingSelector: @selector(compare:)];
 }
 
@@ -731,15 +731,15 @@
   }
   
   // now do the save
-  for( i = 0; i < num_indi; i++ )
+  for( i = 0; i < [individuals count]; i++ )
   {
     [out_text appendString: [[individuals objectAtIndex: i] dataForFile]];
   }
-  for( i = 0; i < num_fam; i++ )
+  for( i = 0; i < [families count]; i++ )
   {
     [out_text appendString: [[families objectAtIndex: i] dataForFile]];
   }
-  for( i = 1; i < num_other; i++ )
+  for( i = 1; i < [other_fields count]; i++ )
   {
     if( ! [[[other_fields objectAtIndex: i] fieldType] isEqualToString: @"TRLR"] )
       [out_text appendString: [[other_fields objectAtIndex: i] dataForFile]];

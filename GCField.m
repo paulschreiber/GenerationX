@@ -46,7 +46,7 @@
   
   need_save = b;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
     [[subfields objectAtIndex: i ] setNeedSave: b];
 }
 
@@ -71,7 +71,7 @@
   NSMutableString* result = [[NSMutableString alloc] initWithString: [self fieldValue]];
   int i = 0;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
     if( [[[subfields objectAtIndex: i] fieldType] isEqualToString: @"CONT"] )
     {
       [result appendString: @"\n"];
@@ -98,7 +98,7 @@
   if( need_save )
     return true;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
     if( [[subfields objectAtIndex: i ] needSave] )
       return true;
       
@@ -107,14 +107,14 @@
 
 - (int) numSubfields
 {
-  return num_subfields;
+  return [subfields count];
 }
 
 - (GCField*) eventAtIndex: (int) index
 {
   int i;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
   {
     if( [[subfields objectAtIndex: i] isEvent] )
       index--;
@@ -137,7 +137,7 @@
 {
   GCField* result;
   int i;
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
   {
     result = [subfields objectAtIndex: i];
     if( [[result fieldType] isEqual: my_type] )
@@ -152,7 +152,7 @@
   NSMutableArray* result = [[NSMutableArray alloc] init];
   int i = 0;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
   {
     if( [[[subfields objectAtIndex: i] fieldType] isEqual: my_type] )
       [result addObject: [subfields objectAtIndex: i]];
@@ -168,7 +168,7 @@
   NSMutableArray* result = [[NSMutableArray alloc] init];
   int i = 0;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
   {
     if( [[[subfields objectAtIndex: i] fieldType] isEqual: my_type] )
       [result addObject: [[subfields objectAtIndex: i] fieldValue]];
@@ -185,7 +185,7 @@
 {
   NSString* tmp;
   int i;
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
   {
     tmp = [[subfields objectAtIndex: i] fieldType];
     if( [tmp isEqual: my_type] )
@@ -231,7 +231,7 @@
   if( !my_value )
     my_value = @"";
 
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
   {
     GCField* tmp = [subfields objectAtIndex: i];
     if( [[tmp fieldType] isEqual: my_type]
@@ -285,7 +285,7 @@
     [result appendString: @"\n"];
   } 
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
     [result appendString:
              [[subfields objectAtIndex: i] dataForFile]];
     
@@ -379,7 +379,7 @@
 {
   int i, result = 0;
   
-  for( i = 0; i < num_subfields; i++ )
+  for( i = 0; i < [subfields count]; i++ )
     if( [[subfields objectAtIndex: i] isEvent] )
       result++;
       

@@ -168,8 +168,9 @@
   {
     [html_text appendString: @" | <a href=\"mailto: "];
     [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
-    [html_text appendString: @"\">Contact</a><p>\n"];
+    [html_text appendString: @"\">Contact</a>\n"];
   }
+  [html_text appendString: @"<p>"];
   // for each surname in the database
   for( i = 0; i < [surnames count]; i++ )
   {
@@ -239,8 +240,9 @@
   {
     [html_text appendString: @" | <a href=\"mailto: "];
     [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
-    [html_text appendString: @"\">Contact</a><p>\n"];
+    [html_text appendString: @"\">Contact</a>\n"];
   }
+  [html_text appendString: @"<p>"];
   for( i = 0; i < [alpha length]; i++ )
   {
     prefix = [[alpha substringFromIndex: i] substringToIndex: 1];
@@ -361,8 +363,9 @@
     {
       [html_text appendString: @" | <a href=\"mailto: "];
       [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
-      [html_text appendString: @"\">Contact</a><p>\n"];
+      [html_text appendString: @"\">Contact</a>\n"];
     }
+    [html_text appendString: @"<p>"];
     for( j = 0; j < [indis count]; j++ )
     {
       indi = [indis objectAtIndex: j];
