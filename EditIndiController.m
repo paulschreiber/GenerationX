@@ -30,9 +30,9 @@
 // preload the dialog with data from the record being passed in
 - (void) prepForDisplay: (id) my_ged: (id) my_field
 {
+  GCField* gc_tmp;
   ged = my_ged;
   field = my_field;
-  GCField* gc_tmp;
     
   [first_name setStringValue: @""];
   [last_name setStringValue: @""];
@@ -1234,7 +1234,7 @@
 {
   return new_indi_window;
 }
-
+/*
 //
 // NSTextField delegate methods
 //
@@ -1275,5 +1275,5 @@
   else if( [[aNotification object] isEqual: death_place] )
     [[GenXUtil sharedUtil] updateRecentPlacesWithString: [death_place stringValue]];
 }
-
+*/
 @end

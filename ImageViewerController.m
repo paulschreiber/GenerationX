@@ -29,6 +29,9 @@ static ImageViewerController* shared_viewer = nil;
   NSBrowserCell*	prototypeCell;
   NSTableColumn*	tableColumn;
   
+  // Notification observer
+  NSNotificationCenter*		appNotificationCenter;
+
   // BrowserCell creation
   prototypeCell = [[NSBrowserCell alloc] init];
   [prototypeCell setLeaf: YES];
@@ -40,9 +43,6 @@ static ImageViewerController* shared_viewer = nil;
   [imageOutline setDelegate: self];
   [imageOutline setDataSource: self];
   
-  // Notification observer
-  NSNotificationCenter*		appNotificationCenter;
-
   // Register the current object as an observer
   appNotificationCenter = [NSNotificationCenter defaultCenter];
 
