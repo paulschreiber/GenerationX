@@ -40,5 +40,7 @@
 - (void) removeSubfieldWithType: (NSString*) my_type Value: (NSString*) my_value;
 - (BOOL) isIdentical: (GCField*)my_field;
 - (BOOL) isEvent;
+- (void) sortEvents;
+- (NSComparisonResult) eventCompare: (GCField*) my_field;
 
 @end

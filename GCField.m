@@ -309,6 +309,37 @@
   return false;
 }
 
+- (void) sortEvents
+{
+  [subfields sortUsingSelector: @selector( eventCompare: )];
+}
+
+- (NSComparisonResult) eventCompare: (GCField*) my_field
+{
+  NSDate* date1, *date2;
+  NSString* date1_str, *date2_str;
+  
+  // if they both have a DATE, do a compare
+  if( ( date1_str = [self valueOfSubfieldWithType: @"DATE"] )
+   && ( date2_str = [my_field valueOfSubfieldWithType: @"DATE"] ) )
+  {
+    date1 = [NSDate dateWithNaturalLanguageString: date1_str];
+    date2 = [NSDate dateWithNaturalLanguageString: date2_str];
+    return [date1 compare: date2];
+  }
+  // if only one has a date, that one goes first
+  else if( date1_str = [self valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedAscending;
+  else if( date2_str = [my_field valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedDescending;
+  // otherwise we'll just go alpha for now
+  // alpha by GEDCOM, *not* alpha by natural language
+  else
+  {
+    return [[self fieldType] compare: [my_field fieldType]]; 
+  }
+}
+
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
   int i, result = 0;

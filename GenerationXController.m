@@ -341,6 +341,8 @@
     current_event = nil;
   }
 
+  if( [[PreferencesController sharedPrefs] sortEvents] )
+    [current_record sortEvents];
   [event_list setDataSource: current_record];
 }
 
@@ -413,6 +415,8 @@
   current_record = selected;
   current_event = nil;
 
+  if( [[PreferencesController sharedPrefs] sortEvents] )
+    [current_record sortEvents];
   [event_list setDataSource: current_record];
 }
 

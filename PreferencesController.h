@@ -10,6 +10,7 @@
     IBOutlet NSTextField* default_file_text;
     IBOutlet NSButton*    sort_records_button;
     IBOutlet NSButton*    sort_filtered_button;
+    IBOutlet NSButton*    sort_events_button;
 }
 
 + (PreferencesController*) sharedPrefs;
@@ -30,6 +31,9 @@
 - (void) setUserName: (NSString*) my_user_name;
 - (int) lastVersionCheck;
 - (void) setLastVersionCheck: (int) my_auto_save;
+- (BOOL) sortEvents;
+- (void) setSortEvents: (BOOL) my_sort;
+
 //- (void) savePrefs;
 
 @end

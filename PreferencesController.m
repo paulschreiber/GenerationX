@@ -28,6 +28,8 @@
     [defaults setObject: [NSNumber numberWithInt: 0] forKey: @"AUTO_SAVE"];
   if( ![preferences stringForKey: @"USER_NAME"] )
     [defaults setObject: @"GenerationX User" forKey: @"USER_NAME"];
+  if( ![preferences stringForKey: @"SORT_EVENTS"] )
+    [defaults setObject: [NSNumber numberWithBool: true] forKey: @"SORT_EVENTS"];
   
   [preferences registerDefaults: defaults];
   
@@ -45,6 +47,11 @@
     [sort_filtered_button setState: NSOnState];
   else
     [sort_filtered_button setState: NSOffState];
+
+  if( [preferences boolForKey: @"SORT_EVENTS"] )
+    [sort_events_button setState: NSOnState];
+  else
+    [sort_events_button setState: NSOffState];
 
   return self;
 }  
@@ -101,6 +108,11 @@
     [[PreferencesController sharedPrefs] setSortFiltered: true];
   else
     [[PreferencesController sharedPrefs] setSortFiltered: false];
+
+  if( [sort_events_button state] == NSOnState )
+    [[PreferencesController sharedPrefs] setSortEvents: true];
+  else
+    [[PreferencesController sharedPrefs] setSortEvents: false];
 
 //  [[PreferencesController sharedPrefs] savePrefs];
   [pref_window orderOut: self];
@@ -170,6 +182,17 @@
 {
   [preferences setInteger: my_version_check forKey: @"LAST_VERSION_CHECK"];
 }
+
+- (BOOL)sortEvents
+{
+  return [preferences boolForKey: @"SORT_EVENTS"];
+}
+
+- (void) setSortEvents: (BOOL) my_sort
+{
+  [preferences setBool: my_sort forKey: @"SORT_EVENTS"];
+}
+
 
 /*
 - (void) savePrefs
