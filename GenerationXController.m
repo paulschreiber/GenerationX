@@ -560,18 +560,14 @@
   if( [[PreferencesController sharedPrefs] sortRecords] )
     [ged sortData];*/
       
-  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
-  {
-    [recordListDataSource refreshIndis];
-    [self handleIndiSelectionChanged: nil];
-    [indiListController reloadData];
-  }
-  else
-  {
-    [recordListDataSource refreshFams];
-    [self handleFamSelectionChanged: nil];
-    [famListController reloadData];
-  }
+  [recordListDataSource refreshIndis];
+  [self handleIndiSelectionChanged: nil];
+  [indiListController reloadData];
+
+  [recordListDataSource refreshFams];
+  [self handleFamSelectionChanged: nil];
+  [famListController reloadData];
+
 
   [event_list reloadData];
 }
