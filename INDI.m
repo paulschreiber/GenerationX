@@ -100,18 +100,9 @@
     name_scanner = [NSScanner scannerWithString:
                   [self valueOfSubfieldWithType: @"NAME"]];
   
-    [name_scanner setCharactersToBeSkipped:
-      [[NSCharacterSet alphanumericCharacterSet] invertedSet]];                   
-  
-    // 020818 fix for bug 596872
-    // for NAME first/last/ scanning for " /" doesn't work
-    // so look for a space first, then if there are any /'s
-    // in the result, scan again up to the /
-    [name_scanner scanUpToString: @" "
-      intoString: &result];
-    [name_scanner initWithString: result];
     [name_scanner scanUpToString: @"/"
       intoString: &result];
+    result = [result stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceCharacterSet]];
   }
         
   if( [result isEqual: @""] )
@@ -136,19 +127,21 @@
     // otherwise we have to extract it from the NAME field
     name_scanner = [NSScanner scannerWithString:
                               [self valueOfSubfieldWithType: @"NAME"]];                            
-    [name_scanner setCharactersToBeSkipped:
-      [[NSCharacterSet alphanumericCharacterSet] invertedSet]];                   
+//    [name_scanner setCharactersToBeSkipped:
+//      [[NSCharacterSet alphanumericCharacterSet] invertedSet]];                   
     [name_scanner scanUpToString: @"/"
+      intoString: nil];
+    [name_scanner scanString: @"/"
       intoString: nil];
 
 // 030131 pmh
-    [name_scanner scanCharactersFromSet: [NSCharacterSet alphanumericCharacterSet]
-      intoString: &result];
-//    [name_scanner scanUpToString: @"/"
+//    [name_scanner scanCharactersFromSet: [NSCharacterSet alphanumericCharacterSet]
 //      intoString: &result];
+    [name_scanner scanUpToString: @"/"
+      intoString: &result];
 // pmh
   }
-            
+  
   if( [result isEqual: @""] )
     return @"?";
     
@@ -812,12 +805,12 @@
   [result appendString: @"<tr><td bgcolor=\"#CCCCCC\"><b>Images</b><tr><td>\n"];
   for( i = 0; i < [images count]; i++ )
   {
-    tmp = [images objectAtIndex: i];
-    if( [tmp subfieldWithType: @"FORM"] && [tmp subfieldWithType: @"FILE"]
-     && [[tmp valueOfSubfieldWithType: @"FORM"] isEqualToString: @"jpeg"] )
+    gc_tmp = [images objectAtIndex: i];
+    if( [gc_tmp subfieldWithType: @"FORM"] && [gc_tmp subfieldWithType: @"FILE"]
+     && [[gc_tmp valueOfSubfieldWithType: @"FORM"] isEqualToString: @"jpeg"] )
     {
       [result appendString: @"<p><img src=\"file://"];
-      [result appendString: [tmp valueOfSubfieldWithType: @"FILE"]];
+      [result appendString: [gc_tmp valueOfSubfieldWithType: @"FILE"]];
       [result appendString: @"\">\n"];
     }
   }
