@@ -201,6 +201,7 @@
 				F5ED29B10263DDAF017FBCAC,
 				F53E630D03843FB601045C00,
 				F53E63100384403001045C00,
+				F52B8C8E03E9E89F0160306E,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -293,9 +294,15 @@
 	<key>CFBundleExecutable</key>
 	<string>GenerationX</string>
 	<key>CFBundleGetInfoString</key>
-	<string>2.2b1</string>
+	<string>2.3b1</string>
+	<key>CFBundleHelpBookFolder</key>
+	<string>GenerationX_Help</string>
+	<key>CFBundleHelpBookName</key>
+	<string>GenerationX Help</string>
 	<key>CFBundleIconFile</key>
 	<string>genx.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>GenerationX</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -303,11 +310,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2b1</string>
+	<string>2.3b1</string>
 	<key>CFBundleSignature</key>
 	<string>GENX</string>
 	<key>CFBundleVersion</key>
-	<string>2.2b1</string>
+	<string>2.3b1</string>
 	<key>NSMainNibFile</key>
 	<string>GenerationX</string>
 	<key>NSPrincipalClass</key>
@@ -386,6 +393,7 @@
 				F50A588A0383844C01DEAC4F,
 				F53E630F03843FB601045C00,
 				F53E63120384403001045C00,
+				F52B8C9203E9E89F0160306E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -737,6 +745,18 @@
 		};
 		F51E57E9023EF3C601E25AE0 = {
 			fileRef = F51E57E7023EF3C601E25AE0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F52B8C8E03E9E89F0160306E = {
+			includeInIndex = 1;
+			isa = PBXFolderReference;
+			path = GenerationX_Help;
+			refType = 4;
+		};
+		F52B8C9203E9E89F0160306E = {
+			fileRef = F52B8C8E03E9E89F0160306E;
 			isa = PBXBuildFile;
 			settings = {
 			};
