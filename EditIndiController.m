@@ -1151,15 +1151,15 @@
   // BIRT
   if( gc_tmp = [[added subfieldWithType: @"BIRT"] subfieldWithType: @"DATE"] )
     [gc_tmp setFieldValue: [NSString stringWithString: birth_str]];
-  else if( ![tmp isEqual: @""] && ( gc_tmp = [added subfieldWithType: @"BIRT"] ) )
+  else if( ![tmp isEqualToString: @""] && ( gc_tmp = [added subfieldWithType: @"BIRT"] ) )
     [gc_tmp addSubfield: @"DATE": [NSString stringWithString: birth_str]];
-  else if( ![tmp isEqual: @""] )
+  else if( ![birth_str isEqualToString: @""] )
   {
     gc_tmp = [added addSubfield: @"BIRT": @""];
     [gc_tmp addSubfield: @"DATE": [NSString stringWithString: birth_str]];
   }
   
-  if( ! [[birth_place stringValue] isEqual: @""] )
+  if( ! [[birth_place stringValue] isEqualToString: @""] )
   {
     if( ! [added subfieldWithType: @"BIRT"] )
       gc_tmp = [added addSubfield: @"BIRT": @""];
@@ -1175,15 +1175,15 @@
   // DEAT
   if( gc_tmp = [[added subfieldWithType: @"DEAT"] subfieldWithType: @"DATE"] )
     [gc_tmp setFieldValue: [NSString stringWithString: death_str]];
-  else if( ![tmp isEqual: @""] && ( gc_tmp = [added subfieldWithType: @"DEAT"] ) )
+  else if( ![tmp isEqualToString: @""] && ( gc_tmp = [added subfieldWithType: @"DEAT"] ) )
     [gc_tmp addSubfield: @"DATE": [NSString stringWithString: death_str]];
-  else if( ![tmp isEqual: @""] )
+  else if( ![death_str isEqualToString: @""] )
   {
     gc_tmp = [added addSubfield: @"DEAT": @""];
     [gc_tmp addSubfield: @"DATE": [NSString stringWithString: death_str]];
   }
   
-  if( ! [[death_place stringValue] isEqual: @""] )
+  if( ! [[death_place stringValue] isEqualToString: @""] )
   {
     if( ! [added subfieldWithType: @"DEAT"] )
       gc_tmp = [added addSubfield: @"DEAT": @""];
