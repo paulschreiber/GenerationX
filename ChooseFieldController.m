@@ -86,18 +86,21 @@
   objectValueForTableColumn:(NSTableColumn *)aTableColumn
   row:(int)rowIndex
 {
-  NSMutableString* tmp = [[NSMutableString alloc] init];
+  NSMutableString* tmp = [[NSMutableString alloc] initWithString: @""];
+  INDI* gc_tmp;
   
   if( [[[fields objectAtIndex: rowIndex] fieldType] isEqual: @"INDI"] )
   {
-    [tmp setString: [[fields objectAtIndex: rowIndex] fullName]];
+    [tmp appendString: [[fields objectAtIndex: rowIndex] fullName]];
     [tmp appendString: [[fields objectAtIndex: rowIndex] lifespan]];
   }
   else
   {
-    [tmp setString: [[[fields objectAtIndex: rowIndex] husband: ged] fullName]];
+    if( gc_tmp = [[fields objectAtIndex: rowIndex] husband: ged] )
+      [tmp appendString: [gc_tmp fullName]];
     [tmp appendString: @"/"];
-    [tmp appendString: [[[fields objectAtIndex: rowIndex] wife: ged] fullName]];
+    if( gc_tmp = [[fields objectAtIndex: rowIndex] wife: ged] )
+      [tmp appendString: [gc_tmp fullName]];
   }
   
   return tmp;
