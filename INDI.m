@@ -670,11 +670,13 @@
 
 - (NSString*) htmlSummary: (id) my_ged
 {
+  GCField* gc_tmp;
   NSString* tmp;
   INDI* tmp_indi;
   NSArray* spice = [self spouseFamilies: my_ged];
   NSArray* children;
   NSArray* notes = [self valuesOfSubfieldsWithType: @"NOTE"];
+  NSArray* images = [self subfieldsWithType: @"OBJE"];
   int i, j;
   NSMutableString* result = [[NSMutableString alloc] init];
   
@@ -774,7 +776,6 @@
   }
   [result appendString: @"<tr><td bgcolor=\"#CCCCCC\"><b>Events</b><tr><td>\n"];
   
-  GCField* gc_tmp;
   i = 0;
   while( gc_tmp = [self eventAtIndex: i] )
   {
@@ -805,6 +806,20 @@
       [result appendString: @"<br>\n"];
     }
     i++;
+  }
+
+  // images
+  [result appendString: @"<tr><td bgcolor=\"#CCCCCC\"><b>Images</b><tr><td>\n"];
+  for( i = 0; i < [images count]; i++ )
+  {
+    tmp = [images objectAtIndex: i];
+    if( [tmp subfieldWithType: @"FORM"] && [tmp subfieldWithType: @"FILE"]
+     && [[tmp valueOfSubfieldWithType: @"FORM"] isEqualToString: @"jpeg"] )
+    {
+      [result appendString: @"<p><img src=\"file://"];
+      [result appendString: [tmp valueOfSubfieldWithType: @"FILE"]];
+      [result appendString: @"\">\n"];
+    }
   }
   [result appendString: @"\n"];
   [result appendString: @"\n"];
