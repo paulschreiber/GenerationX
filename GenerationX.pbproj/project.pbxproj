@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 34;
+	objectVersion = 38;
 	objects = {
 		080E96DCFE201CFB7F000001 = {
 			fileRef = 29B97318FDCFA39411CA2CEA;
@@ -16,6 +16,10 @@
 				29B97316FDCFA39411CA2CEA,
 				F5ED4ED70223033D01498337,
 				F5ED4ED80223033D01498337,
+				F5C2F81203830E7D015ADBC2,
+				F5C2F81303830E7D015ADBC2,
+				F5C2F81803830EB6015ADBC2,
+				F5C2F81903830EB6015ADBC2,
 				F5EE8173022B1F85016D13F8,
 				F5EE8174022B1F85016D13F8,
 				F51E57E1023EF39301E25AE0,
@@ -242,15 +246,14 @@
 				29B9732DFDCFA39411CA2CEA,
 			);
 			buildSettings = {
-				DEBUGGING_SYMBOLS = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
-				OPTIMIZATION_CFLAGS = "-O3";
-				OTHER_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = GenerationX;
+				PROFILING_CODE = YES;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = app;
@@ -263,8 +266,8 @@
 			productName = GenerationX;
 			productReference = 17587328FF379C6511CA2CBB;
 			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">
-<plist version=\"0.9\">
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
@@ -284,7 +287,7 @@
 	<key>CFBundleExecutable</key>
 	<string>GenerationX</string>
 	<key>CFBundleGetInfoString</key>
-	<string>2.0b2</string>
+	<string>2.1b1</string>
 	<key>CFBundleIconFile</key>
 	<string>genx.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -294,11 +297,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0b2</string>
+	<string>2.1b1</string>
 	<key>CFBundleSignature</key>
 	<string>GENX</string>
 	<key>CFBundleVersion</key>
-	<string>2.0b2</string>
+	<string>2.1b1</string>
 	<key>NSMainNibFile</key>
 	<string>GenerationX</string>
 	<key>NSPrincipalClass</key>
@@ -329,9 +332,17 @@
 				F5ED4447025D1CE801F8E4C9,
 				F5ED29B60263E074017FBCAC,
 				F5EA592402B711CF014C8190,
+				F5C2F80C03830E4F015ADBC2,
+				F5C2F81003830E68015ADBC2,
+				F5C2F81403830E7D015ADBC2,
+				F5C2F81C03830ED1015ADBC2,
+				F5C2F82003830F43015ADBC2,
+				F5C2F82203830F62015ADBC2,
+				F5C2F82503830F67015ADBC2,
+				F5C2F82803830FC8015ADBC2,
 			);
 			isa = PBXHeadersBuildPhase;
-			name = Headers;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		29B97328FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -359,7 +370,7 @@
 				F5E7974302B837C401AB0A49,
 			);
 			isa = PBXResourcesBuildPhase;
-			name = "Bundle Resources";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		29B9732BFDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -383,9 +394,17 @@
 				F5ED4448025D1CE801F8E4C9,
 				F5ED29B70263E074017FBCAC,
 				F5EA592502B711CF014C8190,
+				F5C2F80D03830E4F015ADBC2,
+				F5C2F81103830E68015ADBC2,
+				F5C2F81503830E7D015ADBC2,
+				F5C2F81D03830ED1015ADBC2,
+				F5C2F82103830F43015ADBC2,
+				F5C2F82303830F63015ADBC2,
+				F5C2F82403830F66015ADBC2,
+				F5C2F82903830FC8015ADBC2,
 			);
 			isa = PBXSourcesBuildPhase;
-			name = Sources;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 		29B9732CFDCFA39411CA2CEA = {
 			fileRef = 29B97316FDCFA39411CA2CEA;
@@ -401,7 +420,7 @@
 				1058C7A3FEA54F0111CA2CBB,
 			);
 			isa = PBXFrameworksBuildPhase;
-			name = "Frameworks & Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 //290
 //291
@@ -606,6 +625,182 @@
 			settings = {
 			};
 		};
+		F5C2F80A03830E4F015ADBC2 = {
+			isa = PBXFileReference;
+			path = AboutBox.h;
+			refType = 4;
+		};
+		F5C2F80B03830E4F015ADBC2 = {
+			isa = PBXFileReference;
+			path = AboutBox.m;
+			refType = 4;
+		};
+		F5C2F80C03830E4F015ADBC2 = {
+			fileRef = F5C2F80A03830E4F015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F80D03830E4F015ADBC2 = {
+			fileRef = F5C2F80B03830E4F015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F80E03830E68015ADBC2 = {
+			isa = PBXFileReference;
+			path = EventController.h;
+			refType = 4;
+		};
+		F5C2F80F03830E68015ADBC2 = {
+			isa = PBXFileReference;
+			path = EventController.m;
+			refType = 4;
+		};
+		F5C2F81003830E68015ADBC2 = {
+			fileRef = F5C2F80E03830E68015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F81103830E68015ADBC2 = {
+			fileRef = F5C2F80F03830E68015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F81203830E7D015ADBC2 = {
+			isa = PBXFileReference;
+			path = FamListController.h;
+			refType = 4;
+		};
+		F5C2F81303830E7D015ADBC2 = {
+			isa = PBXFileReference;
+			path = FamListController.m;
+			refType = 4;
+		};
+		F5C2F81403830E7D015ADBC2 = {
+			fileRef = F5C2F81203830E7D015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F81503830E7D015ADBC2 = {
+			fileRef = F5C2F81303830E7D015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F81603830E9C015ADBC2 = {
+			isa = PBXFileReference;
+			path = ImageViewerController.h;
+			refType = 4;
+		};
+		F5C2F81703830E9C015ADBC2 = {
+			isa = PBXFileReference;
+			path = ImageViewerController.m;
+			refType = 4;
+		};
+		F5C2F81803830EB6015ADBC2 = {
+			isa = PBXFileReference;
+			path = IndiListController.h;
+			refType = 4;
+		};
+		F5C2F81903830EB6015ADBC2 = {
+			isa = PBXFileReference;
+			path = IndiListController.m;
+			refType = 4;
+		};
+		F5C2F81A03830ED1015ADBC2 = {
+			isa = PBXFileReference;
+			path = NoteController.h;
+			refType = 4;
+		};
+		F5C2F81B03830ED1015ADBC2 = {
+			isa = PBXFileReference;
+			path = NoteController.m;
+			refType = 4;
+		};
+		F5C2F81C03830ED1015ADBC2 = {
+			fileRef = F5C2F81A03830ED1015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F81D03830ED1015ADBC2 = {
+			fileRef = F5C2F81B03830ED1015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F81E03830F43015ADBC2 = {
+			isa = PBXFileReference;
+			path = TableSortInfo.h;
+			refType = 4;
+		};
+		F5C2F81F03830F43015ADBC2 = {
+			isa = PBXFileReference;
+			path = TableSortInfo.m;
+			refType = 4;
+		};
+		F5C2F82003830F43015ADBC2 = {
+			fileRef = F5C2F81E03830F43015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F82103830F43015ADBC2 = {
+			fileRef = F5C2F81F03830F43015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F82203830F62015ADBC2 = {
+			fileRef = F5C2F81603830E9C015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F82303830F63015ADBC2 = {
+			fileRef = F5C2F81703830E9C015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F82403830F66015ADBC2 = {
+			fileRef = F5C2F81903830EB6015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F82503830F67015ADBC2 = {
+			fileRef = F5C2F81803830EB6015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F82603830FC8015ADBC2 = {
+			isa = PBXFileReference;
+			path = NoteViewerController.h;
+			refType = 4;
+		};
+		F5C2F82703830FC8015ADBC2 = {
+			isa = PBXFileReference;
+			path = NoteViewerController.m;
+			refType = 4;
+		};
+		F5C2F82803830FC8015ADBC2 = {
+			fileRef = F5C2F82603830FC8015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C2F82903830FC8015ADBC2 = {
+			fileRef = F5C2F82703830FC8015ADBC2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F5D07D4F02247C17014360AA = {
 			isa = PBXFileReference;
 			path = RawPanelController.m;
@@ -789,6 +984,18 @@
 		};
 		F5ED29B90263E160017FBCAC = {
 			children = (
+				F5C2F81E03830F43015ADBC2,
+				F5C2F81F03830F43015ADBC2,
+				F5C2F81A03830ED1015ADBC2,
+				F5C2F81B03830ED1015ADBC2,
+				F5C2F82603830FC8015ADBC2,
+				F5C2F82703830FC8015ADBC2,
+				F5C2F81603830E9C015ADBC2,
+				F5C2F81703830E9C015ADBC2,
+				F5C2F80E03830E68015ADBC2,
+				F5C2F80F03830E68015ADBC2,
+				F5C2F80A03830E4F015ADBC2,
+				F5C2F80B03830E4F015ADBC2,
 				F5D07D5002247C17014360AA,
 				F5D07D4F02247C17014360AA,
 				F5ED29B50263E074017FBCAC,
