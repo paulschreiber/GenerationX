@@ -1014,6 +1014,14 @@
     [event_drawer openOnEdge: NSMaxXEdge];
 }
 
+- (void) handleRecordsToolbar:(id) sender
+{
+  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
+    [indiListController toggleDrawer];
+  else
+    [famListController toggleDrawer];
+}
+
 - (void) handleImagesToolbar:(id) sender
 {
   [[[ImageViewerController sharedViewer] window] makeKeyAndOrderFront: self];
@@ -1287,6 +1295,7 @@ static NSString*	RawToolbarItemIdentifier 	= @"Raw Item Identifier";
 static NSString*	NewRecordToolbarItemIdentifier 	= @"New Record Item Identifier";
 static NSString*	EditRecordToolbarItemIdentifier 	= @"Edit Record Item Identifier";
 static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
+static NSString*	RecordToolbarItemIdentifier 	= @"Record Item Identifier";
 
 - (void) setupToolbar {
     // Create a new toolbar instance, and attach it to our document window 
@@ -1438,6 +1447,21 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
     [toolbarItem setTarget: self];
     [toolbarItem setAction: @selector(handleEventsToolbar:)];
   }
+  else if([itemIdent isEqual: RecordToolbarItemIdentifier])
+  {
+    // Set the text label to be displayed in the toolbar and customization palette 
+    [toolbarItem setLabel: @"Records"];
+    [toolbarItem setPaletteLabel: @"Records"];
+    
+    // Set up a reasonable tooltip, and image   Note, these aren't localized,
+    // but you will likely want to localize many of the item's properties 
+    [toolbarItem setToolTip: @"Toggle the records drawer"];
+    [toolbarItem setImage: [NSImage imageNamed: @"RecordsItemImage"]];
+    
+    // Tell the item what message to send when it is clicked 
+    [toolbarItem setTarget: self];
+    [toolbarItem setAction: @selector(handleRecordsToolbar:)];
+  }
   else
   {
 	  // itemIdent refered to a toolbar item that is not provide or supported by us or cocoa 
@@ -1470,7 +1494,7 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   // The set of allowed items is used to construct the customization palette 
   return [NSArray arrayWithObjects:
 //          IndiToolbarItemIdentifier, FamToolbarItemIdentifier,
-          EventToolbarItemIdentifier,
+          EventToolbarItemIdentifier, RecordToolbarItemIdentifier,
 //          PedigreeToolbarItemIdentifier,
 //          DescendantsToolbarItemIdentifier,
           NewRecordToolbarItemIdentifier,

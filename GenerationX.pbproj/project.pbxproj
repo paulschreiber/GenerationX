@@ -254,14 +254,14 @@
 				29B9732DFDCFA39411CA2CEA,
 			);
 			buildSettings = {
+				DEBUGGING_SYMBOLS = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
-				OPTIMIZATION_CFLAGS = "-O0";
+				OPTIMIZATION_CFLAGS = "-O3";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = GenerationX;
-				PROFILING_CODE = YES;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = app;
@@ -397,6 +397,7 @@
 				F53E63120384403001045C00,
 				F52B8C9203E9E89F0160306E,
 				F531325403F0B57001B1BC2F,
+				F5EEECB403F1D43F0146A5EE,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,6 +510,7 @@
 				F51C48EE0231E0FE01F231EB,
 				F514D6D80234575A01EB28E5,
 				F5E7974202B837C401AB0A49,
+				F5EEECB303F1D43F0146A5EE,
 				F5EFF0C20232A825016D7509,
 			);
 			isa = PBXGroup;
@@ -1565,6 +1567,17 @@
 		};
 		F5EE8176022B1F85016D13F8 = {
 			fileRef = F5EE8174022B1F85016D13F8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5EEECB303F1D43F0146A5EE = {
+			isa = PBXFileReference;
+			path = RecordsItemImage.tiff;
+			refType = 4;
+		};
+		F5EEECB403F1D43F0146A5EE = {
+			fileRef = F5EEECB303F1D43F0146A5EE;
 			isa = PBXBuildFile;
 			settings = {
 			};

@@ -93,7 +93,12 @@
 // Toggle drawer
 - (void) toggleDrawer
 {
-  [drawer toggle: nil];  
+  int state = [drawer state];
+  
+  if( state == NSDrawerOpenState )
+    [drawer close];
+  else
+    [drawer openOnEdge: NSMinXEdge];
 }
 
 // Set the tableview datasource
