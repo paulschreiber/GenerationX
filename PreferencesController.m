@@ -18,6 +18,8 @@
 {
   // setup defaults in case there's no pref file to load
   NSMutableDictionary* defaults = [NSMutableDictionary dictionary];
+  
+  // General
   if( ![preferences stringForKey: @"DEFAULT_FILE"] )
     [defaults setObject: [@"~/Documents/GenerationX_data.ged" stringByExpandingTildeInPath] forKey: @"DEFAULT_FILE"];
   if( ![preferences stringForKey: @"SORT_ALL"] )
@@ -30,8 +32,12 @@
     [defaults setObject: @"GenerationX User" forKey: @"USER_NAME"];
   if( ![preferences stringForKey: @"SORT_EVENTS"] )
     [defaults setObject: [NSNumber numberWithBool: true] forKey: @"SORT_EVENTS"];
+    
+  // GEDCOM
+  if( ![preferences stringForKey: @"GUESS_LAST_NAMES"] )
+    [defaults setObject: [NSNumber numberWithBool: false] forKey: @"GUESS_LAST_NAMES"];
  
-  // HTML prefs
+  // HTML
   if( ![preferences stringForKey: @"HTML_TITLE"] )
     [defaults setObject: [@"GenerationX" stringByExpandingTildeInPath] forKey: @"HTML_TITLE"];
   if( ![preferences stringForKey: @"HTML_EMAIL"] )
@@ -72,6 +78,12 @@
     [sort_events_button setState: NSOnState];
   else
     [sort_events_button setState: NSOffState];
+
+  // GEDCOM
+  if( [preferences boolForKey: @"GUESS_LAST_NAMES"] )
+    [guess_last_names setState: NSOnState];
+  else
+    [guess_last_names setState: NSOffState];
 
   // HTML
   [html_title setStringValue: [preferences stringForKey: @"HTML_TITLE"]];
@@ -145,6 +157,12 @@
     [[PreferencesController sharedPrefs] setSortEvents: true];
   else
     [[PreferencesController sharedPrefs] setSortEvents: false];
+  
+  // GEDCOM
+  if( [guess_last_names state] == NSOnState )
+    [[PreferencesController sharedPrefs] setGuessLastNames: true];
+  else
+    [[PreferencesController sharedPrefs] setGuessLastNames: false];
     
   // HTML
   [[PreferencesController sharedPrefs] setHTMLTitle: [html_title stringValue]];
@@ -158,6 +176,9 @@
   [pref_window orderOut: self];
 }
 
+//
+// General
+//
 - (BOOL)sortRecords
 {
   return [preferences boolForKey: @"SORT_ALL"];
@@ -234,7 +255,21 @@
 }
 
 //
-// HTML Prefs
+// GEDCOM
+//
+
+- (BOOL) guessLastNames
+{
+  return [preferences boolForKey: @"GUESS_LAST_NAMES"];
+}
+
+- (void) setGuessLastNames: (BOOL) t
+{
+  [preferences setBool: t forKey: @"GUESS_LAST_NAMES"];
+}
+
+//
+// HTML 
 //
 
 - (NSString*) HTMLTitle

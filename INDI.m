@@ -140,8 +140,13 @@
       [[NSCharacterSet alphanumericCharacterSet] invertedSet]];                   
     [name_scanner scanUpToString: @"/"
       intoString: nil];
+
+// 030131 pmh
     [name_scanner scanCharactersFromSet: [NSCharacterSet alphanumericCharacterSet]
       intoString: &result];
+//    [name_scanner scanUpToString: @"/"
+//      intoString: &result];
+// pmh
   }
             
   if( [result isEqual: @""] )

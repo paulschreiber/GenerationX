@@ -8,6 +8,7 @@
             OUTLETS = {
                 "auto_save_text" = id; 
                 "default_file_text" = id; 
+                "guess_last_names" = id; 
                 "html_back_color" = id; 
                 "html_email" = id; 
                 "html_text_color" = id; 

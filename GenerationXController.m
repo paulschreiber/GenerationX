@@ -268,6 +268,13 @@
   if( [NSFileHandle fileHandleForReadingAtPath: data_file] )
   {
     ged = [[GCFile alloc] initWithFile: data_file];
+
+//PMH Determine lastnames of the entries not having one if applicable
+    if( [[PreferencesController sharedPrefs] guessLastNames] ) {
+      //We have; GCFile* ged, nothing more so ask it to do the job
+      [ged completeLastnames]; 
+    }
+// pmh
   }
   else
     // if it didn't load ask the user to specify a file
@@ -1216,6 +1223,13 @@
     ged = [GCFile alloc];
     [self doNewFile];
   }
+
+//PMH Determine lastnames of the entries not having one if applicable
+  if( [[PreferencesController sharedPrefs] guessLastNames] ) {
+    //We have; GCFile* ged, nothing more so ask it to do the job
+    [ged completeLastnames]; 
+  }
+// pmh
 
   [recordListDataSource setGED: ged];
   [recordListDataSource setIndiFilter: @""];

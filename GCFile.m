@@ -398,6 +398,84 @@
   return result;
 }
 
+// 030131 pmh
+// 030131 nowhere mans
+//   fixed bug where case of "NAME xxx /?/" was not handled well
+//   and became "NAME xxx /?/ /yyy/"
+- (void) completeLastnames
+{
+  //Traverse the list of INDI and check NAME field for lastName
+  // if lastname is not present
+  //   determine fathers lastname (recursively)
+  //   add lastname found to the NAME field (SURN does not show)
+  int i = 0;
+  GCField* gc_tmp;
+  INDI* tmp_indi;
+  //NSString* indi_firstname = @"";
+  NSString* indi_lastname = @"";
+  NSScanner* name_scanner;
+  NSString* tmp;
+  
+  for( i = 0; i < num_indi; i++ ) {
+    tmp_indi = [individuals objectAtIndex: i];
+    //[indi_lastname setString: [tmp_indi lastName]];
+    indi_lastname = [tmp_indi lastName];
+    if( [indi_lastname isEqual: @"?"] )
+    {
+      name_scanner = [NSScanner scannerWithString:
+                     [tmp_indi valueOfSubfieldWithType: @"NAME"]];
+                     
+      indi_lastname = [self findFamilyname: tmp_indi];
+      // Assume person has a NAME so add its SURN
+      //gc_tmp = [tmp_indi addSubfield: @"SURN": indi_lastname];
+      //pmh This works for export but it does not show on the display!!!!
+      //pmh Therefore fetch the originale NAME in NEW var and append to it
+      NSMutableString* indi_name = [[NSMutableString alloc] init];
+      [name_scanner scanUpToString: @"/"
+        intoString: &tmp];      
+      
+      [indi_name setString: tmp];
+      [indi_name appendString: @" /"];
+      [indi_name appendString: indi_lastname];
+      [indi_name appendString: @"/"];
+      //pmh Testing this already used var does only give the pointer needed
+      if( gc_tmp = [tmp_indi subfieldWithType: @"NAME"] )
+        [gc_tmp setFieldValue: indi_name];
+      else
+        gc_tmp = [tmp_indi addSubfield: @"NAME": indi_name];
+        
+      //and fix the SURN field
+      if ( gc_tmp = [gc_tmp subfieldWithType: @"SURN"] )
+        [gc_tmp setFieldValue: indi_lastname];
+      else
+        [gc_tmp addSubfield: @"SURN" : indi_lastname];
+    }
+  }
+}
+
+// 030131 pmh
+// 030131 nowhere mans
+//   fixed bug where case of a person with no last name AND no father was not handled
+- (NSString*) findFamilyname: (INDI*) tmp_indi
+{
+  INDI* tmp_father;
+  NSString* indi_lastname = @"";
+
+  // if we ca find a father, grab his last name
+  // otherwise give up
+  if( tmp_father = [tmp_indi father: self] )
+    indi_lastname = [tmp_father lastName];
+  else
+    return @"?";
+  
+  // if we get here, we found a father, but he didn't have a last name
+  // so try HIS father
+  if( [indi_lastname isEqual: @"?"] ) {
+    indi_lastname = [self findFamilyname: tmp_father];
+    }
+  return indi_lastname;
+}
+
 // introduce a new record given it' label
 - (id) addRecord: (NSString*) my_type : (NSString*) my_value
 {

@@ -4,6 +4,7 @@
 
 @interface PreferencesController : NSObject
 {
+    // General tab
     IBOutlet NSWindow*    pref_window;
     IBOutlet NSTextField* auto_save_text;
     IBOutlet NSTextField* user_name_text;
@@ -12,6 +13,10 @@
     IBOutlet NSButton*    sort_filtered_button;
     IBOutlet NSButton*    sort_events_button;
     
+    // GEDCOM tab
+    IBOutlet NSButton*    guess_last_names;
+
+    // HTML tab
     IBOutlet NSTextField* html_title;    
     IBOutlet NSTextField* html_email;    
     IBOutlet NSColorWell* html_back_color;
@@ -25,6 +30,8 @@
 - (IBAction)handleCancel:(id)sender;
 - (IBAction)handleChangeDefaultPath:(id)sender;
 - (IBAction)handleOk:(id)sender;
+
+// General
 - (BOOL)sortRecords;
 - (void) setSort: (BOOL) my_sort;
 - (BOOL)sortFiltered;
@@ -39,6 +46,11 @@
 - (void) setLastVersionCheck: (int) my_auto_save;
 - (BOOL) sortEvents;
 - (void) setSortEvents: (BOOL) my_sort;
+
+// GEDCOM
+- (BOOL) guessLastNames;
+- (void) setGuessLastNames: (BOOL) t;
+
 // HTML
 - (NSString*) HTMLTitle;
 - (void) setHTMLTitle: (NSString*) t;

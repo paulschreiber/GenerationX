@@ -59,4 +59,9 @@
 - (BOOL) needSave;
 - (void) setNeedSave: (BOOL) my_bool;
 
+// 030131 pmh
+- (void) completeLastnames;//: (GCFile*) my_ged;
+- (NSString*) findFamilyname: (INDI*) tmp_indi;
+// pmh
+
 @end
