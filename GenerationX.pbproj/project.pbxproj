@@ -248,14 +248,14 @@
 				29B9732DFDCFA39411CA2CEA,
 			);
 			buildSettings = {
+				DEBUGGING_SYMBOLS = NO;
 				FRAMEWORK_SEARCH_PATHS = "";
 				HEADER_SEARCH_PATHS = "";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = "";
-				OPTIMIZATION_CFLAGS = "-O0";
+				OPTIMIZATION_CFLAGS = "-O3";
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = GenerationX;
-				PROFILING_CODE = YES;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
 				WRAPPER_EXTENSION = app;
@@ -289,7 +289,7 @@
 	<key>CFBundleExecutable</key>
 	<string>GenerationX</string>
 	<key>CFBundleGetInfoString</key>
-	<string>2.1b1</string>
+	<string>2.2b1</string>
 	<key>CFBundleIconFile</key>
 	<string>genx.icns</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -299,11 +299,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1b1</string>
+	<string>2.2b1</string>
 	<key>CFBundleSignature</key>
 	<string>GENX</string>
 	<key>CFBundleVersion</key>
-	<string>2.1b1</string>
+	<string>2.2b1</string>
 	<key>NSMainNibFile</key>
 	<string>GenerationX</string>
 	<key>NSPrincipalClass</key>
