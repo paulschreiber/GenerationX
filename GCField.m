@@ -179,6 +179,13 @@
   return field;
 }
 
+- (void) removeSubfield: (GCField*) my_field
+{
+  [subfields removeObject: my_field];
+  num_subfields--;
+  need_save = true;
+}
+
 // remove a subfield of this field given its type
 // and value
 - (void) removeSubfieldWithType: (NSString*) my_type Value: (NSString*) my_value

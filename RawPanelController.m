@@ -80,8 +80,7 @@
   
   if( selected_level == 0 )
   {
-    [field removeSubfieldWithType: [selected fieldType]
-           Value: [selected fieldValue]];
+    [field removeSubfield: selected];
   }
   else
   {
@@ -89,8 +88,7 @@
       i--;
       
     [[raw_outline itemAtRow: i]
-      removeSubfieldWithType: [selected fieldType]
-      Value: [selected fieldValue]];
+      removeSubfield: selected];
   }
     
   [raw_outline reloadData];

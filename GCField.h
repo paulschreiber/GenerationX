@@ -36,6 +36,7 @@
 - (GCField*) lastField;
 - (GCField*) addSubfield: (NSString*) my_type : (NSString*) my_value;
 - (NSString*) dataForFile;
+- (void) removeSubfield: (GCField*) my_field;
 - (void) removeSubfieldWithType: (NSString*) my_type Value: (NSString*) my_value;
 - (BOOL) isIdentical: (GCField*)my_field;
 - (BOOL) isEvent;
