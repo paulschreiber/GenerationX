@@ -131,6 +131,8 @@
 - (void) handleMergeFile:(id) sender;
 - (void) handlePrefs:(id) sender;
 - (void) handleCheckVersion:(id) sender;
+- (void) handleBugReport:(id) sender;
+- (void) handleFeatureRequest:(id) sender;
 - (void) setupToolbar;
 
 @end

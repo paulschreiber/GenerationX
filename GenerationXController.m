@@ -1246,12 +1246,24 @@
                    
     if( button == NSOKButton )
       [[NSWorkspace sharedWorkspace] openURL:
-       [NSURL URLWithString: @"http://homepage.mac.com/nowhereman77/GenX/download.html"]];
+       [NSURL URLWithString: @"http://sourceforge.net/projects/generationx"]];
   }
   else
     NSRunAlertPanel( @"Error",
                      @"Couldn't get latest version from the Internet",
                      @"Ok", nil, nil );
+}
+
+- (void) handleBugReport:(id) sender
+{
+  [[NSWorkspace sharedWorkspace] openURL:
+    [NSURL URLWithString: @"http://sourceforge.net/tracker/?func=add&group_id=59977&atid=492685"]];
+}
+
+- (void) handleFeatureRequest:(id) sender
+{
+  [[NSWorkspace sharedWorkspace] openURL:
+    [NSURL URLWithString: @"http://sourceforge.net/tracker/?func=add&group_id=59977&atid=492688"]];
 }
 
 - (void)doMerge:(NSOpenPanel *)sheet
