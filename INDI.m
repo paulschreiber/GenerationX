@@ -191,7 +191,7 @@
 
 - (NSDate*) birthDate
 {
-NSLog( @"INDI::birthDate" );
+//NSLog( @"INDI::birthDate" );
   NSString* birth_str = [[self subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"];
   NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
   NSString* tmp;
@@ -230,13 +230,13 @@ NSLog( @"INDI::birthDate" );
     [date_str appendString: birth_str];
   }
   
-NSLog( date_str );
+//NSLog( date_str );
   return [NSDate dateWithNaturalLanguageString: date_str];  
 }
 
 - (NSDate*) deathDate
 {
-NSLog( @"INDI::deathDate" );
+//NSLog( @"INDI::deathDate" );
   NSString* death_str = [[self subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"];
   NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
   NSString* tmp;
@@ -275,7 +275,7 @@ NSLog( @"INDI::deathDate" );
     [date_str appendString: death_str];
   }
   
-NSLog( date_str );
+//NSLog( date_str );
   return [NSDate dateWithNaturalLanguageString: date_str];  
 }
 

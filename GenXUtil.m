@@ -73,7 +73,7 @@
 
 - (NSDate*) dateFromGEDCOM: (NSString*) str
 {
-NSLog( @"GenXUtil::dateFromGEDCOM" );
+//NSLog( @"GenXUtil::dateFromGEDCOM" );
   NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
   NSString* tmp;
   NSScanner* s;
@@ -113,7 +113,7 @@ NSLog( @"GenXUtil::dateFromGEDCOM" );
     [date_str appendString: str];
   }
   
-NSLog( date_str );
+//NSLog( date_str );
   return [NSDate dateWithNaturalLanguageString: date_str];  
 }
 
