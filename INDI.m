@@ -716,7 +716,10 @@
   if( tmp_indi = [self father: my_ged] )
   {
     [result appendString: @"<a href=\""];
-    [result appendString: [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+    if( [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] count] > 1 )
+      [result appendString: [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+    else
+      [result appendString: [tmp_indi fieldValue]];
     [result appendString: @".html\">"];
     [result appendString: [tmp_indi fullName]];
     [result appendString: @"</a>"];
@@ -725,7 +728,10 @@
   if( tmp_indi = [self mother: my_ged] )
   {
     [result appendString: @"<a href=\""];
-    [result appendString: [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+    if( [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] count] > 1 )
+      [result appendString: [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+    else
+      [result appendString: [tmp_indi fieldValue]];
     [result appendString: @".html\">"];
     [result appendString: [tmp_indi fullName]];
     [result appendString: @"</a>"];
@@ -742,7 +748,10 @@
     {
       [result appendString: @"\n<p><b>Spouse:</b> "];
       [result appendString: @"<a href=\""];
-      [result appendString: [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+      if( [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] count] > 1 )
+        [result appendString: [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+      else
+        [result appendString: [tmp_indi fieldValue]];
       [result appendString: @".html\">"];
       [result appendString: [tmp_indi fullName]];
       [result appendString: @"</a>"];
@@ -755,7 +764,10 @@
       {
         [result appendString: @"\n<li>"];
         [result appendString: @"<a href=\""];
-        [result appendString: [[[[children objectAtIndex: j] fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+        if( [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] count] > 1 )
+          [result appendString: [[[[children objectAtIndex: j] fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1]];
+        else
+          [result appendString: [[children objectAtIndex: j] fieldValue]];
         [result appendString: @".html\">"];
         [result appendString: [[children objectAtIndex: j] fullName]];
         [result appendString: @"</a>"];

@@ -228,6 +228,7 @@
   [html_path appendString: my_prefix];
   [html_path appendString: @".html"];
 
+NSLog( my_prefix );
   [html_text setString: [HTMLController HTMLHeader]];
   [html_text appendString: @"<body>\n<table border=0 width=600 cellpadding=10><tr><td bgcolor=#CCCCCC><font size=+2>"];
   [html_text appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
@@ -261,7 +262,10 @@
       [html_text appendString: @"<td valign=top>"];
       
     tmp_indi = [indi_array objectAtIndex: i];
-    stripped_label = [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
+    if( [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] count] > 1 )
+      stripped_label = [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
+    else
+      stripped_label = [tmp_indi fieldValue];
     [html_text appendString: @"<a href=\"INDI"];
 //    [html_text appendString: my_prefix];
     [html_text appendString: @"/"];
@@ -308,7 +312,11 @@
     [progress setDoubleValue: (double)progress_value];
     [window displayIfNeeded];
     tmp_indi = [ged indiAtIndex: i];
-    stripped_label = [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
+    if( [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] count] > 1 )
+      stripped_label = [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
+    else
+      stripped_label = [tmp_indi fieldValue];
+NSLog( stripped_label );
     [indi_path setString: html_path];
     [indi_path appendString: @"/"];
     [indi_path appendString: stripped_label];
@@ -369,7 +377,10 @@
     for( j = 0; j < [indis count]; j++ )
     {
       indi = [indis objectAtIndex: j];
-      stripped_label = [[[indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
+      if( [[[indi fieldValue] componentsSeparatedByString: @"@"] count] > 1 )
+        stripped_label = [[[indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
+      else
+        stripped_label = [indi fieldValue];
       
       [html_text appendString: @"<a href=\"../INDI/\n"];
       [html_text appendString: stripped_label];
