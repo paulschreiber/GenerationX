@@ -355,9 +355,11 @@
 // pmh
 
     //make sure all the children of all the FAM records are sorted properly
+    [main_status_text setStringValue: @"Sorting records..."];
+    [main_window display];
     for( i = 0; i < [ged numFamilies]; i++ )
       [[ged famAtIndex: i] sortChildren: ged];
-
+    [main_status_text setStringValue: @""];
   }
   else
     // if it didn't load ask the user to specify a file
@@ -439,7 +441,10 @@
   [self setupAutosave];
   
   // Load data
+  [main_status_text setStringValue: @"Loading data..."];
+  [main_window display];
   [self loadDataFile];
+  [main_status_text setStringValue: @""];
   
   // Set up GUI
   [self setupGUI];
@@ -1372,6 +1377,9 @@
   {
     // attempt to load a file into the database
     NSArray *filesToOpen = [sheet filenames];
+    [sheet orderOut: self];
+    [main_status_text setStringValue: @"Loading data..."];
+    [main_window display];
     ged = [[GCFile alloc] initWithFile: [filesToOpen objectAtIndex: 0]];
     
     // if the file wasn't a GEDCOM file
@@ -1387,6 +1395,7 @@
         
       [ged setPath: nil];
     }
+    [main_status_text setStringValue: @""];
   }
 
   // this sould only be true if the user got an open dialog
@@ -1406,8 +1415,11 @@
 // pmh
 
   //make sure all the children of all the FAM records are sorted properly
+  [main_status_text setStringValue: @"Sorting records..."];
+  [main_window display];
   for( i = 0; i < [ged numFamilies]; i++ )
     [[ged famAtIndex: i] sortChildren: ged];
+  [main_status_text setStringValue: @""];
 
   [recordListDataSource setGED: ged];
   [recordListDataSource setIndiFilter: @""];
@@ -1428,8 +1440,10 @@
   if( returnCode == NSOKButton )
   {
     // save to a specified file
+    [main_status_text setStringValue: @"Saving data..."];
     [ged setPath: [sheet filename]];
     [ged saveToFile];
+    [main_status_text setStringValue: @""];
   }
   
   if( [contextInfo isEqual: @"newFile"] )

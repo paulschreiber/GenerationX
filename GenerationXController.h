@@ -13,6 +13,7 @@
     // Main window
     IBOutlet NSWindow*    main_window;
     IBOutlet NSTabView*   main_tabs;
+    IBOutlet id           main_status_text;
     
     // Menus
     IBOutlet NSMenuItem*  event_menu;

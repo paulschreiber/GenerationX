@@ -125,6 +125,7 @@
                 "indi_mother_text" = id; 
                 "indi_name" = NSTextField; 
                 "indi_spice_outline" = id; 
+                "main_status_text" = id; 
                 "main_tabs" = NSTabView; 
                 "main_window" = NSWindow; 
                 "ped_father" = NSTextField; 
