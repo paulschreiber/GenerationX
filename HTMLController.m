@@ -38,6 +38,7 @@
   NSString* html_path = [my_dir stringByAppendingString: @"/index.html"];
   NSString* alpha = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   NSString* prefix;
+  NSString* title = [[PreferencesController sharedPrefs] HTMLTitle];
   int i = 0;
 //  NSFileHandle* html_file = [NSFileHandle fileHandleForWritingAtPath: html_path];
  
@@ -48,9 +49,28 @@
 
   // first the index type pages
   [html_text appendString: [[NSDate date] description]];
-  [html_text appendString: @"</title></head>\n<body bgcolor=FFFFFF>\n\n"];
-  [html_text appendString: @"<center><font size=+5>G</font><font size=+2>enerationX</font>\n<br>\n<i>"];
-  [html_text appendString: [[NSDate date] description]];
+  [html_text appendString: @"</title>\n"];
+  [html_text appendString: @"<style type=\"text/css\"><!--\n"];
+  [html_text appendString: @"body{\n"];
+  [html_text appendString: @"  background: #"];
+  [html_text appendString: [[PreferencesController sharedPrefs] HTMLBackColor]];
+  [html_text appendString: @";\n"];
+  [html_text appendString: @"  font-family: sans-serif;\n"];
+  [html_text appendString: @"  font-size: 12px;\n"];
+  [html_text appendString: @"  color: #"];
+  [html_text appendString: [[PreferencesController sharedPrefs] HTMLTextColor]];
+  [html_text appendString: @";\n"];
+  [html_text appendString: @"}\n"];
+  [html_text appendString: @"\n"];
+  [html_text appendString: @"\n"];
+  [html_text appendString: @"\n"];
+  [html_text appendString: @"--></style>\n"];
+  [html_text appendString: @"</head>\n<body>\n\n"];
+  [html_text appendString: @"<center><font size=+2>"];
+  [html_text appendString: title];
+  [html_text appendString: @"</font>\n<br>\n<i>"];
+  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+    [html_text appendString: [[NSDate date] description]];
   [html_text appendString: @"</i></center>\n<p>\n"];
   [html_text appendString: [[NSNumber numberWithInt: [ged numIndividuals]] stringValue]];
   [html_text appendString: @" individuals in this database:\n<p><center>\n"];

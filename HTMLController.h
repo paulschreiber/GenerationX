@@ -2,6 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "GCFile.h"
+#import "PreferencesController.h"
 
 @interface HTMLController : NSObject
 {

@@ -6,12 +6,16 @@
             CLASS = PreferencesController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                auto_save_text = id; 
-                default_file_text = id; 
-                pref_window = id; 
-                sort_filtered_button = id; 
-                sort_records_button = id; 
-                user_name_text = id; 
+                "auto_save_text" = id; 
+                "default_file_text" = id; 
+                "html_back_color" = id; 
+                "html_text_color" = id; 
+                "html_timestamp" = id; 
+                "html_title" = id; 
+                "pref_window" = id; 
+                "sort_filtered_button" = id; 
+                "sort_records_button" = id; 
+                "user_name_text" = id; 
             }; 
             SUPERCLASS = NSObject; 
         }

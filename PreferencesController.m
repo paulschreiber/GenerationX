@@ -30,7 +30,17 @@
     [defaults setObject: @"GenerationX User" forKey: @"USER_NAME"];
   if( ![preferences stringForKey: @"SORT_EVENTS"] )
     [defaults setObject: [NSNumber numberWithBool: true] forKey: @"SORT_EVENTS"];
-  
+ 
+  // HTML prefs
+  if( ![preferences stringForKey: @"HTML_TITLE"] )
+    [defaults setObject: [@"GenerationX" stringByExpandingTildeInPath] forKey: @"HTML_TITLE"];
+  if( ![preferences stringForKey: @"HTML_BACK_COLOR"] )
+    [defaults setObject: [@"FFFFFF" stringByExpandingTildeInPath] forKey: @"HTML_BACK_COLOR"];
+  if( ![preferences stringForKey: @"HTML_TEXT_COLOR"] )
+    [defaults setObject: [@"000000" stringByExpandingTildeInPath] forKey: @"HTML_TEXT_COLOR"];
+  if( ![preferences stringForKey: @"HTML_TIMESTAMP"] )
+    [defaults setObject: [NSNumber numberWithBool: true] forKey: @"HTML_TIMESTAMP"];
+   
   [preferences registerDefaults: defaults];
   
   [NSBundle loadNibNamed: @"Preferences" owner:self];
@@ -52,6 +62,17 @@
     [sort_events_button setState: NSOnState];
   else
     [sort_events_button setState: NSOffState];
+
+  // HTML
+  [html_title setStringValue: [preferences stringForKey: @"HTML_TITLE"]];
+//  [html_back_color setColor: 
+//    [NSColor Color[preferences stringForKey: @"HTML_BACK_COLOR"]]];
+//  [html_text_color setColor: [preferences stringForKey: @"HTML_TEXT_COLOR"]];
+
+  if( [preferences boolForKey: @"HTML_TIMESTAMP"] )
+    [html_timestamp setState: NSOnState];
+  else
+    [html_timestamp setState: NSOffState];
 
   return self;
 }  
@@ -113,8 +134,21 @@
     [[PreferencesController sharedPrefs] setSortEvents: true];
   else
     [[PreferencesController sharedPrefs] setSortEvents: false];
+    
+  // HTML
+  [[PreferencesController sharedPrefs] setHTMLTitle: [html_title stringValue]];
+NSColor* c = [[html_back_color color] colorUsingColorSpaceName: nil];
+NSColor* d = [[html_text_color color] colorUsingColorSpaceName: nil];
+NSLog( @"---" );
+NSLog( [c localizedColorNameComponent] );
+NSLog( [d localizedColorNameComponent] );
+NSLog( @"---" );
 
-//  [[PreferencesController sharedPrefs] savePrefs];
+  if( [html_timestamp state] == NSOnState )
+    [[PreferencesController sharedPrefs] setHTMLTimestamp: true];
+  else
+    [[PreferencesController sharedPrefs] setHTMLTimestamp: false];
+
   [pref_window orderOut: self];
 }
 
@@ -193,6 +227,46 @@
   [preferences setBool: my_sort forKey: @"SORT_EVENTS"];
 }
 
+- (NSString*) HTMLTitle
+{
+  return [preferences stringForKey: @"HTML_TITLE"];
+}
+
+- (void) setHTMLTitle: (NSString*) t
+{
+  [preferences setObject: t forKey: @"HTML_TITLE"];
+}
+
+- (NSString*) HTMLBackColor;
+{
+  return [preferences stringForKey: @"HTML_BACK_COLOR"];
+}
+
+- (void) setHTMLBackColor: (NSString*) t;
+{
+  [preferences setObject: t forKey: @"HTML_BACK_COLOR"];
+}
+
+- (NSString*) HTMLTextColor;
+{
+  return [preferences stringForKey: @"HTML_TEXT_COLOR"];
+}
+
+- (void) setHTMLTextColor: (NSString*) t;
+{
+  [preferences setObject: t forKey: @"HTML_TEXT_COLOR"];
+}
+
+
+- (BOOL) HTMLTimestamp
+{
+  return [preferences boolForKey: @"HTML_TIMESTAMP"];
+}
+
+- (void) setHTMLTimestamp: (BOOL) t
+{
+  [preferences setBool: t forKey: @"HTML_TIMESTAMP"];
+}
 
 /*
 - (void) savePrefs

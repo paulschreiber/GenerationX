@@ -11,6 +11,11 @@
     IBOutlet NSButton*    sort_records_button;
     IBOutlet NSButton*    sort_filtered_button;
     IBOutlet NSButton*    sort_events_button;
+    
+    IBOutlet NSTextField* html_title;    
+    IBOutlet NSColorWell* html_back_color;
+    IBOutlet NSColorWell* html_text_color;
+    IBOutlet NSButton*    html_timestamp;
 }
 
 + (PreferencesController*) sharedPrefs;
@@ -33,6 +38,15 @@
 - (void) setLastVersionCheck: (int) my_auto_save;
 - (BOOL) sortEvents;
 - (void) setSortEvents: (BOOL) my_sort;
+// HTML
+- (NSString*) HTMLTitle;
+- (void) setHTMLTitle: (NSString*) t;
+- (NSString*) HTMLBackColor;
+- (void) setHTMLBackColor: (NSString*) t;
+- (NSString*) HTMLTextColor;
+- (void) setHTMLTextColor: (NSString*) t;
+- (BOOL) HTMLTimestamp;
+- (void) setHTMLTimestamp: (BOOL) t;
 
 //- (void) savePrefs;
 
