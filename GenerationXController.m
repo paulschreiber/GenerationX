@@ -315,9 +315,6 @@
   // Load data
   [self loadDataFile];
   
-  // Center main window
-  [main_window center];
-  
   // Set up GUI
   [self setupGUI];
   
