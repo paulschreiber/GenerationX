@@ -134,6 +134,8 @@
 - (void) handleCheckVersion:(id) sender;
 - (void) handleBugReport:(id) sender;
 - (void) handleFeatureRequest:(id) sender;
+- (void) handleDonate:(id) sender;
+- (void) handleEmail:(id) sender;
 - (void) setupToolbar;
 
 @end

@@ -44,7 +44,9 @@
                 handleDescendantMode = id; 
                 handleDescendantReport = id; 
                 handleDescendantsGEDCOM = id; 
+                handleDonate = id; 
                 handleEditRecord = id; 
+                handleEmail = id; 
                 handleEventsToolbar = id; 
                 handleFamMode = id; 
                 handleFeatureRequest = id; 

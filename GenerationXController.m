@@ -1364,6 +1364,18 @@
     [NSURL URLWithString: @"http://sourceforge.net/tracker/?func=add&group_id=59977&atid=492688"]];
 }
 
+- (void) handleDonate:(id) sender
+{
+  [[NSWorkspace sharedWorkspace] openURL:
+    [NSURL URLWithString: @"http://homepage.mac.com/nowhereman77/GenX/donate.html"]];
+}
+
+- (void) handleEmail:(id) sender
+{
+  [[NSWorkspace sharedWorkspace] openURL:
+    [NSURL URLWithString: @"mailto:nowhereman77@mac.com"]];
+}
+
 - (void)doMerge:(NSOpenPanel *)sheet
   returnCode:(int)returnCode
   contextInfo:(void  *)contextInfo
