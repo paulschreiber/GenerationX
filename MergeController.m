@@ -112,8 +112,7 @@
   // with the record being merged
   // remove the original ecord and add
   // the new one
-  [original removeRecord: original_record];
-  [original addRecord: [merge recordAtIndex: merge_index]];
+  [original replaceRecord: original_record withRecord: [merge recordAtIndex: merge_index]];
 }
 
 @end

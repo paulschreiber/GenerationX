@@ -513,6 +513,27 @@
   return record;
 }
 
+- (void) replaceRecord: (GCField*) old withRecord: (GCField*) new
+{
+  [new setNeedSave: true];
+  
+  if( [[old fieldType] isEqual: @"INDI"] )
+  {
+    [individuals removeObject: old];
+    [individuals addObject: new];
+  }
+  else if( [[old fieldType] isEqual: @"FAM"] )
+  {
+    [families removeObject: old];
+    [families addObject: new];
+  }
+  else
+  {
+    [other_fields removeObject: old];
+    [other_fields addObject: new];
+  }
+}
+
 // sort the list of INDI records alphabetically by surname
 - (void) sortData
 {

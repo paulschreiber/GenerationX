@@ -52,6 +52,7 @@
 - (id)addRecord: (NSString*) my_type : (NSString*) my_value;
 - (id)addRecord: (GCField*) my_field;
 - (GCField*)removeRecord: (GCField*) my_field;
+- (void) replaceRecord: (GCField*) old withRecord: (GCField*) new;
 - (void) sortData;
 - (BOOL)loadData;
 - (BOOL) saveToFile;
