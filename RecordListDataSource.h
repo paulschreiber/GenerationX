@@ -28,6 +28,8 @@
 - (void) setFamFilter: (NSString*) my_filter;
 - (void) setSort: (BOOL) my_sort;
 - (void) refresh;
+- (void) refreshINDI;
+- (void) refreshFAM;
 - (INDI*) indiAtIndex: (int) index;
 - (FAM*) famAtIndex: (int) index;
 - (int) indexForIndi: (INDI*) indi;

@@ -123,6 +123,42 @@
         [displayed_fam addObject: [ged famAtIndex: i]];
 }
 
+- (void) refreshINDI
+{
+  int i;
+  
+  [displayed_indi removeAllObjects];
+  
+  if( [indi_filter isEqual: @""] )
+    for( i = 0; i < [ged numIndividuals]; i++ )
+      [displayed_indi addObject: [ged indiAtIndex: i]];
+  else
+  {
+    for( i = 0; i < [ged numIndividuals]; i++ )
+      if( [[[ged indiAtIndex: i] lastName] hasPrefix: indi_filter] )
+        [displayed_indi addObject: [ged indiAtIndex: i]];
+
+    if( sort )
+      [displayed_indi sortUsingSelector: @selector(compare:)];
+  }
+}
+
+- (void) refreshFAM
+{
+  int i;
+  
+  [displayed_fam removeAllObjects];
+  
+  if( [fam_filter isEqual: @""] )
+    for( i = 0; i < [ged numFamilies]; i++ )
+      [displayed_fam addObject: [ged famAtIndex: i]];
+  else
+    for( i = 0; i < [ged numFamilies]; i++ )
+      if( [[[[ged famAtIndex: i] husband: ged] lastName] hasPrefix: fam_filter]
+       || [[[[ged famAtIndex: i] wife: ged] lastName] hasPrefix: fam_filter] )
+        [displayed_fam addObject: [ged famAtIndex: i]];
+}
+
 - (void) setSort: (BOOL) my_sort
 {
   sort = my_sort;

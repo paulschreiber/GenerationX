@@ -159,15 +159,21 @@
 {
   if( [[PreferencesController sharedPrefs] sortRecords] )
     [ged sortData];
-  [record_data_source refresh];
-  [indi_list reloadData];
-  [fam_list reloadData];
-  [event_list reloadData];
   
   if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
+  {
+    [record_data_source refreshINDI];
     [self handleSelectIndi: indi_list];
+    [indi_list reloadData];
+  }
   else
+  {
+    [record_data_source refreshFAM];
     [self handleSelectFam: fam_list];
+    [fam_list reloadData];
+  }
+
+  [event_list reloadData];
 }
 
 // handles events from the list of INDI records
