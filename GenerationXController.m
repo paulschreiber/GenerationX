@@ -1509,4 +1509,21 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
     [self handleDescendantMode: tabViewItem];
 }
 
+//
+// 021114 Nowhere Man
+//
+//  added the following two methods to solve a problem where
+// i was unable to use the menu bar if anything was selected
+// in the drawer lists. no idea why it works now
+//
+- (BOOL) validRequestorForSendType: (id) a returnType: (id) b
+{
+  return true;
+}
+
+- (id) nextResponder
+{
+  return nil;
+}
+
 @end
