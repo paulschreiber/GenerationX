@@ -129,11 +129,11 @@
   if( tmp = [[thisIndi birthDate] description] )
     [indi_born_text setStringValue: [NSString stringWithFormat: @"Born:\t\t%@", tmp]];
   else
-    [indi_born_text setStringValue: @""];
+    [indi_born_text setStringValue: @"Born:"];
   if( tmp = [[thisIndi deathDate] description] )
     [indi_died_text setStringValue: [NSString stringWithFormat: @"Died:\t\t%@", tmp]];
   else
-    [indi_died_text setStringValue: @""];
+    [indi_died_text setStringValue: @"Died:"];
   if( [thisIndi father: ged] )
     [indi_father_text setStringValue: [NSString stringWithFormat: @"Father:\t%@", [[thisIndi father: ged] fullName]]];
   else
