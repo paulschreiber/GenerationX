@@ -413,6 +413,9 @@
       [NSApp terminate: self];
   }
   
+  // check version
+  [self handleCheckVersion: nil];
+  
   // Register the current object as an observer
   appNotificationCenter = [NSNotificationCenter defaultCenter];
   [appNotificationCenter 	addObserver: self
@@ -1273,27 +1276,43 @@
 {
   NSString* current_vers = [[[NSBundle bundleForClass: [self class]] infoDictionary] objectForKey: @"CFBundleVersion"];
   NSDictionary* latest_dict = [NSDictionary dictionaryWithContentsOfURL:
-    [NSURL URLWithString: @"http://homepage.mac.com/nowhereman77/GenX/info.txt"]];
-  NSString* latest_vers  = [latest_dict valueForKey: @"version"];
-  
-  if( latest_vers && [current_vers isEqualToString: latest_vers] )
-    NSRunAlertPanel( @"Up To Date",
-                     @"You have the most recent version of this software",
-                     @"Ok", nil, nil );
-  else if( latest_vers )
-  {
-    int button = NSRunAlertPanel( @"New Software Avaliable",
-                   @"A newer version of this software is avaliable.\nWould you like to download the new version now?",
-                   @"Yes", @"No", nil );
-                   
-    if( button == NSOKButton )
-      [[NSWorkspace sharedWorkspace] openURL:
-       [NSURL URLWithString: @"http://sourceforge.net/projects/generationx"]];
+    [NSURL URLWithString: @"http://homepage.mac.com/nowhereman77/hacks/versions.txt"]];
+  NSString* latest_vers  = [latest_dict valueForKey: @"GenX"];
+
+  if( sender )
+  {  
+    if( latest_vers && [current_vers isEqualToString: latest_vers] )
+        NSRunAlertPanel( @"Up To Date",
+                        @"You have the most recent version of this software",
+                        @"Ok", nil, nil );
+    else if( latest_vers )
+    {
+        int button = NSRunAlertPanel( @"New Software Avaliable",
+                    @"A newer version of this software is avaliable.\nWould you like to download the new version now?",
+                    @"Yes", @"No", nil );
+                    
+        if( button == NSOKButton )
+        [[NSWorkspace sharedWorkspace] openURL:
+        [NSURL URLWithString: @"http://sourceforge.net/projects/generationx"]];
+    }
+    else
+        NSRunAlertPanel( @"Error",
+                        @"Couldn't get latest version from the Internet",
+                        @"Ok", nil, nil );
   }
   else
-    NSRunAlertPanel( @"Error",
-                     @"Couldn't get latest version from the Internet",
-                     @"Ok", nil, nil );
+  {  
+    if( latest_vers && current_vers && ![current_vers isEqualToString: latest_vers] )
+    {
+        int button = NSRunAlertPanel( @"New Software Avaliable",
+                    @"A newer version of this software is avaliable.\nWould you like to download the new version now?",
+                    @"Yes", @"No", nil );
+                    
+        if( button == NSOKButton )
+        [[NSWorkspace sharedWorkspace] openURL:
+        [NSURL URLWithString: @"http://homepage.mac.com/nowhereman77/hacks/products.html"]];
+    }
+  }
 }
 
 - (void) handleBugReport:(id) sender
