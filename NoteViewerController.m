@@ -108,12 +108,20 @@
   }
   else if( [[item fieldType] isEqualToString: @"NOTE"] )
   {
-    return [item textValue];
+    return [item fieldValue];
   }
   else
   {
     return [[GenXUtil sharedUtil] eventStringFromGEDCOM: [item fieldType]];
   }
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView
+  setObjectValue:(NSString*)object 
+  forTableColumn:(NSTableColumn *)tableColumn
+  byItem:(GCField*)item
+{
+  [item setFieldValue: object];
 }
 
 //
