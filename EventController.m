@@ -98,9 +98,9 @@
     //
     else if( [[current_event fieldType] isEqual: @"FAMS"] )
     {
-      NSBeginAlertSheet( @"Are you sure?", @"I'm sure", @"Cancel", nil,
+      NSBeginAlertSheet( @"You can't do that!", @"Ok", nil, nil,
         [appController mainWindow], self, @selector( deleteMarriagePanelDidEnd:returnCode:contextInfo: ), nil, nil,
-        @"You are about to delete all information about this marriage. Are you sure you want to do this?" );
+        @"You must be in Family mode to delete marriage events." );
     }
   }
 }
