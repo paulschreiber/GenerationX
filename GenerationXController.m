@@ -126,11 +126,11 @@
   
   [indi_name setStringValue: [thisIndi fullName]];
 //  [indi_info setStringValue: [thisIndi textSummary: ged]];
-  if( tmp = [[thisIndi birthDate] description] )
+  if( tmp = [[thisIndi birthDate] descriptionWithCalendarFormat: @"%b %d, %Y" timeZone: nil locale: nil] )
     [indi_born_text setStringValue: [NSString stringWithFormat: @"Born:\t\t%@", tmp]];
   else
     [indi_born_text setStringValue: @"Born:"];
-  if( tmp = [[thisIndi deathDate] description] )
+  if( tmp = [[thisIndi deathDate] descriptionWithCalendarFormat: @"%b %d, %Y" timeZone: nil locale: nil] )
     [indi_died_text setStringValue: [NSString stringWithFormat: @"Died:\t\t%@", tmp]];
   else
     [indi_died_text setStringValue: @"Died:"];
