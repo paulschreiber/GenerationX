@@ -438,7 +438,7 @@
   {
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-    [main_tabs selectTabViewItemAtIndex: 0];
+//  [main_tabs selectTabViewItemAtIndex: 0];
     [fam_drawer close: self];
     [indi_drawer open: self];
     [self handleSelectIndi: indi_list];
@@ -458,7 +458,7 @@
   {
     [indi_event_menu setEnabled: false];
     [fam_event_menu setEnabled: true];
-    [main_tabs selectTabViewItemAtIndex: 1];
+//  [main_tabs selectTabViewItemAtIndex: 1];
     [indi_drawer close: self];
     [fam_drawer open: self];
     [self handleSelectFam: fam_list];
@@ -478,7 +478,7 @@
   {
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-    [main_tabs selectTabViewItemAtIndex: 2];
+//    [main_tabs selectTabViewItemAtIndex: 2];
     [indi_drawer open: self];
     [fam_drawer close: self];
     [self handleSelectIndi: indi_list];
@@ -554,7 +554,7 @@
   {
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-    [main_tabs selectTabViewItemAtIndex: 3];
+//    [main_tabs selectTabViewItemAtIndex: 3];
     [indi_drawer open: self];
     [fam_drawer close: self];
     [self handleSelectIndi: indi_list];
@@ -1376,11 +1376,11 @@
 // ============================================================
 
 static NSString* 	MyToolbarIdentifier 		  = @"My Toolbar Identifier";
-static NSString*	IndiToolbarItemIdentifier = @"Individual Item Identifier";
-static NSString*	FamToolbarItemIdentifier 	= @"Family Item Identifier";
+//static NSString*	IndiToolbarItemIdentifier = @"Individual Item Identifier";
+//static NSString*	FamToolbarItemIdentifier 	= @"Family Item Identifier";
 static NSString*	RawToolbarItemIdentifier 	= @"Raw Item Identifier";
-static NSString*	PedigreeToolbarItemIdentifier 	= @"Pedigree Item Identifier";
-static NSString*	DescendantsToolbarItemIdentifier 	= @"Descendants Item Identifier";
+//static NSString*	PedigreeToolbarItemIdentifier 	= @"Pedigree Item Identifier";
+//static NSString*	DescendantsToolbarItemIdentifier 	= @"Descendants Item Identifier";
 static NSString*	NewRecordToolbarItemIdentifier 	= @"New Record Item Identifier";
 static NSString*	EditRecordToolbarItemIdentifier 	= @"Edit Record Item Identifier";
 static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
@@ -1414,6 +1414,7 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
                                initWithItemIdentifier: itemIdent]
                                autorelease];
     
+/*
   if ([itemIdent isEqual: IndiToolbarItemIdentifier])
   {
     // Set the text label to be displayed in the toolbar and customization palette 
@@ -1474,7 +1475,8 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
     [toolbarItem setTarget: self];
     [toolbarItem setAction: @selector(handleDescendantMode:)];
   }
-  else if([itemIdent isEqual: NewRecordToolbarItemIdentifier])
+*/
+  if([itemIdent isEqual: NewRecordToolbarItemIdentifier])
   {
     // Set the text label to be displayed in the toolbar and customization palette 
     [toolbarItem setLabel: @"New"];
@@ -1550,11 +1552,12 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   // If during the toolbar's initialization, no overriding values are found in the user defaults, or if the
   // user chooses to revert to the default items self set will be used 
   return [NSArray arrayWithObjects:
-          IndiToolbarItemIdentifier, FamToolbarItemIdentifier,
-          EventToolbarItemIdentifier,
-          PedigreeToolbarItemIdentifier, DescendantsToolbarItemIdentifier,
-          NSToolbarSeparatorItemIdentifier,
+//          IndiToolbarItemIdentifier, FamToolbarItemIdentifier,
+//          PedigreeToolbarItemIdentifier, DescendantsToolbarItemIdentifier,
           NewRecordToolbarItemIdentifier, EditRecordToolbarItemIdentifier,
+          NSToolbarFlexibleSpaceItemIdentifier,
+          EventToolbarItemIdentifier,
+          
           nil];
 }
 
@@ -1564,10 +1567,11 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   // does not assume any items are allowed, even the separator   So, every allowed item must be explicitly listed   
   // The set of allowed items is used to construct the customization palette 
   return [NSArray arrayWithObjects:
-          IndiToolbarItemIdentifier, FamToolbarItemIdentifier,
+//          IndiToolbarItemIdentifier, FamToolbarItemIdentifier,
           EventToolbarItemIdentifier,
-          PedigreeToolbarItemIdentifier,
-          DescendantsToolbarItemIdentifier, NewRecordToolbarItemIdentifier,
+//          PedigreeToolbarItemIdentifier,
+//          DescendantsToolbarItemIdentifier,
+          NewRecordToolbarItemIdentifier,
           EditRecordToolbarItemIdentifier, RawToolbarItemIdentifier, 
           //NSToolbarShowColorsItemIdentifier,
           //NSToolbarShowFontsItemIdentifier,
@@ -1611,6 +1615,22 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   {
     [self handleEditRecord: nil];
   }
+}
+
+//
+// NSTabView delegate method
+//
+- (void)tabView:(NSTabView *)tabView
+  willSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+  if( [[tabViewItem identifier] isEqual: @"INDI"] )
+    [self handleIndiMode: indi_list];
+  if( [[tabViewItem identifier] isEqual: @"FAM"] )
+    [self handleFamMode: indi_list];
+  if( [[tabViewItem identifier] isEqual: @"PED"] )
+    [self handlePedigreeMode: indi_list];
+  if( [[tabViewItem identifier] isEqual: @"DEC"] )
+    [self handleDescendantMode: indi_list];
 }
 
 @end

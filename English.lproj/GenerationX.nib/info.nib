@@ -11,7 +11,7 @@
 		<key>221</key>
 		<string>462 324 227 372 0 0 1152 746 </string>
 		<key>29</key>
-		<string>7 685 460 44 0 0 1152 746 </string>
+		<string>55 600 503 44 0 0 1152 746 </string>
 		<key>366</key>
 		<string>589 617 144 66 0 0 1152 746 </string>
 		<key>523</key>
@@ -21,11 +21,7 @@
 	<string>283.0</string>
 	<key>IBOpenObjects</key>
 	<array>
-		<integer>523</integer>
-		<integer>202</integer>
-		<integer>221</integer>
 		<integer>200</integer>
-		<integer>29</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>6C115</string>
