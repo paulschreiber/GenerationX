@@ -11,6 +11,7 @@
 #import "HTMLController.h"
 #import "ImageViewerController.h"
 #import "NoteViewerController.h"
+#import "FileStatsController.h"
 #import "INDI.h"
 #import "FAM.h"
 
@@ -1170,6 +1171,11 @@
 {
   [[NSWorkspace sharedWorkspace] openURL:
     [NSURL URLWithString: @"mailto:nowhereman77@mac.com"]];
+}
+
+- (void) handleFileStats:(id) sender
+{
+  [[FileStatsController sharedStats] displayStats: ged];
 }
 
 - (void)doMerge:(NSOpenPanel *)sheet

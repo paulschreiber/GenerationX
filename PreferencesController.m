@@ -60,7 +60,7 @@
   //
   // get saved values
   //
-  [default_file_text setStringValue: [preferences stringForKey: @"DEFAULT_FILE"]];
+  [default_file_text setStringValue: [[preferences stringForKey: @"DEFAULT_FILE"] lastPathComponent]];
   [user_name_text setStringValue: [preferences stringForKey: @"USER_NAME"]];
   [auto_save_text setStringValue: [[NSNumber numberWithInt: [preferences integerForKey: @"AUTO_SAVE"]] stringValue]];
   
@@ -128,7 +128,7 @@
   {
     // attempt to load a file into the database
     NSArray *filesToOpen = [sheet filenames];
-    [default_file_text setStringValue: [filesToOpen objectAtIndex: 0]];
+    [default_file_text setStringValue: [[filesToOpen objectAtIndex: 0] lastPathComponent]];
    }
 }
 

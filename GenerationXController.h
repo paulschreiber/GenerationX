@@ -122,6 +122,10 @@
 - (void) handleFeatureRequest:(id) sender;
 - (void) handleDonate:(id) sender;
 - (void) handleEmail:(id) sender;
+
+// Window menu
+- (void) handleFileStats:(id) sender;
+
 - (void) setupToolbar;
 
 @end
