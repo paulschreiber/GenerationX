@@ -747,6 +747,9 @@
       [result appendString: [tmp_indi fullName]];
       [result appendString: @"</a>"];
       
+      if( tmp = [[[spice objectAtIndex: i] subfieldWithType: @"MARR"] valueOfSubfieldWithType: @"DATE"] )
+        [result appendString: [NSString stringWithFormat: @" (Married %@)", tmp]];
+      
       [result appendString: @"<br>\n<ul>"];
       for( j = 0; j < [children count]; j++ )
       {
@@ -796,7 +799,12 @@
         [result appendString: tmp];
         [result appendString: @")"];
       }
-      [result appendString: @"<br>\n"];
+      if( tmp = [gc_tmp valueOfSubfieldWithType: @"NOTE"] )
+      {
+        [result appendString: @"<br>"];
+        [result appendString: tmp];
+      }
+      [result appendString: @"<p>\n"];
     }
     i++;
   }

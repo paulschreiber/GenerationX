@@ -407,7 +407,7 @@
           
     if( button == 0 )
     {
-      [[NSUserDefaults standardUserDefaults] setObject: [NSNumber numberWithBool: false] forKey: @"showOSWarning"];
+      [[NSUserDefaults standardUserDefaults] setObject: [NSNumber numberWithBool: false] forKey: @"showJaguarWarning"];
     }
     else if( button == -1 )
       [NSApp terminate: self];
