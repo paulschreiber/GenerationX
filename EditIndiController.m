@@ -1132,7 +1132,8 @@
   if( ![[name_suffix stringValue] isEqual: [field nameSuffix]] )
   {
     // if the field doesn't exist, create it
-    if( ! [gc_tmp subfieldWithType: @"NSFX"] )
+    if( ! [gc_tmp subfieldWithType: @"NSFX"]
+     && ![[name_suffix stringValue] isEqual: @""] )
       [gc_tmp addSubfield: @"NSFX": [name_suffix stringValue]];
     // if it exists and was changed to be blank, delete it
     else if( [[name_suffix stringValue] isEqual: @""] )
