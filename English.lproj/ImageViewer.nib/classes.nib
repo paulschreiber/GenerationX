@@ -1,0 +1,28 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                buttonDownHasBeenClicked = id; 
+                buttonMinusHasBeenClicked = id; 
+                buttonPlusHasBeenClicked = id; 
+                buttonUpHasBeenClicked = id; 
+                imageHasBeenClicked = id; 
+            }; 
+            CLASS = ImageViewerController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                buttonDown = NSButton; 
+                buttonMinus = NSButton; 
+                buttonPlus = NSButton; 
+                buttonUp = NSButton; 
+                headerText = NSTextField; 
+                imageOutline = NSOutlineView; 
+                imagePreview = NSImageView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
