@@ -191,7 +191,7 @@
 
 - (NSDate*) birthDate
 {
-//NSLog( @"INDI::birthDate" );
+NSLog( @"INDI::birthDate" );
   NSString* birth_str = [[self subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"];
   NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
   NSString* tmp;
@@ -211,7 +211,7 @@
   
   // if the DATE field starts with an int between 1 and 31
   // assume we have a full DATE
-  if( i > 0 && i < 31 )
+  if( i > 0 && i <= 31 )
     return [NSDate dateWithNaturalLanguageString: birth_str];
   // otherwise we must have "MON YEAR" or just "YEAR"
   else
@@ -230,13 +230,13 @@
     [date_str appendString: birth_str];
   }
   
-//NSLog( date_str );
+NSLog( date_str );
   return [NSDate dateWithNaturalLanguageString: date_str];  
 }
 
 - (NSDate*) deathDate
 {
-//NSLog( @"INDI::deathDate" );
+NSLog( @"INDI::deathDate" );
   NSString* death_str = [[self subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"];
   NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
   NSString* tmp;
@@ -256,7 +256,7 @@
   
   // if the DATE field starts with an int between 1 and 31
   // assume we have a full DATE
-  if( i > 0 && i < 31 )
+  if( i > 0 && i <= 31 )
     return [NSDate dateWithNaturalLanguageString: death_str];
   // otherwise we must have "MON YEAR" or just "YEAR"
   else
@@ -275,7 +275,7 @@
     [date_str appendString: death_str];
   }
   
-//NSLog( date_str );
+NSLog( date_str );
   return [NSDate dateWithNaturalLanguageString: date_str];  
 }
 
