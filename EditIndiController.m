@@ -1161,6 +1161,8 @@
   
   if( ! [[birth_place stringValue] isEqualToString: @""] )
   {
+    [[GenXUtil sharedUtil] updateRecentPlacesWithString: [birth_place stringValue]];
+    
     if( ! [added subfieldWithType: @"BIRT"] )
       gc_tmp = [added addSubfield: @"BIRT": @""];
     else
@@ -1185,6 +1187,8 @@
   
   if( ! [[death_place stringValue] isEqualToString: @""] )
   {
+    [[GenXUtil sharedUtil] updateRecentPlacesWithString: [death_place stringValue]];
+
     if( ! [added subfieldWithType: @"DEAT"] )
       gc_tmp = [added addSubfield: @"DEAT": @""];
     else
@@ -1229,6 +1233,47 @@
 - (NSWindow*) window
 {
   return new_indi_window;
+}
+
+//
+// NSTextField delegate methods
+//
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+  NSString* tmp;
+  NSText* editor;
+  int b, e;
+
+  if( [[aNotification object] isEqual: birth_place] )
+  {
+    if( tmp = [[GenXUtil sharedUtil] recentPlaceWithPrefix: [birth_place stringValue]] )
+    {
+      editor = [new_indi_window fieldEditor: true forObject: birth_place];
+      b = [[editor string] length];
+      [birth_place setStringValue: tmp];
+      e = [[editor string] length];
+      [editor setSelectedRange: NSMakeRange( b, e )];
+    }
+  }
+  else if( [[aNotification object] isEqual: death_place] )
+  {
+    if( tmp = [[GenXUtil sharedUtil] recentPlaceWithPrefix: [death_place stringValue]] )
+    {
+      editor = [new_indi_window fieldEditor: true forObject: death_place];
+      b = [[editor string] length];
+      [death_place setStringValue: tmp];
+      e = [[editor string] length];
+      [editor setSelectedRange: NSMakeRange( b, e )];
+    }
+  }
+}
+
+- (void)controlTextDidEndEditing:(NSNotification *)aNotification
+{
+  if( [[aNotification object] isEqual: birth_place] )
+    [[GenXUtil sharedUtil] updateRecentPlacesWithString: [birth_place stringValue]];
+  else if( [[aNotification object] isEqual: death_place] )
+    [[GenXUtil sharedUtil] updateRecentPlacesWithString: [death_place stringValue]];
 }
 
 @end

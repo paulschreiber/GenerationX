@@ -11,6 +11,7 @@
 @interface GenXUtil : NSObject
 {
   NSMutableDictionary* eventDict;
+  NSMutableArray* recent_places;
 }
 
 + (GenXUtil*) sharedUtil;
@@ -18,5 +19,8 @@
 - (GenXUtil*) init;
 - (NSString*) eventStringFromGEDCOM: (NSString*) my_gedcom;
 - (NSDate*) dateFromGEDCOM: (NSString*) str;
+
+- (void) updateRecentPlacesWithString: (NSString*) s;
+- (NSString*) recentPlaceWithPrefix: (NSString*) s;
 
 @end

@@ -25,6 +25,7 @@
 - (GenXUtil*) init
 {
   eventDict = [[NSMutableDictionary alloc] init];
+  recent_places = [[NSMutableArray alloc] init];
   
   // INDI Events
   [eventDict setObject: @"Birth" forKey: @"BIRT"];
@@ -116,6 +117,30 @@
   
 //NSLog( date_str );
   return [NSDate dateWithNaturalLanguageString: date_str];  
+}
+
+- (void) updateRecentPlacesWithString: (NSString*) s
+{
+  if( [recent_places containsObject: s] )
+    return;
+    
+  if( [recent_places count] > 9 )
+    [recent_places removeObjectAtIndex: 0];
+    
+  [recent_places addObject: s];
+}
+
+- (NSString*) recentPlaceWithPrefix: (NSString*) s
+{
+  int i;
+  
+  for( i = 0; i < [recent_places count]; i++ )
+  {
+    if( [[recent_places objectAtIndex: i] hasPrefix: s] )
+      return [recent_places objectAtIndex: i];
+  }
+  
+  return nil;
 }
 
 @end
