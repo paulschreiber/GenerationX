@@ -27,6 +27,8 @@
     IBOutlet NSTextField* mother_text;
     IBOutlet NSTextField* father_text;
 
+    IBOutlet NSTextField* source_text;
+
     NSModalSession modal_session;
     GCFile* ged;
     INDI* field;

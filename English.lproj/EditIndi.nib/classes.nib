@@ -20,6 +20,7 @@
                 "name_suffix" = id; 
                 "new_indi_window" = id; 
                 "sex_matrix" = id; 
+                "source_text" = id; 
             }; 
             SUPERCLASS = NSObject; 
         }, 

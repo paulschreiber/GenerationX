@@ -32,6 +32,7 @@
 {
   ged = my_ged;
   field = my_field;
+  GCField* gc_tmp;
     
   [first_name setStringValue: @""];
   [last_name setStringValue: @""];
@@ -47,6 +48,7 @@
   [death_place setStringValue: @""];
   [father_text setStringValue: @""];
   [mother_text setStringValue: @""];
+  [source_text setStringValue: @""];
 
   // if we're editing an existing person, load up
   // the dialog with their info
@@ -193,6 +195,10 @@
       if( [[field mother: my_ged] fullName] )
         [mother_text setStringValue: [[field mother: my_ged] fullName]];
     }
+    
+    // SOUR
+    if( gc_tmp = [field subfieldWithType: @"SOUR"] )
+      [source_text setStringValue: [gc_tmp fieldValue]];
   }
 }
 
@@ -1190,6 +1196,15 @@
       [[added subfieldWithType: @"DEAT"] addSubfield: @"PLAC": [death_place stringValue]];
   }
   
+    // SOUR
+    if( ! [[source_text stringValue] isEqual: @""] )
+    {
+      if( gc_tmp = [added subfieldWithType: @"SOUR"] )
+        [gc_tmp setFieldValue: [source_text stringValue]];
+      else
+        [added addSubfield: @"SOUR": [source_text stringValue]];
+    }
+
   if( !field )
     [ged addRecord: added];
     
