@@ -83,7 +83,14 @@
     [name_scanner setCharactersToBeSkipped:
       [[NSCharacterSet alphanumericCharacterSet] invertedSet]];                   
   
-    [name_scanner scanUpToString: @" /"
+    // 020818 bug fix
+    // for NAME first/last/ scanning for " /" doesn't work
+    // so look for a space first, then if there are any /'s
+    // in the result, scan again up to the /
+    [name_scanner scanUpToString: @" "
+      intoString: &result];
+    [name_scanner initWithString: result];
+    [name_scanner scanUpToString: @"/"
       intoString: &result];
   }
         
