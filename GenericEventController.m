@@ -47,6 +47,16 @@
     else    
       [header_text setStringValue: @""];
   }
+  else if( [type isEqual: @"OCCU"] )
+  {
+    [header_text setEditable: true];
+    [header_text setBezeled: true];
+    [header_text setDrawsBackground: true];
+    if( tmp = [field fieldValue] )
+      [header_text setStringValue: tmp];
+    else    
+      [header_text setStringValue: @"Occupation"];
+  }
   else
   {
     [header_text setEditable: false];
@@ -145,6 +155,10 @@
       [gc_tmp setFieldValue: [header_text stringValue]];
     else
       [field addSubfield: @"TYPE": [header_text stringValue]];    
+  
+  if( [type isEqual: @"OCCU"]
+   && ! [[header_text stringValue] isEqual: @""] )
+    [field setFieldValue: [header_text stringValue]];    
   
   // DATE
   if( ! [[event_day titleOfSelectedItem] isEqual: @"--"] )

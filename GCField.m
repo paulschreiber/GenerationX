@@ -324,6 +324,7 @@
    || [my_type isEqualToString: @"PROB"]
    || [my_type isEqualToString: @"WILL"]
    || [my_type isEqualToString: @"GRAD"]
+   || [my_type isEqualToString: @"OCCU"]
    || [my_type isEqualToString: @"RETI"]
    || [my_type isEqualToString: @"EVEN"]
    || [my_type isEqualToString: @"CHR"]

@@ -931,6 +931,7 @@
    || [[current_event fieldType] isEqualToString: @"PROB"]
    || [[current_event fieldType] isEqualToString: @"WILL"]
    || [[current_event fieldType] isEqualToString: @"GRAD"]
+   || [[current_event fieldType] isEqualToString: @"OCCU"]
    || [[current_event fieldType] isEqualToString: @"RETI"]
    || [[current_event fieldType] isEqualToString: @"MARR"]
    || [[current_event fieldType] isEqualToString: @"ANUL"]
@@ -1408,8 +1409,8 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   else if([itemIdent isEqual: EventToolbarItemIdentifier])
   {
     // Set the text label to be displayed in the toolbar and customization palette 
-    [toolbarItem setLabel: @"Events"];
-    [toolbarItem setPaletteLabel: @"Events"];
+    [toolbarItem setLabel: @"Details"];
+    [toolbarItem setPaletteLabel: @"Details"];
     
     // Set up a reasonable tooltip, and image   Note, these aren't localized,
     // but you will likely want to localize many of the item's properties 

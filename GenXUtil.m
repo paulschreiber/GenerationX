@@ -46,6 +46,7 @@
   [eventDict setObject: @"Probate" forKey: @"PROB"];
   [eventDict setObject: @"Will" forKey: @"WILL"];
   [eventDict setObject: @"Graduation" forKey: @"GRAD"];
+  [eventDict setObject: @"Occupation" forKey: @"OCCU"];
   [eventDict setObject: @"Retirement" forKey: @"RETI"];
   [eventDict setObject: @"Generic Event" forKey: @"EVEN"];
   [eventDict setObject: @"Christening" forKey: @"CHR"];

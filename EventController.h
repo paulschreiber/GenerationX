@@ -35,6 +35,7 @@
 - (void) handleAddImmigration:(id) sender;
 - (void) handleAddNaturalization:(id) sender;
 - (void) handleAddGraduation:(id) sender;
+- (void) handleAddOccupation:(id) sender;
 - (void) handleAddRetirement:(id) sender;
 - (void) handleAddProbate:(id) sender;
 - (void) handleAddWill:(id) sender;

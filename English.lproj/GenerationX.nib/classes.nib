@@ -28,6 +28,7 @@
                 handleAddMarriageSettlement = id; 
                 handleAddNaturalization = id; 
                 handleAddNote = id; 
+                handleAddOccupation = id; 
                 handleAddOrdination = id; 
                 handleAddOtherEvent = id; 
                 handleAddProbate = id; 

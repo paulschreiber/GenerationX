@@ -59,16 +59,17 @@
     || [[current_event fieldType] isEqualToString: @"PROB"]
     || [[current_event fieldType] isEqualToString: @"WILL"]
     || [[current_event fieldType] isEqualToString: @"GRAD"]
+    || [[current_event fieldType] isEqualToString: @"OCCU"]
     || [[current_event fieldType] isEqualToString: @"RETI"]
     || [[current_event fieldType] isEqualToString: @"MARR"]
-   || [[current_event fieldType] isEqualToString: @"ANUL"]
-   || [[current_event fieldType] isEqualToString: @"DIV"]
-   || [[current_event fieldType] isEqualToString: @"DIVF"]
-   || [[current_event fieldType] isEqualToString: @"ENGA"]
-   || [[current_event fieldType] isEqualToString: @"MARB"]
-   || [[current_event fieldType] isEqualToString: @"MARC"]
-   || [[current_event fieldType] isEqualToString: @"MARL"]
-   || [[current_event fieldType] isEqualToString: @"MARS"]
+    || [[current_event fieldType] isEqualToString: @"ANUL"]
+    || [[current_event fieldType] isEqualToString: @"DIV"]
+    || [[current_event fieldType] isEqualToString: @"DIVF"]
+    || [[current_event fieldType] isEqualToString: @"ENGA"]
+    || [[current_event fieldType] isEqualToString: @"MARB"]
+    || [[current_event fieldType] isEqualToString: @"MARC"]
+    || [[current_event fieldType] isEqualToString: @"MARL"]
+    || [[current_event fieldType] isEqualToString: @"MARS"]
     || [[current_event fieldType] isEqualToString: @"EVEN"] )
     {
       [current_record removeSubfield: current_event];
@@ -199,6 +200,11 @@
 - (void) handleAddGraduation:(id) sender
 {
   [self addEvent: @"GRAD"];
+}
+
+- (void) handleAddOccupation:(id) sender
+{
+  [self addEvent: @"OCCU"];
 }
 
 - (void) handleAddRetirement:(id) sender
