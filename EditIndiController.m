@@ -36,7 +36,7 @@
   [first_name setStringValue: @""];
   [last_name setStringValue: @""];
   [name_suffix setStringValue: @""];
-  [sex_matrix selectCellWithTag: 0];
+  [sex_matrix deselectAllCells];
   [birth_day selectItemWithTitle: @"--"];
   [birth_month selectItemWithTitle: @"---"];
   [birth_year setStringValue: @""];
@@ -197,7 +197,7 @@
 }
 
 // extract all the stuff from the dialog and adjust our data accordingly
-- (void) process
+- (BOOL) process
 {
   NSMutableString* indi_label = [[NSMutableString alloc] init];
   NSMutableString* famc_label = [[NSMutableString alloc] init];
@@ -229,7 +229,8 @@
   if( field )
     added = field;
   else
-    added = [ged addRecord: @"INDI": indi_label];
+    added = [[INDI alloc] init: 0 : @"INDI" : indi_label];
+//    added = [ged addRecord: @"INDI": indi_label];
     
   [added setNeedSave: true];
 
@@ -290,6 +291,13 @@
   }
   
   // SEX
+  if( ! [sex_matrix selectedCell] )
+  {
+    NSRunAlertPanel( @"Error", 
+      @"Please indicate a gender for this person.",
+      @"Ok", nil, nil );
+    return false;
+  }
   if( gc_tmp = [added subfieldWithType: @"SEX"] )
     [gc_tmp setFieldValue: [[sex_matrix selectedCell] title]];
   else
@@ -645,14 +653,20 @@
     // add this person as a CHIL to his FAMC
     [famc addSubfield: @"CHIL": [added fieldValue]];
   }
+  
+  if( !field )
+    [ged addRecord: added];
+    
+  return true;
 }
 
 - (void) handleOk: (id) sender
 {
-  [[EditIndiController sharedNewIndi] process];
-  
-  [new_indi_window orderOut: self];
-  [[NSApplication sharedApplication] endSheet: [[EditIndiController sharedNewIndi] window]];
+  if( [[EditIndiController sharedNewIndi] process] )
+  {  
+    [new_indi_window orderOut: self];
+    [[NSApplication sharedApplication] endSheet: [[EditIndiController sharedNewIndi] window]];
+  }
 }
 
 - (void) handleCancel: (id) sender

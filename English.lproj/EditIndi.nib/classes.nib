@@ -5,21 +5,21 @@
             CLASS = EditIndiController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                birth_day = id; 
-                birth_month = id; 
-                birth_place = id; 
-                birth_year = id; 
-                death_day = id; 
-                death_month = id; 
-                death_place = id; 
-                death_year = id; 
-                father_text = id; 
-                first_name = id; 
-                last_name = id; 
-                mother_text = id; 
-                name_suffix = id; 
-                new_indi_window = id; 
-                sex_matrix = id; 
+                "birth_day" = id; 
+                "birth_month" = id; 
+                "birth_place" = id; 
+                "birth_year" = id; 
+                "death_day" = id; 
+                "death_month" = id; 
+                "death_place" = id; 
+                "death_year" = id; 
+                "father_text" = id; 
+                "first_name" = id; 
+                "last_name" = id; 
+                "mother_text" = id; 
+                "name_suffix" = id; 
+                "new_indi_window" = id; 
+                "sex_matrix" = id; 
             }; 
             SUPERCLASS = NSObject; 
         }, 

@@ -34,7 +34,7 @@
 + (EditIndiController*) sharedNewIndi;
 - (EditIndiController*) initNib;
 - (void) prepForDisplay: (id) my_ged: (id) my_field;
-- (void) process;
+- (BOOL) process;
 - (void) handleOk: (id) sender;
 - (void) handleCancel: (id) sender;
 - (NSWindow*) window;
