@@ -27,7 +27,7 @@
 
 - (void) setField: (id) my_field
 {
-  NSMutableString* tmp = [[NSMutableString alloc] init];;
+  NSMutableString* tmp = [[NSMutableString alloc] init];
   field = my_field;
   
   [tmp setString: @"Note for "];
@@ -47,9 +47,9 @@
   NSArray* bits = [[note_text string] componentsSeparatedByString: @"\n"];
   int i;
   
-  added = [field addSubfield: @"NOTE": [bits objectAtIndex: 0]];
+  added = [field addSubfield: @"NOTE": [NSString stringWithString: [bits objectAtIndex: 0]]];
   for( i = 1; i < [bits count]; i++ )
-    [added addSubfield: @"CONT": [bits objectAtIndex: i]];
+    [added addSubfield: @"CONT": [NSString stringWithString: [bits objectAtIndex: i]]];
     
   [added setNeedSave: true];
 }
