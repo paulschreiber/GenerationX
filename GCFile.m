@@ -52,6 +52,7 @@
   path = nil;
 
   // start out with the required HEAD, SUBM and TRLR records
+  // as well as a single INDI
   if( header = [self addRecord: @"HEAD": @"HEAD"] )
   {
     subm = [self addRecord: @"SUBM": subm_label];
@@ -70,6 +71,10 @@
     }
     [header addSubfield: @"CHAR": @"ASCII"];
   }
+  
+  if( tmp = [self addRecord: @"INDI": @"1"] )
+    [tmp addSubfield: @"NAME" : @"Here /Start/"];
+  
   [self addRecord: @"TRLR": @""];
   
   return self;
@@ -255,7 +260,7 @@
 - (NSMutableArray*) surnames
 {
   NSMutableArray* result = [[NSMutableArray alloc] init];
-  GCField* gc_tmp;
+  INDI* gc_tmp;
   int i;
   
   for( i = 0; i < [individuals count]; i++ )
