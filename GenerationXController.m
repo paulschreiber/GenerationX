@@ -123,7 +123,7 @@
   GCField* gc_tmp;
   NSImage* image = [NSImage alloc];
   NSString* tmp;
-
+  
   [indi_name setStringValue: [thisIndi fullName]];
 //  [indi_info setStringValue: [thisIndi textSummary: ged]];
   if( tmp = [[thisIndi birthDate] description] )
@@ -164,7 +164,7 @@
   GCField* gc_tmp;
   NSImage* image = [NSImage alloc];
   NSString* tmp;
-
+  
   if( [thisFam husband: ged] )
     [fam_husb_text setStringValue: [NSString stringWithFormat: @"Husband: %@", [[thisFam husband: ged] fullName]]];
   else
@@ -339,6 +339,7 @@
 - (void)loadDataFile
 {
   NSString* data_file;
+  int i;
 
   // try and load a default data file
   data_file = [[PreferencesController sharedPrefs] defaultFile];
@@ -352,6 +353,11 @@
       [ged completeLastnames]; 
     }
 // pmh
+
+    //make sure all the children of all the FAM records are sorted properly
+    for( i = 0; i < [ged numFamilies]; i++ )
+      [[ged famAtIndex: i] sortChildren: ged];
+
   }
   else
     // if it didn't load ask the user to specify a file
@@ -1341,6 +1347,8 @@
   returnCode:(int)returnCode
   contextInfo:(void  *)contextInfo
 {
+  int i;
+  
   if (returnCode == NSOKButton)
   {
     // attempt to load a file into the database
@@ -1377,6 +1385,10 @@
     [ged completeLastnames]; 
   }
 // pmh
+
+  //make sure all the children of all the FAM records are sorted properly
+  for( i = 0; i < [ged numFamilies]; i++ )
+    [[ged famAtIndex: i] sortChildren: ged];
 
   [recordListDataSource setGED: ged];
   [recordListDataSource setIndiFilter: @""];

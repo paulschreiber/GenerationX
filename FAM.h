@@ -23,5 +23,6 @@
 - (NSMutableArray*) children: (id) my_ged;
 - (NSString*) textSummary: (id) my_ged;
 - (NSComparisonResult) compare: (id) my_field;
+- (void) sortChildren: (id) g;
 
 @end

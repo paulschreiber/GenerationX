@@ -100,6 +100,31 @@
   return result;
 }
 
+- (void) sortChildren: (id) g
+{
+  int i;
+  GCField* f;
+  NSMutableArray* children = [self children: g];
+  [children sortUsingSelector: @selector( compareBirthdays: )];
+  
+  // remove the children
+  for( i = 0; i < [subfields count]; i++ )
+  {
+    f = [subfields objectAtIndex: i];
+    if( [[f fieldType] isEqualToString: @"CHIL"] )
+    {
+      [subfields removeObject: f];
+      i--;
+    }
+  }
+  // and replace them in the correct order
+  for( i = 0; i < [children count]; i++ )
+  {
+    f = [children objectAtIndex: i];
+    [subfields addObject: [[GCField alloc] init: 1 : @"CHIL" : [f fieldValue]]];
+  }
+}
+
 - (NSComparisonResult) compare: (id) my_field
 {
   return [value compare: [my_field fieldValue]];
