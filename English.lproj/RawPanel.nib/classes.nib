@@ -5,7 +5,7 @@
             ACTIONS = {handleDeleteFieldButton = id; handleNewFieldButton = id; }; 
             CLASS = RawPanelController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {raw_outline = id; raw_panel = id; }; 
+            OUTLETS = {"raw_outline" = id; "raw_panel" = id; }; 
             SUPERCLASS = NSObject; 
         }
     ); 

@@ -1,6 +1,5 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
                 handleAddAdoption = id; 
@@ -34,12 +33,33 @@
                 handleAddProbate = id; 
                 handleAddRetirement = id; 
                 handleAddWill = id; 
+            }; 
+            CLASS = EventController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {appController = id; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {filterButtonHasBeenClicked = id; }; 
+            CLASS = FamListController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                drawer = NSDrawer; 
+                famFilterButton = NSButton; 
+                famFilterLabel = NSTextField; 
+                famFilterTextField = NSTextField; 
+                famList = NSTableView; 
+                mainWindow = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
                 handleAllHTML = id; 
                 handleAncestorsGEDCOM = id; 
-                handleAncestorsReport = id; 
                 handleBugReport = id; 
                 handleCheckVersion = id; 
-                handleDeleteEvent = id; 
                 handleDeleteRecord = id; 
                 handleDescendantMode = id; 
                 handleDescendantReport = id; 
@@ -49,66 +69,73 @@
                 handleEmail = id; 
                 handleEventsToolbar = id; 
                 handleFamMode = id; 
+                handleFamSelectionChanged = id; 
                 handleFeatureRequest = id; 
-                handleFilter = id; 
                 handleImageClick = id; 
+                handleImagesToolbar = id; 
                 handleIndiMode = id; 
+                handleIndiSelectionChanged = id; 
                 handleMergeFile = id; 
                 handleNewFile = id; 
                 handleNewRecord = id; 
+                handleNotesToolbar = id; 
                 handleOpenFile = id; 
                 handlePedigreeClick = id; 
                 handlePedigreeMode = id; 
                 handlePrefs = id; 
                 handleSaveAs = id; 
                 handleSaveFile = id; 
-                handleSelectEvent = id; 
-                handleSelectFam = id; 
-                handleSelectIndi = id; 
+                showAboutBox = id; 
                 showRawPanel = id; 
             }; 
             CLASS = GenerationXController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "dec_name" = id; 
-                "dec_outline" = id; 
-                "displayed_fam_text" = id; 
-                "displayed_indi_text" = id; 
-                "event_drawer" = id; 
-                "event_list" = id; 
-                "event_menu" = id; 
-                "fam_drawer" = id; 
-                "fam_event_menu" = id; 
-                "fam_filter_button" = id; 
-                "fam_filter_text" = id; 
-                "fam_image" = id; 
-                "fam_info" = id; 
-                "fam_list" = id; 
-                "indi_drawer" = id; 
-                "indi_event_menu" = id; 
-                "indi_filter_button" = id; 
-                "indi_filter_text" = id; 
-                "indi_image" = id; 
-                "indi_info" = id; 
-                "indi_list" = id; 
-                "indi_name" = id; 
-                "main_tabs" = id; 
-                "main_window" = id; 
-                "ped_father" = id; 
-                "ped_mgf" = id; 
-                "ped_mgm" = id; 
-                "ped_mmgf" = id; 
-                "ped_mmgm" = id; 
-                "ped_mother" = id; 
-                "ped_mpgf" = id; 
-                "ped_mpgm" = id; 
-                "ped_pgf" = id; 
-                "ped_pgm" = id; 
-                "ped_pmgf" = id; 
-                "ped_pmgm" = id; 
-                "ped_ppgf" = id; 
-                "ped_ppgm" = id; 
-                "ped_root" = id; 
+                "dec_name" = NSTextField; 
+                "dec_outline" = NSOutlineView; 
+                "event_drawer" = NSDrawer; 
+                "event_list" = NSTableView; 
+                "event_menu" = NSMenuItem; 
+                famListController = FamListController; 
+                "fam_event_menu" = NSMenuItem; 
+                "fam_image" = NSImageView; 
+                "fam_info" = NSTextField; 
+                indiListController = IndiListController; 
+                "indi_event_menu" = NSMenuItem; 
+                "indi_image" = NSImageView; 
+                "indi_info" = NSTextField; 
+                "indi_name" = NSTextField; 
+                "main_tabs" = NSTabView; 
+                "main_window" = NSWindow; 
+                "ped_father" = NSTextField; 
+                "ped_mgf" = NSTextField; 
+                "ped_mgm" = NSTextField; 
+                "ped_mmgf" = NSTextField; 
+                "ped_mmgm" = NSTextField; 
+                "ped_mother" = NSTextField; 
+                "ped_mpgf" = NSTextField; 
+                "ped_mpgm" = NSTextField; 
+                "ped_pgf" = NSTextField; 
+                "ped_pgm" = NSTextField; 
+                "ped_pmgf" = NSTextField; 
+                "ped_pmgm" = NSTextField; 
+                "ped_ppgf" = NSTextField; 
+                "ped_ppgm" = NSTextField; 
+                "ped_root" = NSTextField; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {filterButtonHasBeenClicked = id; }; 
+            CLASS = IndiListController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                drawer = NSDrawer; 
+                indiFilterButton = NSButton; 
+                indiFilterLabel = NSTextField; 
+                indiFilterTextField = NSTextField; 
+                indiList = NSTableView; 
+                mainWindow = NSWindow; 
             }; 
             SUPERCLASS = NSObject; 
         }

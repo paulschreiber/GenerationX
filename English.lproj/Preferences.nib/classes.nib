@@ -9,7 +9,6 @@
                 auto_save_text = id; 
                 default_file_text = id; 
                 pref_window = id; 
-                sort_events_button = id; 
                 sort_filtered_button = id; 
                 sort_records_button = id; 
                 user_name_text = id; 
