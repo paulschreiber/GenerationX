@@ -16,6 +16,8 @@
   int i;
   ged = my_ged;
   sort = false;
+  indis_are_sorted = false;
+  fams_are_sorted = false;
   
   indi_filter = @"";
   fam_filter = @"";
@@ -140,7 +142,8 @@
       [displayed_indi sortUsingSelector: @selector(compare:)];
   }
   
-  [self sortIndisUsingFieldId: sort_column descending: sort_descending];
+  if( indis_are_sorted )
+    [self sortIndisUsingFieldId: sort_column descending: sort_descending];
 }
 
 - (void) refreshFams
@@ -158,7 +161,8 @@
        || [[[[ged famAtIndex: i] wife: ged] lastName] hasPrefix: fam_filter] )
         [displayed_fam addObject: [ged famAtIndex: i]];
 
-  [self sortFamsUsingFieldId: sort_column descending: sort_descending];
+  if( fams_are_sorted )
+    [self sortFamsUsingFieldId: sort_column descending: sort_descending];
 }
 
 
@@ -204,6 +208,7 @@ descending: (BOOL) sortDescending;
 
   sort_column = fieldId;
   sort_descending = sortDescending;
+  indis_are_sorted = true;
   
   [displayed_indi sortUsingFunction: compareIndisUsingSortInfo context: sortInfo];
   [sortInfo release];
@@ -243,6 +248,11 @@ descending: (BOOL) sortDescending;
 {
   TableSortInfo*	sortInfo =
     [[TableSortInfo alloc] initWithColumnId: fieldId withDescending: sortDescending withGCFile: ged];
+
+  sort_column = fieldId;
+  sort_descending = sortDescending;
+  indis_are_sorted = true;
+  
   [displayed_fam sortUsingFunction: compareFamsUsingSortInfo context: sortInfo];
   [sortInfo release];
 }

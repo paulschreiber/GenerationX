@@ -17,6 +17,8 @@
   GCFile* ged;
   BOOL sort;
   int sort_column;
+  BOOL indis_are_sorted;
+  BOOL fams_are_sorted;
   BOOL sort_descending;
   
   NSString* indi_filter;
