@@ -56,6 +56,7 @@
 {
   float		surnameColWidth;
   float		givenNameColWidth;
+  NSSize		drawerSize;
 
   // Drawer
   [drawer setParentWindow: mainWindow];
@@ -63,7 +64,6 @@
   [drawer openOnEdge: NSMinXEdge];
   
   // Initial size
-  NSSize		drawerSize;
   drawerSize = [drawer contentSize];
   drawerSize.width = 250;
   [drawer setContentSize: drawerSize];

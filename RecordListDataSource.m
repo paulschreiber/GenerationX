@@ -139,6 +139,8 @@
     if( sort )
       [displayed_indi sortUsingSelector: @selector(compare:)];
   }
+  
+  [self sortIndisUsingFieldId: sort_column descending: sort_descending];
 }
 
 - (void) refreshFams
@@ -155,6 +157,8 @@
       if( [[[[ged famAtIndex: i] husband: ged] lastName] hasPrefix: fam_filter]
        || [[[[ged famAtIndex: i] wife: ged] lastName] hasPrefix: fam_filter] )
         [displayed_fam addObject: [ged famAtIndex: i]];
+
+  [self sortFamsUsingFieldId: sort_column descending: sort_descending];
 }
 
 
@@ -180,6 +184,13 @@ static int compareIndisUsingSortInfo( id p1, id p2, void* context )
       result =  [[indi2 lastName] caseInsensitiveCompare: [indi1 lastName]];
     else
       result =  [[indi1 lastName] caseInsensitiveCompare: [indi2 lastName]];
+
+    // if the last names are the same, sub-sort on first name
+    if( result == NSOrderedSame )
+      if( descending )
+        result =  [[indi2 firstName] caseInsensitiveCompare: [indi1 firstName]];
+      else
+        result =  [[indi1 firstName] caseInsensitiveCompare: [indi2 firstName]];
   }
   
   return result;
@@ -190,6 +201,10 @@ descending: (BOOL) sortDescending;
 {
   TableSortInfo*	sortInfo =
     [[TableSortInfo alloc] initWithColumnId: fieldId withDescending: sortDescending withGCFile: ged];
+
+  sort_column = fieldId;
+  sort_descending = sortDescending;
+  
   [displayed_indi sortUsingFunction: compareIndisUsingSortInfo context: sortInfo];
   [sortInfo release];
 }
