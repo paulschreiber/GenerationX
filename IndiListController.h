@@ -56,5 +56,6 @@
   - (INDI*) selection;
   - (void) setSelection: (INDI*)indiRecord;
   - (void) makeSelectionVisible;
+  - (NSTableView*) indiList;
 
 @end

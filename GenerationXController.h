@@ -73,6 +73,7 @@
 - (NSWindow*) mainWindow;
 - (GCFile*) gedFile;
 - (GCField*) currentRecord;
+- (GCField*) currentEvent;
 
 
 - (void) refreshGUI;

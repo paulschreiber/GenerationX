@@ -215,4 +215,10 @@
   [self reloadData];
   [self makeSelectionVisible];
 }
+
+- (NSTableView*) famList
+{
+  return famList;
+}
+
 @end

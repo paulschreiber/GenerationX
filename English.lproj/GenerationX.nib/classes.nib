@@ -33,6 +33,7 @@
                 handleAddProbate = id; 
                 handleAddRetirement = id; 
                 handleAddWill = id; 
+                handleDeleteEvent = id; 
             }; 
             CLASS = EventController; 
             LANGUAGE = ObjC; 
@@ -44,6 +45,7 @@
             CLASS = FamListController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                appController = id; 
                 drawer = NSDrawer; 
                 famFilterButton = NSButton; 
                 famFilterLabel = NSTextField; 
@@ -85,6 +87,7 @@
                 handlePrefs = id; 
                 handleSaveAs = id; 
                 handleSaveFile = id; 
+                handleSelectEvent = id; 
                 showAboutBox = id; 
                 showRawPanel = id; 
             }; 
@@ -130,6 +133,7 @@
             CLASS = IndiListController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                appController = id; 
                 drawer = NSDrawer; 
                 indiFilterButton = NSButton; 
                 indiFilterLabel = NSTextField; 

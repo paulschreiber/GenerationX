@@ -31,7 +31,10 @@
 
 - (void) handleDeleteEvent:(id) sender
 {
-/*
+  GCField* current_event = [appController currentEvent];
+  GCField* current_record = [appController currentRecord];
+  GCFile* ged = [appController gedFile];
+  
   if( current_event )
   {
     //
@@ -95,11 +98,10 @@
     else if( [[current_event fieldType] isEqual: @"FAMS"] )
     {
       NSBeginAlertSheet( @"Are you sure?", @"I'm sure", @"Cancel", nil,
-        main_window, self, @selector( deleteMarriagePanelDidEnd:returnCode:contextInfo: ), nil, nil,
+        [appController mainWindow], self, @selector( deleteMarriagePanelDidEnd:returnCode:contextInfo: ), nil, nil,
         @"You are about to delete all information about this marriage. Are you sure you want to do this?" );
     }
   }
-*/
 }
 
 - (void)deleteMarriagePanelDidEnd:(NSOpenPanel *)sheet

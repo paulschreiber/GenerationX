@@ -52,9 +52,12 @@
   // Setup the event drawer
   [event_list setTag: 2];
   [event_list setDelegate: self];
-//  [event_list setNextResponder: self];
   [event_drawer setParentWindow: main_window];
   [event_drawer setPreferredEdge: NSMaxXEdge];
+
+  [event_list setNextResponder: self];
+  [[famListController famList] setNextResponder: self];
+  [[indiListController indiList] setNextResponder: self];
 
   // Setup the toolbar
   [self setupToolbar];
@@ -402,6 +405,11 @@
 - (GCField*) currentRecord
 {
   return current_record;
+}
+
+- (GCField*) currentEvent
+{
+  return current_event;
 }
 
 // Refresh GUI

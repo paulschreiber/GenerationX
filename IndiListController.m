@@ -225,4 +225,9 @@
   [self makeSelectionVisible];
 }
 
+- (NSTableView*) indiList
+{
+  return indiList;
+}
+
 @end

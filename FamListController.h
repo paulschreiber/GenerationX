@@ -57,5 +57,6 @@
   - (FAM*) selection;
   - (void) setSelection: (FAM*)indiRecord;
   - (void) makeSelectionVisible;
+  - (NSTableView*) famList;
 
 @end
