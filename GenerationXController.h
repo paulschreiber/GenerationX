@@ -27,6 +27,11 @@
     // Indi view
     IBOutlet NSTextField* indi_name;
     IBOutlet NSTextField* indi_info;
+    IBOutlet NSTextField* indi_born_text;
+    IBOutlet NSTextField* indi_died_text;
+    IBOutlet NSTextField* indi_father_text;
+    IBOutlet NSTextField* indi_mother_text;
+    IBOutlet id           indi_spice_outline;
     IBOutlet NSImageView* indi_image;
     
     // Fam list controller
@@ -34,6 +39,10 @@
 
     // Fam view
     IBOutlet NSTextField* fam_info;
+    IBOutlet NSTextField* fam_husb_text;
+    IBOutlet NSTextField* fam_wife_text;
+    IBOutlet NSTextField* fam_marr_text;
+    IBOutlet NSTextField* fam_child_table;
     IBOutlet NSImageView* fam_image;
 
     // Event drawer
@@ -65,6 +74,7 @@
     NSTimer* 				autoSaveTimer;
 
     GCFile*               	ged;
+    NSMutableArray*             indi_history;
     GCField*              	current_record;
     GCField*              	current_event;
 }
@@ -87,6 +97,7 @@
 - (void) handlePedigreeMode:(id) sender;
 - (void) handleDescendantMode:(id) sender;
 - (void) handlePedigreeClick:(id) sender;
+- (void) handlePedigreeGoBack:(id) sender;
 - (void) handleImageClick:(id) sender;
 - (void) showRawPanel:(id) sender;
 - (void) handleEventsToolbar:(id) sender;
@@ -125,6 +136,12 @@
 
 // Window menu
 - (void) handleFileStats:(id) sender;
+
+- (void) handleGoToFather:(id) sender;
+- (void) handleGoToMother:(id) sender;
+- (void) handleFamGoToHusb:(id) sender;
+- (void) handleFamGoToWife:(id) sender;
+- (void) handleFamGoToChild:(id) sender;
 
 - (void) setupToolbar;
 

@@ -20,6 +20,11 @@
 
 @implementation GenerationXController
 
++ (void)initialize {
+    NSMutableDictionary *defaultValues = [NSMutableDictionary dictionary];
+    [defaultValues setObject: [NSNumber numberWithBool: true] forKey:@"showJaguarWarning"];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaultValues];
+}
 
 // Set up  auto-save
 - (void)setupAutosave
@@ -41,6 +46,11 @@
 // This method is called from applicationDidFinishLaunching
 - (void)setupGUI
 {
+  NSTableColumn *tableColumn = nil;
+  NSButtonCell*  buttonCell1 = [[[NSButtonCell alloc] initTextCell: @""] autorelease];
+  NSButtonCell*  buttonCell2 = [[[NSButtonCell alloc] initTextCell: @""] autorelease];
+  NSButtonCell*  buttonCell3 = [[[NSButtonCell alloc] initTextCell: @""] autorelease];
+
   // start up in indi view mode
   [main_tabs selectTabViewItemAtIndex: 0];
   
@@ -73,15 +83,64 @@
 //  [ped_father setTarget: self];
 //  [ped_father sendActionOn: NSLeftMouseUp];
 //  [ped_father setAction: @selector(handlePedigreeClick:)];
+
+//  [indi_spice_outline setIndentationPerLevel: 10];
+//  [buttonCell1 setControlSize: NSSmallControlSize];
+  [buttonCell1 setTitle: @"Go"];
+  [buttonCell1 setEditable: NO];
+  [buttonCell1 setBezelStyle: NSShadowlessSquareBezelStyle];
+  [buttonCell1 setImagePosition: NSNoImage];
+  [buttonCell1 setTarget: self];
+  [buttonCell1 setAction: @selector( handleGoToSpouseOrChild: )];  
+  tableColumn = [indi_spice_outline tableColumnWithIdentifier: @"GO"];
+  [tableColumn setDataCell:buttonCell1];
+
+//  [indi_spice_outline setIndentationPerLevel: 10];
+//  [buttonCell2 setControlSize: NSSmallControlSize];
+  [buttonCell2 setTitle: @"Go"];
+  [buttonCell2 setEditable: NO];
+  [buttonCell2 setBezelStyle: NSShadowlessSquareBezelStyle];
+  [buttonCell2 setImagePosition: NSNoImage];
+  [buttonCell2 setTarget: self];
+  [buttonCell2 setAction: @selector( handleGoToSpouseOrChild: )];  
+  tableColumn = [dec_outline tableColumnWithIdentifier: @"GO"];
+  [tableColumn setDataCell:buttonCell2];
+
+//  [indi_spice_outline setIndentationPerLevel: 10];
+//  [buttonCell2 setControlSize: NSSmallControlSize];
+  [buttonCell3 setTitle: @"Go"];
+  [buttonCell3 setEditable: NO];
+  [buttonCell3 setBezelStyle: NSShadowlessSquareBezelStyle];
+  [buttonCell3 setImagePosition: NSNoImage];
+  [buttonCell3 setTarget: self];
+  [buttonCell3 setAction: @selector( handleFamGoToChild: )];  
+  tableColumn = [fam_child_table tableColumnWithIdentifier: @"GO"];
+  [tableColumn setDataCell:buttonCell3];
 }
 
 - (void) updateIndiViewWithIndi: (INDI*)thisIndi
 {
   GCField* gc_tmp;
   NSImage* image = [NSImage alloc];
+  NSString* tmp;
 
   [indi_name setStringValue: [thisIndi fullName]];
-  [indi_info setStringValue: [thisIndi textSummary: ged]];
+//  [indi_info setStringValue: [thisIndi textSummary: ged]];
+  if( tmp = [[thisIndi birthDate] description] )
+    [indi_born_text setStringValue: [NSString stringWithFormat: @"Born:\t\t%@", tmp]];
+  if( tmp = [[thisIndi deathDate] description] )
+    [indi_died_text setStringValue: [NSString stringWithFormat: @"Died:\t\t%@", tmp]];
+  if( [thisIndi father: ged] )
+    [indi_father_text setStringValue: [NSString stringWithFormat: @"Father:\t%@", [[thisIndi father: ged] fullName]]];
+  else
+    [indi_father_text setStringValue: @"Father: Unknown"];
+  if( [thisIndi mother: ged] )
+    [indi_mother_text setStringValue: [NSString stringWithFormat: @"Mother:\t%@", [[thisIndi mother: ged] fullName]]];
+  else
+    [indi_mother_text setStringValue: @"Mother: Unknown"];
+  
+  [indi_spice_outline setDataSource: self];
+  [indi_spice_outline reloadData];
 
 // BCH
   // images stuff
@@ -104,8 +163,24 @@
 {
   GCField* gc_tmp;
   NSImage* image = [NSImage alloc];
+  NSString* tmp;
 
+  if( [thisFam husband: ged] )
+    [fam_husb_text setStringValue: [NSString stringWithFormat: @"Husband: %@", [[thisFam husband: ged] fullName]]];
+  else
+    [fam_husb_text setStringValue: @"Husband: Unknown"];
+    
+  if( [thisFam wife: ged] )
+    [fam_wife_text setStringValue: [NSString stringWithFormat: @"Wife: %@", [[thisFam wife: ged] fullName]]];
+  else
+    [fam_wife_text setStringValue: @"Wife: Unknown"];
+    
+  if( tmp = [[thisFam subfieldWithType: @"MARR"] valueOfSubfieldWithType: @"DATE"] )
+    [fam_marr_text setStringValue: [NSString stringWithFormat: @"Married: %@", tmp]];
   [fam_info setStringValue: [thisFam textSummary: ged]];
+
+  [fam_child_table setDataSource: self];
+  [fam_child_table reloadData];
 
 // BCH  
   // images stuff
@@ -293,11 +368,15 @@
   recordListDataSource = [[RecordListDataSource alloc] initWithGED: ged];
   [indiListController setListDataSource: recordListDataSource];
   [famListController setListDataSource: recordListDataSource];
+
+  [indi_spice_outline setDataSource: self];
+  [fam_child_table setDataSource: self];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
   NSNotificationCenter*		appNotificationCenter;
+  indi_history = [[NSMutableArray alloc] init];
 
   if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_0)
   {  //User is using Mac OS X 10.0.x or earlier
@@ -312,6 +391,20 @@
       @"This version of GenerationX requires Mac OS X 10.2 Jaguar. The application will now terminate.",
       @"Ok", nil, nil );
     [NSApp terminate: self];
+  }
+  else if (floor(NSAppKitVersionNumber) < 743 && [[NSUserDefaults standardUserDefaults] boolForKey: @"showJaguarWarning"])
+  { // User is using Mac OS X 10.3.x
+    int button = 
+      NSRunAlertPanel( @"Warning",
+      @"This version of GenX is developed and tested on Mac OS X 10.3 Panther. Performance under previous versions of Mac OS X may be unpredicatable.",
+      @"Continue", @"Don't show again", @"Quit now" );
+          
+    if( button == 0 )
+    {
+      [[NSUserDefaults standardUserDefaults] setObject: [NSNumber numberWithBool: false] forKey: @"showOSWarning"];
+    }
+    else if( button == -1 )
+      [NSApp terminate: self];
   }
   
   // Register the current object as an observer
@@ -473,6 +566,20 @@
 
   if( selectedIndi )
   {
+    // Current indi and event
+    current_record = selectedIndi;
+    current_event = nil;
+
+    if( [indi_history count] == 20 )
+      [indi_history removeObjectAtIndex: 0];
+    if( [[current_record class] isEqual: NSClassFromString( @"INDI" )]
+     && ![[indi_history lastObject] isEqual: current_record] )
+      [indi_history addObject: current_record];
+
+    if( [[PreferencesController sharedPrefs] sortEvents] )
+      [current_record sortEvents];
+    [event_list setDataSource: current_record];
+
     // Indi list
     if( notificationSender != indiListController )
     {
@@ -490,13 +597,6 @@
   
     // RawPanel
     [[RawPanelController sharedRawPanel] setDataField: selectedIndi];
-    
-    // Current indi and event
-    current_record = selectedIndi;
-    current_event = nil;
-    if( [[PreferencesController sharedPrefs] sortEvents] )
-      [current_record sortEvents];
-    [event_list setDataSource: current_record];
   }
   else
   {
@@ -508,11 +608,19 @@
 // Handle changes in the fam selection
 - (void)handleFamSelectionChanged:(NSNotification *)aNotification
 {
-  id		notificationSender = [aNotification object];
+  id		notificationSender = aNotification;
   FAM*		selectedFam = [famListController selection];
 
   if( selectedFam )
   {
+    // Current fam and event
+    current_record = selectedFam;
+    current_event = nil;
+
+    if( [[PreferencesController sharedPrefs] sortEvents] )
+      [current_record sortEvents];
+    [event_list setDataSource: current_record];
+
     // Indi list
     if( notificationSender != famListController )
     {
@@ -524,13 +632,6 @@
             
     // RawPanel
     [[RawPanelController sharedRawPanel] setDataField: selectedFam];
-
-    // Current fam and event
-    current_record = selectedFam;
-    current_event = nil;
-    if( [[PreferencesController sharedPrefs] sortEvents] )
-      [current_record sortEvents];
-    [event_list setDataSource: current_record];
   }
   else
   {
@@ -564,8 +665,8 @@
 {
   // if we arent in indi view mode activate indi view mode
   // if we're already there, just toggle the indi drawer
-  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"INDI"] )
-  {
+//  if( ! [[sender identifier] isEqual: @"INDI"] )
+//  {
     if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
       [main_tabs selectTabViewItemAtIndex: 0];
     [indi_event_menu setEnabled: true];
@@ -576,17 +677,17 @@
     
 //    fam_event_menu = [event_menu submenu];
 //    [event_menu setSubmenu: indi_event_menu];
-  }
-  else
-    [indiListController toggleDrawer];
+//  }
+//  else
+//    [indiListController toggleDrawer];
 }
 
 - (void) handleFamMode:(id) sender 
 {
   // if we arent in fam view mode activate FAM view mode
   // if we're already there, just toggle the fam drawer
-  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
-  {
+//  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
+//  {
     if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
       [main_tabs selectTabViewItemAtIndex: 1];
     [recordListDataSource refreshFams];
@@ -598,17 +699,17 @@
 
 //    fam_event_menu = [event_menu submenu];
 //    [event_menu setSubmenu: fam_event_menu];
-  }
-  else
-    [famListController toggleDrawer];
+//  }
+//  else
+//    [famListController toggleDrawer];
 }
 
 - (void) handlePedigreeMode:(id) sender 
 {
   // if we arent in pedigree view mode activate pedigree view mode
   // if we're already there, just toggle the indi drawer
-  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"PED"] )
-  {
+//  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"PED"] )
+//  {
     if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
       [main_tabs selectTabViewItemAtIndex: 2];
     [indi_event_menu setEnabled: true];
@@ -616,9 +717,9 @@
     [indiListController showDrawer: YES];
     [famListController showDrawer: NO];
     [self handleIndiSelectionChanged: nil];
-  }
-  else
-    [indiListController toggleDrawer];
+//  }
+//  else
+//    [indiListController toggleDrawer];
 }
 
 - (void) handlePedigreeClick:(id) sender
@@ -657,6 +758,18 @@
   [indiListController setSelection: indi];
 }
 
+- (void) handlePedigreeGoBack:(id) sender
+{
+  INDI* previous = [indi_history lastObject];
+  
+  if( [previous isEqual: current_record] )
+    [indi_history removeLastObject];
+    
+  previous = [indi_history lastObject];
+  [indiListController setSelection: previous];
+  [indi_history removeLastObject];
+}
+
 - (void) handleImageClick: (id) sender
 {
   GCField* gc_tmp;
@@ -670,8 +783,8 @@
 {
   // if we arent in descendant view mode activate pedigree view mode
   // if we're already there, just toggle the indi drawer
-  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"DEC"] )
-  {
+//  if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"DEC"] )
+//  {
     if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
       [main_tabs selectTabViewItemAtIndex: 3];
     [indi_event_menu setEnabled: true];
@@ -679,9 +792,9 @@
     [indiListController showDrawer: YES];
     [famListController showDrawer: NO];
     [self handleIndiSelectionChanged: nil];
-  }
-  else
-    [indiListController toggleDrawer];
+//  }
+//  else
+//    [indiListController toggleDrawer];
 }
 
 // Handle AboutBox menu event
@@ -1302,9 +1415,53 @@
     [NSApp replyToApplicationShouldTerminate: true];
 }
 
-// ============================================================
-// NSToolbar Related Methods
-// ============================================================
+- (void) handleGoToFather:(id) sender
+{
+  [indiListController setSelection: [current_record father: ged]];
+}
+
+- (void) handleGoToMother:(id) sender
+{
+  [indiListController setSelection: [current_record mother: ged]];
+}
+
+- (void) handleGoToSpouseOrChild:(id) sender
+{
+  id item = [indi_spice_outline itemAtRow: [indi_spice_outline selectedRow]];
+  if( !item )
+    item = [dec_outline itemAtRow: [dec_outline selectedRow]];
+  
+  if( [[item class] isEqual: NSClassFromString( @"FAM" )] )
+  {
+    if( [[current_record sex] isEqual: @"F"] )
+      [indiListController setSelection: [item husband: ged]];
+    else
+      [indiListController setSelection: [item wife: ged]];
+  }
+  else
+    [indiListController setSelection: item];
+}
+
+- (void) handleFamGoToHusb:(id) sender
+{
+  [indiListController setSelection: [current_record husband: ged]];
+  [self handleIndiMode: nil];
+}
+
+- (void) handleFamGoToWife:(id) sender
+{
+  [indiListController setSelection: [current_record wife: ged]];
+  [self handleIndiMode: nil];
+}
+
+- (void) handleFamGoToChild:(id) sender
+{
+  [indiListController setSelection: [[current_record children: ged] objectAtIndex: [fam_child_table selectedRow]]];
+  [self handleIndiMode: nil];
+}
+
+#pragma mark -
+#pragma mark Toolbar stuff
 
 static NSString* 	MyToolbarIdentifier 		  = @"My Toolbar Identifier";
 //static NSString*	IndiToolbarItemIdentifier = @"Individual Item Identifier";
@@ -1555,19 +1712,135 @@ static NSString*	RecordToolbarItemIdentifier 	= @"Record Item Identifier";
   }
 }
 
-//
-// NSTabView delegate method
-//
-- (void)tabView:(NSTabView *)tabView
-  willSelectTabViewItem:(NSTabViewItem *)tabViewItem
+#pragma mark -
+#pragma mark NSOutlineView Data Source
+
+- (id)outlineView:(NSOutlineView *)outlineView
+  child:(int)index
+  ofItem:(id)item
 {
-  if( [[tabViewItem identifier] isEqual: @"INDI"] )
+  if( [[current_record class] isEqual: NSClassFromString( @"INDI" )] )
+  {
+    NSArray* spice = [current_record spouseFamilies: ged];
+    
+    if( item == nil )
+    {
+        return [spice objectAtIndex: index];
+    }
+    else if( [[item class] isEqual: NSClassFromString( @"FAM" )] )
+    {
+        NSArray* children = [item children: ged];
+        return [children objectAtIndex: index];
+    }
+    else
+        return nil;
+  }
+  
+  return nil;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView
+  isItemExpandable:(GCField*)item
+{
+  if( [[current_record class] isEqual: NSClassFromString( @"INDI" )] )
+  {
+    if( [[item class] isEqual: NSClassFromString( @"FAM" )] )
+        return true;
+    else
+        return false;
+  }
+  
+  return false;
+}
+
+- (int)outlineView:(NSOutlineView *)outlineView
+  numberOfChildrenOfItem:(id)item
+{
+  if( [[current_record class] isEqual: NSClassFromString( @"INDI" )] )
+  {
+    if( item == nil )
+    {
+        NSArray* spice = [current_record spouseFamilies: ged];
+        return [spice count];
+    }
+    else if( [[item class] isEqual: NSClassFromString( @"FAM" )] )
+    {
+        NSArray* children = [item children: ged];
+        return [children count];
+    }
+    else
+        return 0;
+  }
+  
+  return 0;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView
+  objectValueForTableColumn:(NSTableColumn *)tableColumn
+  byItem:(id)item
+{
+  if( [[current_record class] isEqual: NSClassFromString( @"INDI" )] )
+  {
+    if( [[item class] isEqual: NSClassFromString( @"FAM" )] )
+    {
+      if( [[current_record sex] isEqual: @"F"] )
+      {
+        if( [item husband: ged] )
+          return [NSString stringWithFormat: @"Spouse: %@", [[item husband: ged] fullName]];
+        else
+          return @"Soupse: Unknown";
+      }
+      else
+      {
+        if( [item wife: ged] )
+          return [NSString stringWithFormat: @"Spouse: %@", [[item wife: ged] fullName]];
+        else
+          return @"Soupse: Unknown";
+      }
+    }
+    else
+        return [NSString stringWithFormat: @"Child: %@", [item fullName]];
+  }
+  
+  return @"***";
+}
+
+#pragma mark -
+#pragma mark NSTableView Data Source
+
+- (int)numberOfRowsInTableView: (NSTableView*)aTableView
+{
+  if( [[current_record class] isEqual: NSClassFromString( @"FAM" )] )
+  {
+    return [[current_record children: ged] count];
+  }
+  return 0;
+}
+
+- (id)tableView: (NSTableView *)aTableView
+  objectValueForTableColumn: (NSTableColumn *)aTableColumn
+  row: (int)rowIndex
+{
+  if( [[current_record class] isEqual: NSClassFromString( @"FAM" )]
+   && [[aTableColumn identifier] isEqual: @"NAME"] )
+  {
+    NSArray* children = [current_record children: ged];
+    return [NSString stringWithFormat: @"Child: %@", [[children objectAtIndex: rowIndex] fullName]];
+  }
+  return @"***";
+}
+
+#pragma mark -
+
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
+{
+  if( [[tabViewItem identifier] isEqualToString: @"INDI"] )
     [self handleIndiMode: tabViewItem];
-  if( [[tabViewItem identifier] isEqual: @"FAM"] )
+  else if( [[tabViewItem identifier] isEqualToString: @"FAM"] )
     [self handleFamMode: tabViewItem];
-  if( [[tabViewItem identifier] isEqual: @"PED"] )
+  else if( [[tabViewItem identifier] isEqualToString: @"PED"] )
     [self handlePedigreeMode: tabViewItem];
-  if( [[tabViewItem identifier] isEqual: @"DEC"] )
+  else if( [[tabViewItem identifier] isEqualToString: @"DEC"] )
     [self handleDescendantMode: tabViewItem];
 }
 

@@ -141,6 +141,8 @@
   [thisFam retain];
   [selectedFam release];
   selectedFam = thisFam;
+  
+  [self makeSelectionVisible];
 }
 
 - (void) makeSelectionVisible

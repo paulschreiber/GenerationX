@@ -73,48 +73,51 @@
 {
   NSMutableString* result = [[NSMutableString alloc] init];
   
-  if( [[item fieldType] isEqual: @"INDI"] )
+  if( [[tableColumn identifier] isEqual: @"NAME"] )
   {
-    [result setString: [item fullName]];
-    [result appendString: @" "];
-    [result appendString: [item lifespan]];
-    return result;
-  }
-  else
-  {
-    int selected_level = [outlineView levelForItem: item];
-    int i = [outlineView rowForItem: item];
-    INDI* spouse;
-    
-    if( selected_level == 0 )
+    if( [[item fieldType] isEqual: @"INDI"] )
     {
-      if( [[indi sex] isEqual: @"M"] )
-        spouse = [item wife: ged];
-      else
-        spouse = [item husband: ged];
+        [result setString: [item fullName]];
+        [result appendString: @" "];
+        [result appendString: [item lifespan]];
+        return result;
     }
     else
     {
-      while( [outlineView levelForRow: i] >= selected_level )
-        i--;
+        int selected_level = [outlineView levelForItem: item];
+        int i = [outlineView rowForItem: item];
+        INDI* spouse;
         
-      if( [[[outlineView itemAtRow: i] sex] isEqual: @"M"] )
-        spouse = [item wife: ged];
-      else
-        spouse = [item husband: ged];
+        if( selected_level == 0 )
+        {
+        if( [[indi sex] isEqual: @"M"] )
+            spouse = [item wife: ged];
+        else
+            spouse = [item husband: ged];
+        }
+        else
+        {
+        while( [outlineView levelForRow: i] >= selected_level )
+            i--;
+            
+        if( [[[outlineView itemAtRow: i] sex] isEqual: @"M"] )
+            spouse = [item wife: ged];
+        else
+            spouse = [item husband: ged];
+        }
+        
+        [result setString: @"+ "];
+        if( spouse )
+        {
+        [result appendString: [spouse fullName]];
+        [result appendString: @" "];
+        [result appendString: [spouse lifespan]];
+        }
+        else
+        [result appendString: @"?"];
+        
+        return result;
     }
-    
-    [result setString: @"+ "];
-    if( spouse )
-    {
-      [result appendString: [spouse fullName]];
-      [result appendString: @" "];
-      [result appendString: [spouse lifespan]];
-    }
-    else
-      [result appendString: @"?"];
-      
-    return result;
   }
   
   return result;

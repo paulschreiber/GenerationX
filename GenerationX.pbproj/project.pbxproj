@@ -145,6 +145,7 @@
 				4A9504CCFFE6A4B311CA0CBA,
 				4A9504CDFFE6A4B311CA0CBA,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -179,6 +180,7 @@
 			refType = 4;
 		};
 		29B97316FDCFA39411CA2CEA = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = main.m;
 			refType = 4;
@@ -295,7 +297,7 @@
 	<key>CFBundleExecutable</key>
 	<string>GenerationX</string>
 	<key>CFBundleGetInfoString</key>
-	<string>2.3b1</string>
+	<string>2.3.3</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>GenerationX_Help</string>
 	<key>CFBundleHelpBookName</key>
@@ -311,11 +313,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.3b1</string>
+	<string>2.3.3</string>
 	<key>CFBundleSignature</key>
 	<string>GENX</string>
 	<key>CFBundleVersion</key>
-	<string>2.3b1</string>
+	<string>2.3.3</string>
 	<key>NSMainNibFile</key>
 	<string>GenerationX</string>
 	<key>NSPrincipalClass</key>
@@ -323,7 +325,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 1;
 		};
 		29B97327FDCFA39411CA2CEA = {
 			buildActionMask = 2147483647;
@@ -692,11 +693,13 @@
 			};
 		};
 		F51E57E0023EF39301E25AE0 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = AddMarriageController.m;
 			refType = 4;
 		};
 		F51E57E1023EF39301E25AE0 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = AddMarriageController.h;
 			refType = 4;
@@ -789,11 +792,13 @@
 			};
 		};
 		F531325503F0B61001B1BC2F = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = FileStatsController.m;
 			refType = 4;
 		};
 		F531325603F0B61001B1BC2F = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = FileStatsController.h;
 			refType = 4;
@@ -853,11 +858,13 @@
 			};
 		};
 		F5480E4F0384312C01EE11C9 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = EventController.h;
 			refType = 4;
 		};
 		F5480E500384312C01EE11C9 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = EventController.m;
 			refType = 4;
@@ -881,11 +888,13 @@
 			};
 		};
 		F5C2F80A03830E4F015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = AboutBox.h;
 			refType = 4;
 		};
 		F5C2F80B03830E4F015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = AboutBox.m;
 			refType = 4;
@@ -903,11 +912,13 @@
 			};
 		};
 		F5C2F81203830E7D015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = FamListController.h;
 			refType = 4;
 		};
 		F5C2F81303830E7D015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = FamListController.m;
 			refType = 4;
@@ -925,31 +936,37 @@
 			};
 		};
 		F5C2F81603830E9C015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = ImageViewerController.h;
 			refType = 4;
 		};
 		F5C2F81703830E9C015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = ImageViewerController.m;
 			refType = 4;
 		};
 		F5C2F81803830EB6015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = IndiListController.h;
 			refType = 4;
 		};
 		F5C2F81903830EB6015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = IndiListController.m;
 			refType = 4;
 		};
 		F5C2F81A03830ED1015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = NoteController.h;
 			refType = 4;
 		};
 		F5C2F81B03830ED1015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = NoteController.m;
 			refType = 4;
@@ -967,11 +984,13 @@
 			};
 		};
 		F5C2F81E03830F43015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = TableSortInfo.h;
 			refType = 4;
 		};
 		F5C2F81F03830F43015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = TableSortInfo.m;
 			refType = 4;
@@ -1013,11 +1032,13 @@
 			};
 		};
 		F5C2F82603830FC8015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = NoteViewerController.h;
 			refType = 4;
 		};
 		F5C2F82703830FC8015ADBC2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = NoteViewerController.m;
 			refType = 4;
@@ -1035,11 +1056,13 @@
 			};
 		};
 		F5D07D4F02247C17014360AA = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = RawPanelController.m;
 			refType = 4;
 		};
 		F5D07D5002247C17014360AA = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = RawPanelController.h;
 			refType = 4;
@@ -1110,11 +1133,13 @@
 			};
 		};
 		F5EA592202B711CF014C8190 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GenXUtil.h;
 			refType = 4;
 		};
 		F5EA592302B711CF014C8190 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GenXUtil.m;
 			refType = 4;
@@ -1132,11 +1157,13 @@
 			};
 		};
 		F5EB8FAC02270BAE019BD9C6 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = FAM.h;
 			refType = 4;
 		};
 		F5EB8FAD02270BAE019BD9C6 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = FAM.m;
 			refType = 4;
@@ -1175,11 +1202,13 @@
 			};
 		};
 		F5ED1415025288FB013720F1 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = NoteController.m;
 			refType = 4;
 		};
 		F5ED1416025288FB013720F1 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = NoteController.h;
 			refType = 4;
@@ -1218,11 +1247,13 @@
 			};
 		};
 		F5ED29B40263E074017FBCAC = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = ChooseFieldController.m;
 			refType = 4;
 		};
 		F5ED29B50263E074017FBCAC = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = ChooseFieldController.h;
 			refType = 4;
@@ -1290,11 +1321,13 @@
 			refType = 4;
 		};
 		F5ED41A5024817DA01F36DB6 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = RecordListDataSource.h;
 			refType = 4;
 		};
 		F5ED41A6024817DA01F36DB6 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = RecordListDataSource.m;
 			refType = 4;
@@ -1333,11 +1366,13 @@
 			};
 		};
 		F5ED4445025D1CE701F8E4C9 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = HTMLController.m;
 			refType = 4;
 		};
 		F5ED4446025D1CE801F8E4C9 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = HTMLController.h;
 			refType = 4;
@@ -1355,11 +1390,13 @@
 			};
 		};
 		F5ED4ED70223033D01498337 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GenerationXController.h;
 			refType = 4;
 		};
 		F5ED4ED80223033D01498337 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GenerationXController.m;
 			refType = 4;
@@ -1377,11 +1414,13 @@
 			};
 		};
 		F5ED4EDC0223079801498337 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GCFile.h;
 			refType = 4;
 		};
 		F5ED4EDD0223079801498337 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GCFile.m;
 			refType = 4;
@@ -1399,11 +1438,13 @@
 			};
 		};
 		F5ED4EE002230A1301498337 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GCField.h;
 			refType = 4;
 		};
 		F5ED4EE102230A1301498337 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GCField.m;
 			refType = 4;
@@ -1442,11 +1483,13 @@
 			};
 		};
 		F5EDCA45025699DC01DE9FC9 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = EventWithFAMCController.m;
 			refType = 4;
 		};
 		F5EDCA46025699DC01DE9FC9 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = EventWithFAMCController.h;
 			refType = 4;
@@ -1485,11 +1528,13 @@
 			};
 		};
 		F5EE77FA024E44510154BE47 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = PreferencesController.m;
 			refType = 4;
 		};
 		F5EE77FB024E44510154BE47 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = PreferencesController.h;
 			refType = 4;
@@ -1528,11 +1573,13 @@
 			};
 		};
 		F5EE7819024EAA330154BE47 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GenericEventController.m;
 			refType = 4;
 		};
 		F5EE781A024EAA330154BE47 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = GenericEventController.h;
 			refType = 4;
@@ -1550,11 +1597,13 @@
 			};
 		};
 		F5EE8173022B1F85016D13F8 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = EditIndiController.h;
 			refType = 4;
 		};
 		F5EE8174022B1F85016D13F8 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = EditIndiController.m;
 			refType = 4;
@@ -1598,11 +1647,13 @@
 			refType = 4;
 		};
 		F5EF7E790230AFAE016DB74F = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = MergeController.m;
 			refType = 4;
 		};
 		F5EF7E7A0230AFAE016DB74F = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = MergeController.h;
 			refType = 4;
@@ -1652,11 +1703,13 @@
 			};
 		};
 		F5F3D48C0225BE7B01A385B0 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = INDI.h;
 			refType = 4;
 		};
 		F5F3D48D0225BE7B01A385B0 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = INDI.m;
 			refType = 4;
@@ -1674,11 +1727,13 @@
 			};
 		};
 		F5F938F7022F087D018132C7 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DescendantOutlineData.m;
 			refType = 4;
 		};
 		F5F938F8022F087D018132C7 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DescendantOutlineData.h;
 			refType = 4;
