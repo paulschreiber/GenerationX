@@ -440,9 +440,10 @@
   // if we're already there, just toggle the indi drawer
   if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"INDI"] )
   {
+    if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
+      [main_tabs selectTabViewItemAtIndex: 0];
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-//  [main_tabs selectTabViewItemAtIndex: 0];
     [fam_drawer close: self];
     [indi_drawer open: self];
     [self handleSelectIndi: indi_list];
@@ -460,9 +461,10 @@
   // if we're already there, just toggle the fam drawer
   if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"FAM"] )
   {
+    if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
+      [main_tabs selectTabViewItemAtIndex: 1];
     [indi_event_menu setEnabled: false];
     [fam_event_menu setEnabled: true];
-//  [main_tabs selectTabViewItemAtIndex: 1];
     [indi_drawer close: self];
     [fam_drawer open: self];
     [self handleSelectFam: fam_list];
@@ -480,9 +482,10 @@
   // if we're already there, just toggle the indi drawer
   if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"PED"] )
   {
+    if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
+      [main_tabs selectTabViewItemAtIndex: 2];
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-//    [main_tabs selectTabViewItemAtIndex: 2];
     [indi_drawer open: self];
     [fam_drawer close: self];
     [self handleSelectIndi: indi_list];
@@ -556,9 +559,10 @@
   // if we're already there, just toggle the indi drawer
   if( ! [[[main_tabs selectedTabViewItem] identifier] isEqual: @"DEC"] )
   {
+    if( ! [[sender class] isEqual: NSClassFromString( @"NSTabViewItem" )] )
+      [main_tabs selectTabViewItemAtIndex: 3];
     [indi_event_menu setEnabled: true];
     [fam_event_menu setEnabled: false];
-//    [main_tabs selectTabViewItemAtIndex: 3];
     [indi_drawer open: self];
     [fam_drawer close: self];
     [self handleSelectIndi: indi_list];
@@ -1718,13 +1722,13 @@ static NSString*	EventToolbarItemIdentifier 	= @"Event Item Identifier";
   willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
   if( [[tabViewItem identifier] isEqual: @"INDI"] )
-    [self handleIndiMode: indi_list];
+    [self handleIndiMode: tabViewItem];
   if( [[tabViewItem identifier] isEqual: @"FAM"] )
-    [self handleFamMode: fam_list];
+    [self handleFamMode: tabViewItem];
   if( [[tabViewItem identifier] isEqual: @"PED"] )
-    [self handlePedigreeMode: indi_list];
+    [self handlePedigreeMode: tabViewItem];
   if( [[tabViewItem identifier] isEqual: @"DEC"] )
-    [self handleDescendantMode: indi_list];
+    [self handleDescendantMode: tabViewItem];
 }
 
 @end
