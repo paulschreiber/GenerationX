@@ -14,8 +14,9 @@
 #import "FileStatsController.h"
 #import "INDI.h"
 #import "FAM.h"
-
 #import "AboutBox.h"
+
+#import "math.h"
 
 @implementation GenerationXController
 
@@ -297,6 +298,28 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
   NSNotificationCenter*		appNotificationCenter;
+
+  if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_0)
+  {  //User is using Mac OS X 10.0.x or earlier
+    NSRunAlertPanel( @"Error",
+      @"This version of GenerationX requires Mac OS X 10.2 Jaguar. The application will now terminate.",
+      @"Ok", nil, nil );
+    [NSApp terminate: self];
+  }
+  else if (floor(NSAppKitVersionNumber) <= 620)
+  { // User is using Mac OS X 10.1.x
+    NSRunAlertPanel( @"Error",
+      @"This version of GenerationX requires Mac OS X 10.2 Jaguar. The application will now terminate.",
+      @"Ok", nil, nil );
+    [NSApp terminate: self];
+  }
+  else
+  { // User is using some version of Mac OS X greater than 10.1.x
+    NSRunAlertPanel( @"Error",
+      @"This version of GenerationX requires Mac OS X 10.2 Jaguar. The application will now terminate.",
+      @"Ok", nil, nil );
+    [NSApp terminate: self];
+  }
 
   // Register the current object as an observer
   appNotificationCenter = [NSNotificationCenter defaultCenter];
