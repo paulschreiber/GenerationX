@@ -17,5 +17,6 @@
 
 - (GenXUtil*) init;
 - (NSString*) eventStringFromGEDCOM: (NSString*) my_gedcom;
+- (NSDate*) dateFromGEDCOM: (NSString*) str;
 
 @end

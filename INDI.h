@@ -17,6 +17,7 @@
 - (id)init: (int) my_level : (NSString*) my_type : (NSString*) my_value;
 - (INDI*) father: (id) my_ged;
 - (INDI*) mother: (id) my_ged;
+- (NSArray*) INDIChildren: (id) my_ged;
 - (NSMutableArray*) spouseFamilies: (id) my_ged;
 - (NSString*) firstName;
 //- (NSString*) middleName;
@@ -24,6 +25,8 @@
 - (NSString*) nameSuffix;
 - (NSString*) fullName;
 - (NSString*) sex;
+- (NSDate*) birthDate;
+- (NSDate*) deathDate;
 - (NSString*) lifespan;
 - (NSString*) textSummary: (id) my_ged;
 - (NSString*) descendantsGEDCOM: (id) my_ged;

@@ -48,6 +48,24 @@
   return result;
 }
 
+- (NSArray*) INDIChildren: (id) my_ged
+{
+  NSMutableArray* result = [[NSMutableArray alloc] init];
+  NSArray* f = [self spouseFamilies: my_ged];
+  NSArray* c;
+  int i, j;
+  
+  for( i = 0; i < [f count]; i++ )
+  {
+    c = [(FAM*)[f objectAtIndex: i] children: my_ged];
+    
+    for( j = 0; j < [c count]; j++ )
+      [result addObject: [c objectAtIndex: j]];
+  }
+  
+  return result;
+}
+
 // return an array of FAM records. one for each of this person's spouses
 - (NSMutableArray*) spouseFamilies: (id) my_ged
 {
@@ -169,6 +187,96 @@
   }
   
   return result;
+}
+
+- (NSDate*) birthDate
+{
+//NSLog( @"INDI::birthDate" );
+  NSString* birth_str = [[self subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"];
+  NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
+  NSString* tmp;
+  NSScanner* s;
+  int i;
+  
+  [birth_str stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  
+  if( !birth_str )
+    return nil;
+  if( [birth_str isEqualToString: @""] )
+    return nil;
+    
+  s = [NSScanner scannerWithString: birth_str];
+  [s setCharactersToBeSkipped: [NSCharacterSet letterCharacterSet]];
+  [s scanInt: &i];
+  
+  // if the DATE field starts with an int between 1 and 31
+  // assume we have a full DATE
+  if( i > 0 && i < 31 )
+    return [NSDate dateWithNaturalLanguageString: birth_str];
+  // otherwise we must have "MON YEAR" or just "YEAR"
+  else
+    [date_str appendString: @"1 "];
+
+  // reset the scanner
+  [s setScanLocation: 0];
+  [s setCharactersToBeSkipped: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  // if DATE starts with letters, we maust have "MON YEAR"
+  if( [s scanCharactersFromSet: [NSCharacterSet letterCharacterSet] intoString: &tmp] )
+    [date_str appendString: birth_str];
+  // otherwise we just have "YEAR"
+  else
+  {
+    [date_str appendString: @"JAN "];
+    [date_str appendString: birth_str];
+  }
+  
+//NSLog( date_str );
+  return [NSDate dateWithNaturalLanguageString: date_str];  
+}
+
+- (NSDate*) deathDate
+{
+//NSLog( @"INDI::deathDate" );
+  NSString* death_str = [[self subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"];
+  NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
+  NSString* tmp;
+  NSScanner* s;
+  int i;
+  
+  [death_str stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  
+  if( !death_str )
+    return nil;
+  if( [death_str isEqualToString: @""] )
+    return nil;
+    
+  s = [NSScanner scannerWithString: death_str];
+  [s setCharactersToBeSkipped: [NSCharacterSet letterCharacterSet]];
+  [s scanInt: &i];
+  
+  // if the DATE field starts with an int between 1 and 31
+  // assume we have a full DATE
+  if( i > 0 && i < 31 )
+    return [NSDate dateWithNaturalLanguageString: death_str];
+  // otherwise we must have "MON YEAR" or just "YEAR"
+  else
+    [date_str appendString: @"31 "];
+
+  // reset the scanner
+  [s setScanLocation: 0];
+  [s setCharactersToBeSkipped: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  // if DATE starts with letters, we maust have "MON YEAR"
+  if( [s scanCharactersFromSet: [NSCharacterSet letterCharacterSet] intoString: &tmp] )
+    [date_str appendString: death_str];
+  // otherwise we just have "YEAR"
+  else
+  {
+    [date_str appendString: @"DEC "];
+    [date_str appendString: death_str];
+  }
+  
+//NSLog( date_str );
+  return [NSDate dateWithNaturalLanguageString: date_str];  
 }
 
 // return this persono's birth and death years

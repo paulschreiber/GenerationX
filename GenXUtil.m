@@ -71,4 +71,50 @@
   return [eventDict objectForKey: my_gedcom];
 }
 
+- (NSDate*) dateFromGEDCOM: (NSString*) str
+{
+//NSLog( @"GenXUtil::dateFromGEDCOM" );
+  NSMutableString* date_str = [[NSMutableString alloc] initWithString: @""];
+  NSString* tmp;
+  NSScanner* s;
+  int i;
+  
+  str = [str stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  
+  if( !str )
+    return nil;
+  if( [str isEqualToString: @""] )
+    return nil;
+    
+  s = [NSScanner scannerWithString: str];
+  [s setCharactersToBeSkipped: [NSCharacterSet letterCharacterSet]];
+  [s scanInt: &i];
+  
+  // if the DATE field starts with an int between 1 and 31
+  // assume we have a full DATE
+  if( i > 0 && i < 31 )
+    return [NSDate dateWithNaturalLanguageString: str];
+  // otherwise we must have "MON YEAR" or just "YEAR"
+  else
+    [date_str appendString: @"1 "];
+
+  // reset the scanner
+  [s setScanLocation: 0];
+  [s setCharactersToBeSkipped: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  // if DATE starts with letters, we maust have "MON YEAR"
+  if( [s scanCharactersFromSet: [NSCharacterSet letterCharacterSet] intoString: &tmp] )
+  {
+    [date_str appendString: str];
+  }
+  // otherwise we just have "YEAR"
+  else
+  {
+    [date_str appendString: @"JAN "];
+    [date_str appendString: str];
+  }
+  
+//NSLog( date_str );
+  return [NSDate dateWithNaturalLanguageString: date_str];  
+}
+
 @end

@@ -201,13 +201,24 @@
 {
   NSMutableString* indi_label = [[NSMutableString alloc] init];
   NSMutableString* famc_label = [[NSMutableString alloc] init];
+  NSMutableString* birth_str  = [[NSMutableString alloc] init];
+  NSMutableString* death_str  = [[NSMutableString alloc] init];
   NSMutableString* tmp = [[NSMutableString alloc] init];
   INDI* added;
   GCField* gc_tmp;
   GCField* famc = nil;
-  GCField* father = nil; 
-  GCField* mother = nil;
+  INDI* father = nil; 
+  INDI* mother = nil;
   NSMutableArray* famc_array;
+  NSArray* children_array;
+  NSDate* birth_date = nil;
+  NSDate* death_date = nil;
+  NSDate* father_birth_date = nil;
+  NSDate* mother_birth_date = nil;
+  NSDate* father_death_date = nil;
+  NSDate* mother_death_date = nil;
+  NSDate* child_birth_date = nil;
+  NSDate* child_death_date = nil;
   int i = 0;
   
   // just in case we have to create any new records. we can ensure giving them
@@ -234,63 +245,12 @@
     
   [added setNeedSave: true];
 
-  //
-  // do it
-  //
-  
-  // NAME
-  [tmp setString: [first_name stringValue]];
-  [tmp appendString: @" /"];
-  [tmp appendString: [last_name stringValue]];
-  [tmp appendString: @"/"];
-  if( ! ( gc_tmp = [added subfieldWithType: @"NAME"] ) )
-    gc_tmp = [added addSubfield: @"NAME": [NSString stringWithString: tmp]];
-  else
-    [gc_tmp setFieldValue: [NSString stringWithString: tmp]]; 
-  
-  // if the user changed the field
-  if( ![[first_name stringValue] isEqual: [field firstName]] )
-  {
-    // if the field doesn't exist, create it
-    if( ! [gc_tmp subfieldWithType: @"GIVN"] )
-      [gc_tmp addSubfield: @"GIVN": [first_name stringValue]];
-    // if it exists and was changed to be blank, delete it
-    else if( [[first_name stringValue] isEqual: @""] )
-      [gc_tmp removeSubfieldWithType: @"GIVN" Value: [added firstName]];
-    // otherwise just update the value
-    else
-      [[gc_tmp subfieldWithType: @"GIVN"] setFieldValue: [first_name stringValue]];
-  }
-    
-  // if the user changed the field
-  if( ![[last_name stringValue] isEqual: [field lastName]] )
-  {
-    // if the field doesn't exist, create it
-    if( ! [gc_tmp subfieldWithType: @"SURN"] )
-      [gc_tmp addSubfield: @"SURN": [last_name stringValue]];
-    // if it exists and was changed to be blank, delete it
-    else if( [[last_name stringValue] isEqual: @""] )
-      [gc_tmp removeSubfieldWithType: @"SURN" Value: [added lastName]];
-    // otherwise just update the value
-    else
-      [[gc_tmp subfieldWithType: @"SURN"] setFieldValue: [last_name stringValue]];
-  }
-    
-  // if the user changed the field
-  if( ![[name_suffix stringValue] isEqual: [field nameSuffix]] )
-  {
-    // if the field doesn't exist, create it
-    if( ! [gc_tmp subfieldWithType: @"NSFX"] )
-      [gc_tmp addSubfield: @"NSFX": [name_suffix stringValue]];
-    // if it exists and was changed to be blank, delete it
-    else if( [[name_suffix stringValue] isEqual: @""] )
-      [gc_tmp removeSubfieldWithType: @"NSFX" Value: [added nameSuffix]];
-    // otherwise just update the value
-    else
-      [[gc_tmp subfieldWithType: @"NSFX"] setFieldValue: [name_suffix stringValue]];
-  }
-  
-  // SEX
+
+//
+// BEGIN SANITY CHECKING
+//
+
+  // force the selection of a sex
   if( ! [sex_matrix selectedCell] )
   {
     NSRunAlertPanel( @"Error", 
@@ -298,91 +258,193 @@
       @"Ok", nil, nil );
     return false;
   }
-  if( gc_tmp = [added subfieldWithType: @"SEX"] )
-    [gc_tmp setFieldValue: [[sex_matrix selectedCell] title]];
-  else
-    [added addSubfield: @"SEX": [[sex_matrix selectedCell] title]];
-  
-  // BIRT
-  [tmp setString: @""];
+
+  // make sure the death date is later than the birth date
+  [birth_str setString: @""];
   if( ! [[birth_day titleOfSelectedItem] isEqual: @"--"] )
   {
-    [tmp setString: [birth_day titleOfSelectedItem]];
+    [birth_str setString: [birth_day titleOfSelectedItem]];
   }
   if( ! [[birth_month titleOfSelectedItem] isEqual: @"---"] )
   {
-    [tmp appendString: @" "];
-    [tmp appendString: [birth_month titleOfSelectedItem]];
+    [birth_str appendString: @" "];
+    [birth_str appendString: [birth_month titleOfSelectedItem]];
   }
   if( ![[birth_year stringValue] isEqual: @""] )
   {
-    [tmp appendString: @" "];
-    [tmp appendString: [birth_year stringValue]];
+    [birth_str appendString: @" "];
+    [birth_str appendString: [birth_year stringValue]];
   }
 
-  if( gc_tmp = [[added subfieldWithType: @"BIRT"] subfieldWithType: @"DATE"] )
-    [gc_tmp setFieldValue: [NSString stringWithString: tmp]];
-  else if( ![tmp isEqual: @""] && ( gc_tmp = [added subfieldWithType: @"BIRT"] ) )
-    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: tmp]];
-  else if( ![tmp isEqual: @""] )
-  {
-    gc_tmp = [added addSubfield: @"BIRT": @""];
-    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: tmp]];
-  }
-  
-  if( ! [[birth_place stringValue] isEqual: @""] )
-  {
-    if( ! [added subfieldWithType: @"BIRT"] )
-      gc_tmp = [added addSubfield: @"BIRT": @""];
-    else
-      gc_tmp = [added subfieldWithType: @"BIRT"];
-      
-    if( gc_tmp = [gc_tmp subfieldWithType: @"PLAC"] )
-      [gc_tmp setFieldValue: [birth_place stringValue]];
-    else
-      [[added subfieldWithType: @"BIRT"] addSubfield: @"PLAC": [birth_place stringValue]];
-  }
-      
-  // DEAT
-  [tmp setString: @""];
+  [death_str setString: @""];
   if( ! [[death_day titleOfSelectedItem] isEqual: @"--"] )
   {
-    [tmp setString: [death_day titleOfSelectedItem]];
+    [death_str setString: [death_day titleOfSelectedItem]];
   }
   if( ! [[death_month titleOfSelectedItem] isEqual: @"---"] )
   {
-    [tmp appendString: @" "];
-    [tmp appendString: [death_month titleOfSelectedItem]];
+    [death_str appendString: @" "];
+    [death_str appendString: [death_month titleOfSelectedItem]];
   }
   if( ![[death_year stringValue] isEqual: @""] )
   {
-    [tmp appendString: @" "];
-    [tmp appendString: [death_year stringValue]];
+    [death_str appendString: @" "];
+    [death_str appendString: [death_year stringValue]];
   }
 
-  if( gc_tmp = [[added subfieldWithType: @"DEAT"] subfieldWithType: @"DATE"] )
-    [gc_tmp setFieldValue: [NSString stringWithString: tmp]];
-  else if( ![tmp isEqual: @""] && ( gc_tmp = [added subfieldWithType: @"DEAT"] ) )
-    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: tmp]];
-  else if( ![tmp isEqual: @""] )
+  birth_date = [[GenXUtil sharedUtil] dateFromGEDCOM: birth_str];
+  death_date = [[GenXUtil sharedUtil] dateFromGEDCOM: death_str];
+//  NSLog( [birth_date description] );
+//  NSLog( [death_date description] );
+  
+  if( [birth_date compare: death_date] == NSOrderedDescending )
   {
-    gc_tmp = [added addSubfield: @"DEAT": @""];
-    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: tmp]];
+    NSRunAlertPanel( @"Error", 
+      @"Please check the dates you enetered.\nA person cannot die before they were born.",
+      @"Ok", nil, nil );
+    return false;
+  }
+
+  // if neither of the parent fields has been altered
+  // check against their dates
+  if( ( ![[father_text stringValue] isEqual: @""]
+        && ![[mother_text stringValue] isEqual: @""] )
+    && ( [[father_text stringValue] isEqual: [[field father: ged] fullName]]
+        && [[mother_text stringValue] isEqual: [[field mother: ged] fullName]] ) )
+  {
+    gc_tmp = [ged recordWithLabel: [added valueOfSubfieldWithType: @"FAMC"]];
+    father_birth_date = [[(FAM*)gc_tmp husband: ged] birthDate];
+    mother_birth_date = [[(FAM*)gc_tmp wife: ged] birthDate];
+    father_death_date = [[(FAM*)gc_tmp husband: ged] deathDate];
+    // add a year to the father's death date since technically a person
+    // can be born up to 9 months after their father dies. a year gives 3 months buffer
+    father_death_date = [father_death_date addTimeInterval: 31536000];
+    mother_death_date = [[(FAM*)gc_tmp wife: ged] deathDate];
+    if( [birth_date compare: father_birth_date] == NSOrderedAscending
+      || [birth_date compare: mother_birth_date] == NSOrderedAscending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is earlier than one of the parents' birth dates.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [birth_date compare: father_death_date] == NSOrderedDescending
+      || [birth_date compare: mother_death_date] == NSOrderedDescending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is later than one of the parents' death dates.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [death_date compare: father_birth_date] == NSOrderedAscending
+      || [death_date compare: mother_birth_date] == NSOrderedAscending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the death date for this person.\nIt is earlier than one of the parents' birth dates.",
+        @"Ok", nil, nil );
+      return false;
+    }
+  }
+  // single father case
+  else if( ( ![[father_text stringValue] isEqual: @""]
+        && [[mother_text stringValue] isEqual: @""] )
+    && [[father_text stringValue] isEqual: [[field father: ged] fullName]] )
+  {
+    gc_tmp = [ged recordWithLabel: [added valueOfSubfieldWithType: @"FAMC"]];
+    father_birth_date = [[(FAM*)gc_tmp husband: ged] birthDate];
+    father_death_date = [[(FAM*)gc_tmp husband: ged] deathDate];
+    // add a year to the father's death date since technically a person
+    // can be born up to 9 months after their father dies. a year gives 3 months buffer
+    father_death_date = [father_death_date addTimeInterval: 31536000];
+    if( [birth_date compare: father_birth_date] == NSOrderedAscending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is earlier than the father's birth date.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [birth_date compare: father_death_date] == NSOrderedDescending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is later than the father's death date.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [death_date compare: father_birth_date] == NSOrderedAscending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the death date for this person.\nIt is earlier than the father's birth date.",
+        @"Ok", nil, nil );
+      return false;
+    }
+  }
+  // single mother case
+  else if( ( [[father_text stringValue] isEqual: @""]
+        && ![[mother_text stringValue] isEqual: @""] )
+    && [[mother_text stringValue] isEqual: [[field mother: ged] fullName]] )
+  {
+    gc_tmp = [ged recordWithLabel: [added valueOfSubfieldWithType: @"FAMC"]];
+    mother_birth_date = [[(FAM*)gc_tmp wife: ged] birthDate];
+    mother_death_date = [[(FAM*)gc_tmp wife: ged] deathDate];
+    if( [birth_date compare: mother_birth_date] == NSOrderedAscending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is earlier than the mother's birth date.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [birth_date compare: mother_death_date] == NSOrderedDescending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is later than the mother's death date.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [death_date compare: mother_birth_date] == NSOrderedAscending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the death date for this person.\nIt is earlier than the mother's birth date.",
+        @"Ok", nil, nil );
+      return false;
+    }
   }
   
-  if( ! [[death_place stringValue] isEqual: @""] )
+  //
+  // check against dates of any children this person has
+  //
+  children_array = [added INDIChildren: ged];
+  for( i = 0; i < [children_array count]; i++ )
   {
-    if( ! [added subfieldWithType: @"DEAT"] )
-      gc_tmp = [added addSubfield: @"DEAT": @""];
-    else
-      gc_tmp = [added subfieldWithType: @"DEAT"];
-      
-    if( gc_tmp = [gc_tmp subfieldWithType: @"PLAC"] )
-      [gc_tmp setFieldValue: [death_place stringValue]];
-    else
-      [[added subfieldWithType: @"DEAT"] addSubfield: @"PLAC": [death_place stringValue]];
+    child_birth_date = [[children_array objectAtIndex: i] birthDate];
+    child_death_date = [[children_array objectAtIndex: i] deathDate];
+
+    if( [birth_date compare: child_birth_date] == NSOrderedDescending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is later than one of its children's birth dates.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [birth_date compare: child_death_date] == NSOrderedDescending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the birth date for this person.\nIt is later than one of its children's death dates.",
+        @"Ok", nil, nil );
+      return false;
+    }
+    else if( [death_date compare: child_birth_date] == NSOrderedAscending )
+    {
+      NSRunAlertPanel( @"Error",
+        @"Please check the death date for this person.\nIt is earlier than one of its children's birth dates.",
+        @"Ok", nil, nil );
+      return false;
+    }
   }
-  
+
+//
+// END SANITY CHECKING
+//
+
   //
   // FAMC
   //
@@ -452,22 +514,60 @@
       // if we found matching INDI records
       if( father && mother )
       {
+        father_birth_date = [father birthDate];
+        mother_birth_date = [mother birthDate];
+        father_death_date = [father deathDate];
+        // add a year to the father's death date since technically a person
+        // can be born up to 9 months after their father dies. a year gives 3 months buffer
+        father_death_date = [father_death_date addTimeInterval: 31536000];
+       mother_death_date = [mother deathDate];
+        if( [birth_date compare: father_birth_date] == NSOrderedAscending
+         || [birth_date compare: mother_birth_date] == NSOrderedAscending )
+        {
+          //[new_indi_window orderOut: self];
+          NSRunAlertPanel( @"Error",
+          @"Please check the parents you enetered. According to you one of them was born after their child was born.",
+            @"Ok", nil, nil );
+          return false;
+        }
+        else if( [birth_date compare: father_death_date] == NSOrderedDescending
+         || [birth_date compare: mother_death_date] == NSOrderedDescending )
+        {
+          //[new_indi_window orderOut: self];
+          NSRunAlertPanel( @"Error",
+          @"Please check the parents you entered. According to you one of them died before their child was born.",
+            @"Ok", nil, nil );
+          return false;
+        }
+        else if( [death_date compare: father_birth_date] == NSOrderedAscending
+         || [death_date compare: mother_birth_date] == NSOrderedAscending )
+        {
+          //[new_indi_window orderOut: self];
+          NSRunAlertPanel( @"Error",
+          @"Please check the parents you enetered. According to you one of them was born after their child died.",
+            @"Ok", nil, nil );
+          return false;
+        }
+        else
+        {
 //DEBUG
 // NSLog( @"EditIndiController::process Found INDIs...building new FAM." ); 
-        famc = [ged addRecord: @"FAM": famc_label];
-        [famc setNeedSave: true];
-        [famc addSubfield: @"HUSB": [father fieldValue]];
-        [famc addSubfield: @"WIFE": [mother fieldValue]];
-        
-        [father addSubfield: @"FAMS": [famc fieldValue]];
-        [mother addSubfield: @"FAMS": [famc fieldValue]];
+          famc = [ged addRecord: @"FAM": famc_label];
+          [famc setNeedSave: true];
+          [famc addSubfield: @"HUSB": [father fieldValue]];
+          [famc addSubfield: @"WIFE": [mother fieldValue]];
+          
+          [father addSubfield: @"FAMS": [famc fieldValue]];
+          [mother addSubfield: @"FAMS": [famc fieldValue]];
+        }
       }
       else
       {
-        [new_indi_window orderOut: self];
+        //[new_indi_window orderOut: self];
         NSRunAlertPanel( @"Error",
-          @"Error encountered trying to find parent records. All other changes were successful.",
+          @"Please check the parents you entered.\nI couldn't find their records.",
           @"Ok", nil, nil );
+        return false;
       }
     }
     else if ( [famc_array count] > 1 )
@@ -478,13 +578,87 @@
       [[ChooseFieldController sharedChooser] setHeaderString: @"Found these possible parents:"];
       [[ChooseFieldController sharedChooser] setFields: famc_array: ged];
       [NSApp runModalForWindow: [[ChooseFieldController sharedChooser] window]];
-      famc = [[ChooseFieldController sharedChooser] result];
+      gc_tmp = [[ChooseFieldController sharedChooser] result];
+
+      father_birth_date = [[(FAM*)gc_tmp husband: ged] birthDate];
+      mother_birth_date = [[(FAM*)gc_tmp wife: ged] birthDate];
+      father_death_date = [[(FAM*)gc_tmp husband: ged] deathDate];
+      // add a year to the father's death date since technically a person
+      // can be born up to 9 months after their father dies. a year gives 3 months buffer
+      father_death_date = [father_death_date addTimeInterval: 31536000];
+      mother_death_date = [[(FAM*)gc_tmp wife: ged] deathDate];
+      if( [birth_date compare: father_birth_date] == NSOrderedAscending
+        || [birth_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the parents you enetered. According to you one of them was born after their child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: father_death_date] == NSOrderedDescending
+        || [birth_date compare: mother_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the parents you entered. According to you one of them died before their child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: father_birth_date] == NSOrderedAscending
+        || [death_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the parents you enetered. According to you one of them was born after their child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+        famc = gc_tmp;
     }
     else
     {
 //DEBUG
 // NSLog( @"EditIndiController::process Found one set of matching parents. Proceeding." );
-      famc = [famc_array objectAtIndex: 0];
+      gc_tmp = [famc_array objectAtIndex: 0];
+
+      father_birth_date = [[(FAM*)gc_tmp husband: ged] birthDate];
+      mother_birth_date = [[(FAM*)gc_tmp wife: ged] birthDate];
+      father_death_date = [[(FAM*)gc_tmp husband: ged] deathDate];
+      // add a year to the father's death date since technically a person
+      // can be born up to 9 months after their father dies. a year gives 3 months buffer
+      father_death_date = [father_death_date addTimeInterval: 31536000];
+      mother_death_date = [[(FAM*)gc_tmp wife: ged] deathDate];
+      if( [birth_date compare: father_birth_date] == NSOrderedAscending
+        || [birth_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the parents you enetered. According to you one of them was born after their child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: father_death_date] == NSOrderedDescending
+        || [birth_date compare: mother_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the parents you entered. According to you one of them died before their child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: father_birth_date] == NSOrderedAscending
+        || [death_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the parents you enetered. According to you one of them was born after their child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+        famc = gc_tmp;
     }
   }
   // if only the father field was filled in
@@ -503,7 +677,39 @@
     {
 //DEBUG
 // NSLog( @"EditIndiController::process Found a FAMC for person with only a father" );
-      famc = [famc_array objectAtIndex: 0];
+      gc_tmp = [famc_array objectAtIndex: 0];
+
+      father_birth_date = [[(FAM*)gc_tmp husband: ged] birthDate];
+      father_death_date = [[(FAM*)gc_tmp husband: ged] deathDate];
+      // add a year to the father's death date since technically a person
+      // can be born up to 9 months after their father dies. a year gives 3 months buffer
+      father_death_date = [father_death_date addTimeInterval: 31536000];
+      if( [birth_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: father_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you entered. According to you he died more than a year before his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+        famc = gc_tmp;
 /*
       [famc setNeedSave: true];
       [added addSubfield: @"FAMC": [famc fieldValue]];
@@ -520,19 +726,84 @@
       [[ChooseFieldController sharedChooser] setHeaderString: @"Found these possible parents:"];
       [[ChooseFieldController sharedChooser] setFields: famc_array: ged];
       [NSApp runModalForWindow: [[ChooseFieldController sharedChooser] window]];
-      famc = [[ChooseFieldController sharedChooser] result];
+      gc_tmp = [[ChooseFieldController sharedChooser] result];
+      
+      father_birth_date = [[(FAM*)gc_tmp husband: ged] birthDate];
+      father_death_date = [[(FAM*)gc_tmp husband: ged] deathDate];
+      // add a year to the father's death date since technically a person
+      // can be born up to 9 months after their father dies. a year gives 3 months buffer
+      father_death_date = [father_death_date addTimeInterval: 31536000];
+      if( [birth_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: father_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you entered. According to you he died more than a year before his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+        famc = gc_tmp;
     }
     // otherwise, if we can find the father's record, set up a new FAM record
     // with him as HUSB, but no WIFE
     else if( [father_array count] == 1 ) //&& [[[father_array objectAtIndex: 0] sex] isEqual: @"M"] )
     {
+      father = [father_array objectAtIndex: 0];
+      father_birth_date = [father birthDate];
+      father_death_date = [father deathDate];
+      // add a year to the father's death date since technically a person
+      // can be born up to 9 months after their father dies. a year gives 3 months buffer
+      father_death_date = [father_death_date addTimeInterval: 31536000];
+      if( [birth_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: father_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you entered. According to you he died more than a year before his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+      {
 //DEBUG
 // NSLog( @"EditIndiController::process Adding FAMC for person with only a father" );
-      famc = [ged addRecord: @"FAM": famc_label];
-      [famc setNeedSave: true];
-      [famc addSubfield: @"HUSB": [[father_array objectAtIndex: 0] fieldValue]];
-      gc_tmp = [[father_array objectAtIndex: 0] addSubfield: @"FAMS": famc_label];
-      [gc_tmp setNeedSave: true];
+        famc = [ged addRecord: @"FAM": famc_label];
+        [famc setNeedSave: true];
+        [famc addSubfield: @"HUSB": [[father_array objectAtIndex: 0] fieldValue]];
+        gc_tmp = [[father_array objectAtIndex: 0] addSubfield: @"FAMS": famc_label];
+        [gc_tmp setNeedSave: true];
+      }
     }
     else if( [father_array count] > 1 ) //&& [[[father_array objectAtIndex: 0] sex] isEqual: @"M"] )
     {
@@ -540,22 +811,56 @@
       [[ChooseFieldController sharedChooser] setFields: father_array: ged];
       [NSApp runModalForWindow: [[ChooseFieldController sharedChooser] window]];
       father = [[ChooseFieldController sharedChooser] result];
+
+      father_birth_date = [father birthDate];
+      father_death_date = [father deathDate];
+      // add a year to the father's death date since technically a person
+      // can be born up to 9 months after their father dies. a year gives 3 months buffer
+      father_death_date = [father_death_date addTimeInterval: 31536000];
+      if( [birth_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: father_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you entered. According to you he died more than a year before his child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: father_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the father you enetered. According to you he was born after his child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+      {
 //DEBUG
 // NSLog( @"EditIndiController::process Adding FAMC for person with only a father" );
-      famc = [ged addRecord: @"FAM": famc_label];
-      [famc setNeedSave: true];
-      [famc addSubfield: @"HUSB": [father fieldValue]];
-      gc_tmp = [father addSubfield: @"FAMS": famc_label];
-      [gc_tmp setNeedSave: true];
+        famc = [ged addRecord: @"FAM": famc_label];
+        [famc setNeedSave: true];
+        [famc addSubfield: @"HUSB": [father fieldValue]];
+        gc_tmp = [father addSubfield: @"FAMS": famc_label];
+        [gc_tmp setNeedSave: true];
+      }
     }
     else
     {
 //DEBUG
 // NSLog( @"EditIndiController::process Only father specified, but errors encountered finding him." );
-      [new_indi_window orderOut: self];
+      //[new_indi_window orderOut: self];
       NSRunAlertPanel( @"Error", 
-        @"Errors encountered finding father record. All other changes were successful.",
+        @"Please check the father you entered.\nI couldn't find his record.",
         @"Ok", nil, nil );
+        return false;
     }
   }
   // if only the mother field was filled in
@@ -574,7 +879,35 @@
     {
 //DEBUG
 // NSLog( @"EditIndiController::process Found a FAMC for person with only a mother" );
-      famc = [famc_array objectAtIndex: 0];
+      gc_tmp = [famc_array objectAtIndex: 0];
+      mother_birth_date = [[(FAM*)gc_tmp wife: ged] birthDate];
+      mother_death_date = [[(FAM*)gc_tmp wife: ged] deathDate];
+      if( [birth_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: mother_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you entered. According to you she died before her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+        famc = gc_tmp;
     }
     else if ( [famc_array count] > 1 )
     {
@@ -584,22 +917,81 @@
       [[ChooseFieldController sharedChooser] setHeaderString: @"Found these possible parents:"];
       [[ChooseFieldController sharedChooser] setFields: famc_array: ged];
       [NSApp runModalForWindow: [[ChooseFieldController sharedChooser] window]];
-      famc = [[ChooseFieldController sharedChooser] result];
+      gc_tmp = [[ChooseFieldController sharedChooser] result];
+
+      mother_birth_date = [[(FAM*)gc_tmp wife: ged] birthDate];
+      mother_death_date = [[(FAM*)gc_tmp wife: ged] deathDate];
+      if( [birth_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: mother_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you entered. According to you she died before her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+        famc = gc_tmp;
     }
     // otherwise, if we can find the mother's record, set up a new FAM record
     // with her as WIFE, but no HUSB
     else if( [mother_array count] == 1 ) // && [[[mother_array objectAtIndex: 0] sex] isEqual: @"F"] )
     {
+      mother = [mother_array objectAtIndex: 0];
+      mother_birth_date = [mother birthDate];
+      mother_death_date = [mother deathDate];
+      if( [birth_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: mother_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you entered. According to you she died before her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+      {
 //DEBUG
 // NSLog( @"EditIndiController::process Adding FAMC for person with only a mother" );
-      famc = [ged addRecord: @"FAM": famc_label];
-      // tag the record for saving later
-      [famc setFieldValue: famc_label];
-      [famc setNeedSave: true];
-      gc_tmp = [[mother_array objectAtIndex: 0] addSubfield: @"FAMS": famc_label];
-      // tag the record for saving later
-      [gc_tmp setFieldValue: famc_label];
-      [famc addSubfield: @"WIFE": [[mother_array objectAtIndex: 0] fieldValue]];
+        famc = [ged addRecord: @"FAM": famc_label];
+        // tag the record for saving later
+        [famc setFieldValue: famc_label];
+        [famc setNeedSave: true];
+        gc_tmp = [[mother_array objectAtIndex: 0] addSubfield: @"FAMS": famc_label];
+        // tag the record for saving later
+        [gc_tmp setFieldValue: famc_label];
+        [famc addSubfield: @"WIFE": [[mother_array objectAtIndex: 0] fieldValue]];
+      }
     }
     else if( [mother_array count] > 1 ) //&& [[[father_array objectAtIndex: 0] sex] isEqual: @"M"] )
     {
@@ -607,27 +999,64 @@
       [[ChooseFieldController sharedChooser] setFields: mother_array: ged];
       [NSApp runModalForWindow: [[ChooseFieldController sharedChooser] window]];
       mother = [[ChooseFieldController sharedChooser] result];
+
+      mother_birth_date = [mother birthDate];
+      mother_death_date = [mother deathDate];
+      if( [birth_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [birth_date compare: mother_death_date] == NSOrderedDescending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you entered. According to you she died before her child was born.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else if( [death_date compare: mother_birth_date] == NSOrderedAscending )
+      {
+        //[new_indi_window orderOut: self];
+        NSRunAlertPanel( @"Error",
+          @"Please check the mother you enetered. According to you she was born after her child died.",
+          @"Ok", nil, nil );
+        return false;
+      }
+      else
+      {
 //DEBUG
 // NSLog( @"EditIndiController::process Adding FAMC for person with only a mother" );
-      famc = [ged addRecord: @"FAM": famc_label];
-      [famc setNeedSave: true];
-      [famc addSubfield: @"WIFE": [mother fieldValue]];
-      gc_tmp = [mother addSubfield: @"FAMS": famc_label];
-      [gc_tmp setNeedSave: true];
+        famc = [ged addRecord: @"FAM": famc_label];
+        [famc setNeedSave: true];
+        [famc addSubfield: @"WIFE": [mother fieldValue]];
+        gc_tmp = [mother addSubfield: @"FAMS": famc_label];
+        [gc_tmp setNeedSave: true];
+      }
     }
     else
     {
 //DEBUG
 // NSLog( @"EditIndiController::process Only mother specified, but errors encountered finding her." );
-      [new_indi_window orderOut: self];
+      //[new_indi_window orderOut: self];
       NSRunAlertPanel( @"Error", 
-        @"Errors encountered finding mother record. All other changes were successful.",
+        @"Please check the mother you enetered.\nI couldn't find her record.",
         @"Ok", nil, nil );
+      return false;
     }
   }
 
+//
+// there's no going back from this point on
+// we're about to start changing data
+//
+  
   if( famc )
   {
+    GCField* old_famc;
     [famc setNeedSave: true];
 
     // if this person already has a FAMC tag
@@ -635,16 +1064,11 @@
     // and remove this person from the old FAMC as a CHIL
     if( gc_tmp = [added subfieldWithType: @"FAMC"] )
     {
-      GCField* old_famc = [ged recordWithLabel: [gc_tmp fieldValue]];
+      old_famc = [ged recordWithLabel: [gc_tmp fieldValue]];
       [[ged famWithLabel: [gc_tmp fieldValue]]
         removeSubfieldWithType: @"CHIL" Value: [added fieldValue]];
       [gc_tmp setFieldValue: [famc fieldValue]];
       
-      // now that we've removed the CHIL from the FAM record,
-      // it's pointless to keep the FAM record around if it has
-      // fewer than 2 links left in it.
-      if( old_famc && [old_famc numSubfields] < 2 )
-        [ged removeRecord: old_famc];
     }
     // otherwise, give this person a FAMC tag
     else
@@ -652,6 +1076,118 @@
 
     // add this person as a CHIL to his FAMC
     [famc addSubfield: @"CHIL": [added fieldValue]];
+
+    // at this point,
+    // it's pointless to keep the old FAM record around if it has
+    // fewer than 2 links left in it.
+    if( old_famc && [old_famc numSubfields] < 2 )
+      [ged removeRecord: old_famc];
+  }
+
+  // NAME
+  [tmp setString: [first_name stringValue]];
+  [tmp appendString: @" /"];
+  [tmp appendString: [last_name stringValue]];
+  [tmp appendString: @"/"];
+  if( ! ( gc_tmp = [added subfieldWithType: @"NAME"] ) )
+    gc_tmp = [added addSubfield: @"NAME": [NSString stringWithString: tmp]];
+  else
+    [gc_tmp setFieldValue: [NSString stringWithString: tmp]]; 
+  
+  // if the user changed the field
+  if( ![[first_name stringValue] isEqual: [field firstName]] )
+  {
+    // if the field doesn't exist, create it
+    if( ! [gc_tmp subfieldWithType: @"GIVN"] )
+      [gc_tmp addSubfield: @"GIVN": [first_name stringValue]];
+    // if it exists and was changed to be blank, delete it
+    else if( [[first_name stringValue] isEqual: @""] )
+      [gc_tmp removeSubfieldWithType: @"GIVN" Value: [added firstName]];
+    // otherwise just update the value
+    else
+      [[gc_tmp subfieldWithType: @"GIVN"] setFieldValue: [first_name stringValue]];
+  }
+    
+  // if the user changed the field
+  if( ![[last_name stringValue] isEqual: [field lastName]] )
+  {
+    // if the field doesn't exist, create it
+    if( ! [gc_tmp subfieldWithType: @"SURN"] )
+      [gc_tmp addSubfield: @"SURN": [last_name stringValue]];
+    // if it exists and was changed to be blank, delete it
+    else if( [[last_name stringValue] isEqual: @""] )
+      [gc_tmp removeSubfieldWithType: @"SURN" Value: [added lastName]];
+    // otherwise just update the value
+    else
+      [[gc_tmp subfieldWithType: @"SURN"] setFieldValue: [last_name stringValue]];
+  }
+    
+  // if the user changed the field
+  if( ![[name_suffix stringValue] isEqual: [field nameSuffix]] )
+  {
+    // if the field doesn't exist, create it
+    if( ! [gc_tmp subfieldWithType: @"NSFX"] )
+      [gc_tmp addSubfield: @"NSFX": [name_suffix stringValue]];
+    // if it exists and was changed to be blank, delete it
+    else if( [[name_suffix stringValue] isEqual: @""] )
+      [gc_tmp removeSubfieldWithType: @"NSFX" Value: [added nameSuffix]];
+    // otherwise just update the value
+    else
+      [[gc_tmp subfieldWithType: @"NSFX"] setFieldValue: [name_suffix stringValue]];
+  }
+  
+  // SEX
+  if( gc_tmp = [added subfieldWithType: @"SEX"] )
+    [gc_tmp setFieldValue: [[sex_matrix selectedCell] title]];
+  else
+    [added addSubfield: @"SEX": [[sex_matrix selectedCell] title]];
+  
+  // BIRT
+  if( gc_tmp = [[added subfieldWithType: @"BIRT"] subfieldWithType: @"DATE"] )
+    [gc_tmp setFieldValue: [NSString stringWithString: birth_str]];
+  else if( ![tmp isEqual: @""] && ( gc_tmp = [added subfieldWithType: @"BIRT"] ) )
+    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: birth_str]];
+  else if( ![tmp isEqual: @""] )
+  {
+    gc_tmp = [added addSubfield: @"BIRT": @""];
+    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: birth_str]];
+  }
+  
+  if( ! [[birth_place stringValue] isEqual: @""] )
+  {
+    if( ! [added subfieldWithType: @"BIRT"] )
+      gc_tmp = [added addSubfield: @"BIRT": @""];
+    else
+      gc_tmp = [added subfieldWithType: @"BIRT"];
+      
+    if( gc_tmp = [gc_tmp subfieldWithType: @"PLAC"] )
+      [gc_tmp setFieldValue: [birth_place stringValue]];
+    else
+      [[added subfieldWithType: @"BIRT"] addSubfield: @"PLAC": [birth_place stringValue]];
+  }
+      
+  // DEAT
+  if( gc_tmp = [[added subfieldWithType: @"DEAT"] subfieldWithType: @"DATE"] )
+    [gc_tmp setFieldValue: [NSString stringWithString: death_str]];
+  else if( ![tmp isEqual: @""] && ( gc_tmp = [added subfieldWithType: @"DEAT"] ) )
+    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: death_str]];
+  else if( ![tmp isEqual: @""] )
+  {
+    gc_tmp = [added addSubfield: @"DEAT": @""];
+    [gc_tmp addSubfield: @"DATE": [NSString stringWithString: death_str]];
+  }
+  
+  if( ! [[death_place stringValue] isEqual: @""] )
+  {
+    if( ! [added subfieldWithType: @"DEAT"] )
+      gc_tmp = [added addSubfield: @"DEAT": @""];
+    else
+      gc_tmp = [added subfieldWithType: @"DEAT"];
+      
+    if( gc_tmp = [gc_tmp subfieldWithType: @"PLAC"] )
+      [gc_tmp setFieldValue: [death_place stringValue]];
+    else
+      [[added subfieldWithType: @"DEAT"] addSubfield: @"PLAC": [death_place stringValue]];
   }
   
   if( !field )
