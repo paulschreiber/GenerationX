@@ -60,7 +60,7 @@
   //
   // get saved values
   //
-  [default_file_text setStringValue: [[preferences stringForKey: @"DEFAULT_FILE"] lastPathComponent]];
+  [default_file_text setStringValue: [preferences stringForKey: @"DEFAULT_FILE"]];
   [user_name_text setStringValue: [preferences stringForKey: @"USER_NAME"]];
   [auto_save_text setStringValue: [[NSNumber numberWithInt: [preferences integerForKey: @"AUTO_SAVE"]] stringValue]];
   
