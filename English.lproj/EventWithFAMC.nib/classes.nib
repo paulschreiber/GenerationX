@@ -1,0 +1,26 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {handleCancel = id; handleOk = id; }; 
+            CLASS = EventWithFAMCController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                event_day = id; 
+                event_month = id; 
+                event_place = id; 
+                event_window = id; 
+                event_year = id; 
+                father_label = id; 
+                father_text = id; 
+                header_text = id; 
+                mother_label = id; 
+                mother_text = id; 
+                note_text = id; 
+                source_text = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

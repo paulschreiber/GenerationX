@@ -1,0 +1,20 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {handleCancel = id; handleChangeDefaultPath = id; handleOk = id; }; 
+            CLASS = PreferencesController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                auto_save_text = id; 
+                default_file_text = id; 
+                pref_window = id; 
+                sort_filtered_button = id; 
+                sort_records_button = id; 
+                user_name_text = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

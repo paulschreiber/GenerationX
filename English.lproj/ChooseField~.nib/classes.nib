@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {handleNone = id; handleOk = id; }; 
+            CLASS = ChooseFieldController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {header = id; table = id; window = id; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
