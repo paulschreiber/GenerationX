@@ -330,6 +330,8 @@ descending: (BOOL) sortDescending;
     {
       indi = [displayed_indi objectAtIndex: rowIndex];
       [result setString: [indi firstName]];
+      if( [indi nameSuffix] )
+        [result appendString: [NSString stringWithFormat: @" %@", [indi nameSuffix]]];
     }
     // Second column
     else if( [columnId isEqualToString: @"surname"] )
