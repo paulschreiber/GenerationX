@@ -95,7 +95,7 @@
     }
     else
     {
-      while( [outlineView levelForRow: i] == selected_level )
+      while( [outlineView levelForRow: i] >= selected_level )
         i--;
         
       if( [[[outlineView itemAtRow: i] sex] isEqual: @"M"] )
