@@ -1062,7 +1062,7 @@
   
   if( famc )
   {
-    GCField* old_famc;
+    GCField* old_famc = nil;
     [famc setNeedSave: true];
 
     // if this person already has a FAMC tag
