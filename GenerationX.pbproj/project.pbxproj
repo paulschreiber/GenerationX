@@ -184,6 +184,8 @@
 		29B97317FDCFA39411CA2CEA = {
 			children = (
 				29B97318FDCFA39411CA2CEA,
+				F5E1614E038383BE01C467B4,
+				F5E16151038383D401C467B4,
 				F5F3D4790225A17101A385B0,
 				F51E57E7023EF3C601E25AE0,
 				F51E57E4023EF3B101E25AE0,
@@ -368,6 +370,16 @@
 				F5ED4444025D1C4E01F8E4C9,
 				F5ED29B30263DDAF017FBCAC,
 				F5E7974302B837C401AB0A49,
+				F5E16150038383BE01C467B4,
+				F5E16153038383D401C467B4,
+				F50A58830383844C01DEAC4F,
+				F50A58840383844C01DEAC4F,
+				F50A58850383844C01DEAC4F,
+				F50A58860383844C01DEAC4F,
+				F50A58870383844C01DEAC4F,
+				F50A58880383844C01DEAC4F,
+				F50A58890383844C01DEAC4F,
+				F50A588A0383844C01DEAC4F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,6 +475,14 @@
 //F54
 		F5055BB10224B72F011BEE18 = {
 			children = (
+				F50A587B0383844C01DEAC4F,
+				F50A587C0383844C01DEAC4F,
+				F50A587D0383844C01DEAC4F,
+				F50A587E0383844C01DEAC4F,
+				F50A587F0383844C01DEAC4F,
+				F50A58800383844C01DEAC4F,
+				F50A58810383844C01DEAC4F,
+				F50A58820383844C01DEAC4F,
 				F51C48E60231DE7101F231EB,
 				F51C48E80231DF1A01F231EB,
 				F51C48EA0231E01A01F231EB,
@@ -477,6 +497,102 @@
 			name = Images;
 			path = "";
 			refType = 4;
+		};
+		F50A587B0383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = ButtonDown.tiff;
+			path = Button/ButtonDown.tiff;
+			refType = 4;
+		};
+		F50A587C0383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = ButtonEmpty.tiff;
+			path = Button/ButtonEmpty.tiff;
+			refType = 4;
+		};
+		F50A587D0383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = ButtonLeft.tiff;
+			path = Button/ButtonLeft.tiff;
+			refType = 4;
+		};
+		F50A587E0383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = ButtonMinus.tiff;
+			path = Button/ButtonMinus.tiff;
+			refType = 4;
+		};
+		F50A587F0383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = ButtonPlus.tiff;
+			path = Button/ButtonPlus.tiff;
+			refType = 4;
+		};
+		F50A58800383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = ButtonRight.tiff;
+			path = Button/ButtonRight.tiff;
+			refType = 4;
+		};
+		F50A58810383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = ButtonUp.tiff;
+			path = Button/ButtonUp.tiff;
+			refType = 4;
+		};
+		F50A58820383844C01DEAC4F = {
+			isa = PBXFileReference;
+			name = Triangle.tiff;
+			path = Button/Triangle.tiff;
+			refType = 4;
+		};
+		F50A58830383844C01DEAC4F = {
+			fileRef = F50A587B0383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A58840383844C01DEAC4F = {
+			fileRef = F50A587C0383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A58850383844C01DEAC4F = {
+			fileRef = F50A587D0383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A58860383844C01DEAC4F = {
+			fileRef = F50A587E0383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A58870383844C01DEAC4F = {
+			fileRef = F50A587F0383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A58880383844C01DEAC4F = {
+			fileRef = F50A58800383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A58890383844C01DEAC4F = {
+			fileRef = F50A58810383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F50A588A0383844C01DEAC4F = {
+			fileRef = F50A58820383844C01DEAC4F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		F514D6D70234575A01EB28E5 = {
 			isa = PBXFileReference;
@@ -819,6 +935,48 @@
 		};
 		F5D07D5202247C18014360AA = {
 			fileRef = F5D07D4F02247C17014360AA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5E1614E038383BE01C467B4 = {
+			children = (
+				F5E1614F038383BE01C467B4,
+			);
+			isa = PBXVariantGroup;
+			name = ImageViewer.nib;
+			path = "";
+			refType = 4;
+		};
+		F5E1614F038383BE01C467B4 = {
+			isa = PBXFileReference;
+			name = English;
+			path = English.lproj/ImageViewer.nib;
+			refType = 4;
+		};
+		F5E16150038383BE01C467B4 = {
+			fileRef = F5E1614E038383BE01C467B4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5E16151038383D401C467B4 = {
+			children = (
+				F5E16152038383D401C467B4,
+			);
+			isa = PBXVariantGroup;
+			name = NoteViewer.nib;
+			path = "";
+			refType = 4;
+		};
+		F5E16152038383D401C467B4 = {
+			isa = PBXFileReference;
+			name = English;
+			path = English.lproj/NoteViewer.nib;
+			refType = 4;
+		};
+		F5E16153038383D401C467B4 = {
+			fileRef = F5E16151038383D401C467B4;
 			isa = PBXBuildFile;
 			settings = {
 			};
