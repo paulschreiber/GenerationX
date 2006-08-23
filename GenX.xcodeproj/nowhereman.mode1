@@ -371,9 +371,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>B573E3660A9C021000C398FE</string>
+				<string>B573E3A50A9C08A100C398FE</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>B573E3670A9C021000C398FE</string>
+				<string>B573E3A60A9C08A100C398FE</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -508,7 +508,6 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>B5B35A4A09BB892F003403D8</string>
-		<string>1C0AD2B3069F1EA900FABCE6</string>
 		<string>/Users/nowhereman/Hacks/genxCVS/generationx/GenX.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
@@ -589,7 +588,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>B5B35A4A09BB892F003403D8</string>
-				<string>B573E3680A9C021000C398FE</string>
+				<string>B573E3A70A9C08A100C398FE</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
