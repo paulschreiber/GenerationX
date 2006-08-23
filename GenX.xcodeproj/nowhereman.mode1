@@ -371,9 +371,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>B5A88B6E0A9C003200C8D864</string>
+				<string>B573E3660A9C021000C398FE</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>B5A88B6F0A9C003200C8D864</string>
+				<string>B573E3670A9C021000C398FE</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -508,8 +508,8 @@
 	<key>WindowOrderList</key>
 	<array>
 		<string>B5B35A4A09BB892F003403D8</string>
-		<string>/Users/nowhereman/Hacks/genxCVS/generationx/GenX.xcodeproj</string>
 		<string>1C0AD2B3069F1EA900FABCE6</string>
+		<string>/Users/nowhereman/Hacks/genxCVS/generationx/GenX.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>167 138 248 598 0 0 1024 746 </string>
@@ -589,7 +589,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>B5B35A4A09BB892F003403D8</string>
-				<string>B5A88B700A9C003200C8D864</string>
+				<string>B573E3680A9C021000C398FE</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -934,9 +934,9 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C0AD2B3069F1EA900FABCE6</string>
-				<string>B5A88B710A9C003200C8D864</string>
+				<string>B573E3690A9C021000C398FE</string>
 				<string>1CD0528B0623707200166675</string>
-				<string>B5A88B720A9C003200C8D864</string>
+				<string>B573E36A0A9C021000C398FE</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.run</string>
@@ -945,7 +945,7 @@
 			<key>WindowToolGUID</key>
 			<string>1C0AD2B3069F1EA900FABCE6</string>
 			<key>WindowToolIsVisible</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Identifier</key>
