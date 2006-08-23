@@ -1,0 +1,25 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                handleAddEvent = id; 
+                handleChangeSource = id; 
+                handleDeleteEvent = id; 
+                handleSelectEventType = id; 
+                handleSelectSource = id; 
+            }; 
+            CLASS = eventViewerController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                addEventMenu = id; 
+                addEventSheet = id; 
+                eventTable = id; 
+                panel = id; 
+                sourceText = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
