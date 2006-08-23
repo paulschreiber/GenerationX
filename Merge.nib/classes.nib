@@ -1,0 +1,18 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {handleKeepBoth = id; handleKeepOriginal = id; handleReplaceOriginal = id; }; 
+            CLASS = MergeController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "merge_field" = id; 
+                "merge_label" = id; 
+                "merge_window" = id; 
+                "original_field" = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

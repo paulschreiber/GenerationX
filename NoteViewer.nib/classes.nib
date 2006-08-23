@@ -1,0 +1,27 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                handleAddNote = id; 
+                handleChangeSource = id; 
+                handleDeleteNote = id; 
+                handleSelectSource = id; 
+            }; 
+            CLASS = NoteViewerController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                buttonMinus = id; 
+                buttonPlus = id; 
+                "header_text" = id; 
+                noteText = id; 
+                "note_outline" = id; 
+                panel = id; 
+                sourceText = id; 
+                window = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

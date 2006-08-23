@@ -1,0 +1,22 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                handleHtmlChangeEmail = id; 
+                handleHtmlChangeTimestamp = id; 
+                handleHtmlChangeTitle = id; 
+            }; 
+            CLASS = PrefsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                htmlEmailText = id; 
+                htmlTimestampSwitch = id; 
+                htmlTitleText = id; 
+                panel = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
