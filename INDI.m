@@ -8,7 +8,7 @@
 
 #import "INDI.h"
 #import "GCFile.h"
-#import "HTMLController.h"
+//#import "HTMLController.h"
 #import "GenXUtil.h"
 
 @implementation INDI
@@ -116,7 +116,8 @@
   NSString* result = @"";
   NSScanner* name_scanner;
   
-  if( ! [self valueOfSubfieldWithType: @"NAME"] )
+  if( ! [self valueOfSubfieldWithType: @"NAME"]
+	 || [[self valueOfSubfieldWithType: @"NAME"] isEqualToString: @""] )
     return @"?";
     
   // if this person has a NAME -> SURN field, just use that
@@ -164,6 +165,8 @@
 
 - (NSString*) sex
 {
+  if( ![self valueOfSubfieldWithType: @"SEX"] )
+	  return @"?";
   return [self valueOfSubfieldWithType: @"SEX"];
 }
 
@@ -663,6 +666,7 @@
 
 - (NSString*) htmlSummary: (id) my_ged
 {
+/*
   GCField* gc_tmp;
   NSString* tmp;
   INDI* tmp_indi;
@@ -843,6 +847,8 @@
   [result appendString: @"</html>\n"];
   
   return result;
+*/
+return @"HTML result";
 }
 
 // Compare 2 fields for sorting by surname and givenname
@@ -852,6 +858,70 @@
     return [[self firstName] compare: [my_field firstName]];
   else
     return [[self lastName] compare: [my_field lastName]];
+}
+
+- (NSComparisonResult) compareFirstName: (id) my_field
+{
+  if( [[self firstName] compare: [my_field firstName]] == NSOrderedSame )
+	  return [self compareBirthdays: my_field];
+		
+	return [[self firstName] compare: [my_field firstName]];
+}
+
+- (NSComparisonResult) compareFirstNameReverse: (id) my_field
+{
+  if( [[self firstName] compare: [my_field firstName]] == NSOrderedSame )
+	  return [self compareBirthdaysReverse: my_field];
+
+	return [[my_field firstName] compare: [self firstName]];
+}
+
+- (NSComparisonResult) compareLastName: (id) my_field
+{
+  if( [[self lastName] compare: [my_field lastName]] == NSOrderedSame )
+	  return [self compareFirstName: my_field];
+	
+	return [[self lastName] compare: [my_field lastName]];
+}
+
+- (NSComparisonResult) compareLastNameReverse: (id) my_field
+{
+  if( [[self lastName] compare: [my_field lastName]] == NSOrderedSame )
+	  return [self compareFirstNameReverse: my_field];
+
+	return [[my_field lastName] compare: [self lastName]];
+}
+
+- (NSComparisonResult) compareNameSuffix: (id) my_field
+{
+  if( [[self nameSuffix] compare: [my_field nameSuffix]] )
+	  return [self compareLastName: my_field];
+		
+	return [[self nameSuffix] compare: [my_field nameSuffix]];
+}
+
+- (NSComparisonResult) compareNameSuffixReverse: (id) my_field
+{
+  if( [[self nameSuffix] compare: [my_field nameSuffix]] )
+	  return [self compareLastNameReverse: my_field];
+		
+	return [[my_field nameSuffix] compare: [self nameSuffix]];
+}
+
+- (NSComparisonResult) compareSex: (id) my_field
+{
+  if( [[self sex] compare: [my_field sex]] == NSOrderedSame )
+	  return [self compareLastName: my_field];
+		
+	return [[self sex] compare: [my_field sex]];
+}
+
+- (NSComparisonResult) compareSexReverse: (id) my_field
+{
+  if( [[self sex] compare: [my_field sex]] == NSOrderedSame )
+	  return [self compareLastNameReverse: my_field];
+		
+	return [[my_field sex] compare: [self sex]];
 }
 
 - (NSComparisonResult) compareBirthdays: (id) a
@@ -870,6 +940,72 @@
     return NSOrderedAscending;
   else if( date2_str = [[a subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"] )
     return NSOrderedDescending;
+  else
+  {
+    return NSOrderedSame;
+  }
+}
+
+- (NSComparisonResult) compareBirthdaysReverse: (id) a
+{
+  NSDate* date1, *date2;
+  NSString* date1_str, *date2_str;
+
+  if( (date1_str = [[self subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"])
+   && (date2_str = [[a subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"]) )
+  {
+    date1 = [NSDate dateWithNaturalLanguageString: date1_str];
+    date2 = [NSDate dateWithNaturalLanguageString: date2_str];
+    return [date2 compare: date1];
+  }
+  else if( date1_str = [[self subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedDescending;
+  else if( date2_str = [[a subfieldWithType: @"BIRT"] valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedAscending;
+  else
+  {
+    return NSOrderedSame;
+  }
+}
+
+- (NSComparisonResult) compareDeathDates: (id) a
+{
+  NSDate* date1, *date2;
+  NSString* date1_str, *date2_str;
+
+  if( (date1_str = [[self subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"])
+   && (date2_str = [[a subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"]) )
+  {
+    date1 = [NSDate dateWithNaturalLanguageString: date1_str];
+    date2 = [NSDate dateWithNaturalLanguageString: date2_str];
+    return [date1 compare: date2];
+  }
+  else if( date1_str = [[self subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedAscending;
+  else if( date2_str = [[a subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedDescending;
+  else
+  {
+    return NSOrderedSame;
+  }
+}
+
+- (NSComparisonResult) compareDeathDatesReverse: (id) a
+{
+  NSDate* date1, *date2;
+  NSString* date1_str, *date2_str;
+
+  if( (date1_str = [[self subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"])
+   && (date2_str = [[a subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"]) )
+  {
+    date1 = [NSDate dateWithNaturalLanguageString: date1_str];
+    date2 = [NSDate dateWithNaturalLanguageString: date2_str];
+    return [date2 compare: date1];
+  }
+  else if( date1_str = [[self subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedDescending;
+  else if( date2_str = [[a subfieldWithType: @"DEAT"] valueOfSubfieldWithType: @"DATE"] )
+    return NSOrderedAscending;
   else
   {
     return NSOrderedSame;

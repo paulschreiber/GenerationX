@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GCField.h"
+#import "INDI.h"
 
 
 @interface FAM : GCField
@@ -21,8 +22,15 @@
 - (INDI*) wife: (id) my_ged;
 - (INDI*) husband: (id) my_ged;
 - (NSMutableArray*) children: (id) my_ged;
+- (NSDate*) marriageDate;
 - (NSString*) textSummary: (id) my_ged;
 - (NSComparisonResult) compare: (id) my_field;
 - (void) sortChildren: (id) g;
+- (NSComparisonResult) compareHusbandSurname: (id) my_field;
+- (NSComparisonResult) compareHusbandSurnameReverse: (id) my_field;
+- (NSComparisonResult) compareWifeSurname: (id) my_field;
+- (NSComparisonResult) compareWifeSurnameReverse: (id) my_field;
+- (NSComparisonResult) compareMarriageDate: (id) a;
+- (NSComparisonResult) compareMarriageDateReverse: (id) a;
 
 @end

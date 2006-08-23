@@ -8,11 +8,16 @@
 
 @interface NoteViewerController : NSObject
 {
-    IBOutlet NSWindow* window;
+    IBOutlet id panel;
     IBOutlet NSTextField* header_text;
     IBOutlet NSOutlineView* note_outline;
+    IBOutlet id noteText;
+    IBOutlet id sourceText;
+    IBOutlet id buttonPlus;
+    IBOutlet id buttonMinus;
     
     GCField* field;
+    GCField* currentNote;
     NSMutableArray* events;
 }
 
@@ -20,6 +25,12 @@
 
 - (NoteViewerController*) initViewer;
 - (void) setField: (id) my_field;
-- (NSWindow*) window;
+- (void) toggle;
+- (BOOL) isVisible;
+
+- (void) handleSelectSource: (id) sender;
+- (void) handleChangeSource: (id) sender;
+- (void) handleAddNote: (id) sender;
+- (void) handleDeleteNote: (id) sender;
 
 @end

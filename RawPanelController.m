@@ -28,6 +28,19 @@
   [raw_panel makeKeyAndOrderFront:self];  
 }
 
+- (void) toggle
+{
+  if( ![raw_panel isVisible] )
+	  [raw_panel makeKeyAndOrderFront:self];
+	else
+	  [raw_panel orderOut:self];
+}
+
+- (BOOL) isVisible
+{
+  return [raw_panel isVisible];
+}
+
 - (void) handleNewFieldButton: (id) sender
 {
   GCField* selected = [raw_outline itemAtRow: [raw_outline selectedRow]];
@@ -56,6 +69,8 @@
     [raw_outline editColumn: 0 row: [raw_outline rowForItem: added]
                  withEvent: nil select: true ];
   }
+	
+	[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
 }
 
 - (void) handleDeleteFieldButton: (id) sender
@@ -92,6 +107,7 @@
   }
     
   [raw_outline reloadData];
+	[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
 }
 
 - (GCField*) dataField
@@ -176,6 +192,8 @@
     [item setFieldType: object];
   else
     [item setFieldValue: object];
+
+	[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
 }
 
 @end

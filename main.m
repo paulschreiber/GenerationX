@@ -1,9 +1,9 @@
 //
 //  main.m
-//  GenerationX
+//  GenXDoc
 //
-//  Created by Nowhere Man on Tue Feb 19 2002.
-//  Copyright (c) 2001 __MyCompanyName__. All rights reserved.
+//  Created by Nowhere Man on Fri Feb 06 2004.
+//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

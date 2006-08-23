@@ -18,6 +18,7 @@
 
 - (GenXUtil*) init;
 - (NSString*) eventStringFromGEDCOM: (NSString*) my_gedcom;
+- (NSString*) GEDCOMFromEventString: (NSString*) s;
 - (NSDate*) dateFromGEDCOM: (NSString*) str;
 
 - (void) updateRecentPlacesWithString: (NSString*) s;

@@ -2,6 +2,8 @@
 
 #import "HTMLController.h"
 
+#define prefs [NSUserDefaults standardUserDefaults]
+
 @implementation HTMLController
 
 + (HTMLController*) sharedHTML
@@ -19,8 +21,8 @@
   NSMutableString* result = [[NSMutableString alloc] init];
 
   [result setString: @"<html><head><title>"];
-  [result appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
-  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+  [result appendString: [prefs objectForKey: @"htmlTitle"]];
+  if( [[prefs objectForKey: @"htmlIncludeTimestamp"] boolValue] )
   {
     [result appendString: @" "];
     [result appendString: [[NSDate date] description]];
@@ -29,12 +31,12 @@
   [result appendString: @"<style type=\"text/css\"><!--\n"];
   [result appendString: @"body{\n"];
   [result appendString: @"  background: #"];
-  [result appendString: [[PreferencesController sharedPrefs] HTMLBackColor]];
+  [result appendString: @"#FFFFFF"];//[[PreferencesController sharedPrefs] HTMLBackColor]];
   [result appendString: @";\n"];
   [result appendString: @"  font-family: sans-serif;\n"];
   [result appendString: @"  font-size: 12px;\n"];
   [result appendString: @"  color: #"];
-  [result appendString: [[PreferencesController sharedPrefs] HTMLTextColor]];
+  [result appendString: @"#000000"];//[[PreferencesController sharedPrefs] HTMLTextColor]];
   [result appendString: @";\n"];
   [result appendString: @"}\n"];
   [result appendString: @"td{\n"];
@@ -44,7 +46,7 @@
   [result appendString: @"  font-family: sans-serif;\n"];
   [result appendString: @"  font-size: 12px;\n"];
   [result appendString: @"  color: #"];
-  [result appendString: [[PreferencesController sharedPrefs] HTMLTextColor]];
+  [result appendString: @"#000000"];//[[PreferencesController sharedPrefs] HTMLTextColor]];
   [result appendString: @";\n"];
   [result appendString: @"}\n"];
   [result appendString: @"--></style>\n"];
@@ -79,7 +81,7 @@
     [my_dir stringByAppendingString: @"/index.html"]];
   NSString* alpha = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   NSString* prefix;
-  NSString* title = [[PreferencesController sharedPrefs] HTMLTitle];
+  NSString* title = [prefs objectForKey: @"htmlTitle"];
   NSMutableArray* surnames = [ged surnames];
   NSFileManager* manager = [NSFileManager defaultManager];
   int i = 0;
@@ -99,7 +101,7 @@
   [html_text appendString: @"<tr><td bgcolor=\"#CCCCCC\"><font size=+2>"];
   [html_text appendString: title];
   [html_text appendString: @"</font>\n<br>\n<i>"];
-  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+  if( [[prefs objectForKey: @"htmlIncludeTimestamp"] boolValue] )
     [html_text appendString: [[NSDate date] description]];
   [html_text appendString: @"</i>\n<tr><td>\n"];
   [html_text appendString: @"<a href=\"surnames/index.html\">All surnames</a> |\n"];
@@ -132,10 +134,10 @@
   [html_text appendString: @" family records in this database\n<br>\n"];
   [html_text appendString: [[NSNumber numberWithInt: [surnames count]] stringValue]];
   [html_text appendString: @" surnames in this database\n"];
-  if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+  if( ! [[prefs objectForKey: @"htmlEmailAddress"] isEqualToString: @""] )
   {
-    [html_text appendString: @"<p><a href=\"mailto: "];
-    [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+    [html_text appendString: @"<p><a href=\"mailto:"];
+    [html_text appendString: [prefs objectForKey: @"htmlEmailAddress"]];
     [html_text appendString: @"\">Contact the owner of this database</a>\n"];
   }
   [html_text appendString: @"\n"];
@@ -158,16 +160,16 @@
   
   [html_text setString: [HTMLController HTMLHeader]];
   [html_text appendString: @"<body>\n<table border=0 width=600 cellpadding=10><tr><td bgcolor=#CCCCCC><font size=+2>"];
-  [html_text appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
+  [html_text appendString: [prefs objectForKey: @"htmlTitle"]];
   [html_text appendString: @"</font>\n<br>\n<i>"];
-  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+  if( [[prefs objectForKey: @"htmlIncludeTimestamp"] boolValue] )
     [html_text appendString: [[NSDate date] description]];
   [html_text appendString: @"</i>\n<tr><td>\n"];
   [html_text appendString: @"<a href=\"../index.html\">Home</a>\n"];
-  if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+  if( ! [[prefs objectForKey: @"htmlEmailAddress"] isEqualToString: @""] )
   {
-    [html_text appendString: @" | <a href=\"mailto: "];
-    [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+    [html_text appendString: @" | <a href=\"mailto:"];
+    [html_text appendString: [prefs objectForKey: @"htmlEmailAddress"]];
     [html_text appendString: @"\">Contact</a>\n"];
   }
   [html_text appendString: @"<p>"];
@@ -231,16 +233,16 @@
 NSLog( my_prefix );
   [html_text setString: [HTMLController HTMLHeader]];
   [html_text appendString: @"<body>\n<table border=0 width=600 cellpadding=10><tr><td bgcolor=#CCCCCC><font size=+2>"];
-  [html_text appendString: [[PreferencesController sharedPrefs] HTMLTitle]];
+  [html_text appendString: [prefs objectForKey: @"htmlTitle"]];
   [html_text appendString: @"</font>\n<br>\n<i>"];
-  if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+  if( [[prefs objectForKey: @"htmlIncludeTimestamp"] boolValue] )
     [html_text appendString: [[NSDate date] description]];
   [html_text appendString: @"</i>\n<tr><td>\n"];
   [html_text appendString: @"<a href=\"index.html\">Home</a>\n"];
-  if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+  if( ! [[prefs objectForKey: @"htmlEmailAddress"] isEqualToString: @""] )
   {
-    [html_text appendString: @" | <a href=\"mailto: "];
-    [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+    [html_text appendString: @" | <a href=\"mailto:"];
+    [html_text appendString: [prefs objectForKey: @"htmlEmailAddress"]];
     [html_text appendString: @"\">Contact</a>\n"];
   }
   [html_text appendString: @"<p>"];
@@ -335,7 +337,7 @@ NSLog( stripped_label );
   NSMutableArray* indis = [[NSMutableString alloc] init];
   NSMutableString* html_path = [[NSMutableString alloc] initWithString: my_dir];
   NSMutableString* html_text = [[NSMutableString alloc] init];
-  NSString* title = [[PreferencesController sharedPrefs] HTMLTitle];
+  NSString* title = [prefs objectForKey: @"htmlTitle"];
   NSString* surname, *stripped_label;
   INDI* indi;
   int i, j;
@@ -363,14 +365,14 @@ NSLog( stripped_label );
     [html_text appendString: @"<tr><td bgcolor=\"#CCCCCC\"><font size=+2>"];
     [html_text appendString: title];
     [html_text appendString: @"</font>\n<br>\n<i>"];
-    if( [[PreferencesController sharedPrefs] HTMLTimestamp] )
+    if( [[prefs objectForKey: @"htmlIncludeTimestamp"] boolValue] )
       [html_text appendString: [[NSDate date] description]];
     [html_text appendString: @"</i>\n<tr><td>\n"];
     [html_text appendString: @"<a href=\"../index.html\">Home</a>\n"];
-    if( ! [[[PreferencesController sharedPrefs] HTMLEmail] isEqualToString: @""] )
+    if( ! [[prefs objectForKey: @"htmlEmailAddress"] isEqualToString: @""] )
     {
-      [html_text appendString: @" | <a href=\"mailto: "];
-      [html_text appendString: [[PreferencesController sharedPrefs] HTMLEmail]];
+      [html_text appendString: @" | <a href=\"mailto:"];
+      [html_text appendString: [prefs objectForKey: @"htmlEmailAddress"]];
       [html_text appendString: @"\">Contact</a>\n"];
     }
     [html_text appendString: @"<p>"];

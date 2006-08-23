@@ -14,6 +14,8 @@
 + (RawPanelController*) sharedRawPanel;
 - (RawPanelController*) initNib;
 - (void) display;
+- (void) toggle;
+- (BOOL) isVisible;
 - (void) handleNewFieldButton: (id) sender;
 - (void) handleDeleteFieldButton: (id) sender;
 - (GCField*) dataField;

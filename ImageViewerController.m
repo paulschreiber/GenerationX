@@ -1,4 +1,7 @@
 #import "ImageViewerController.h"
+#import "sourceSelectorController.h"
+
+#define currentDoc [[NSDocumentController sharedDocumentController] currentDocument]
 
 @implementation ImageViewerController
 
@@ -102,11 +105,24 @@ static ImageViewerController* shared_viewer = nil;
   return window;
 }
 
+- (void) toggle
+{
+  if( [window isVisible] )
+	  [window orderOut: nil];
+	else
+	  [window makeKeyAndOrderFront: nil];
+}
+
+- (BOOL) isVisible
+{
+  return [window isVisible];
+}
+
 // Update the content of the view
 - (void) updateViewContent
 {
   GCField* gc_tmp;
-  NSMutableString* title = [NSMutableString stringWithString: @"Images for\n"];
+  NSMutableString* title = [NSMutableString stringWithString: @"Images for "];
   int i = 0;
   
   [events removeAllObjects];
@@ -124,10 +140,11 @@ static ImageViewerController* shared_viewer = nil;
   for( i = 0; i < [record numSubfields]; i++ )
   {
     gc_tmp = [record subfieldAtIndex: i];
-    if( [gc_tmp isEvent] && [[gc_tmp subfieldsWithType: @"OBJE"] count] > 0 )
+    if( [gc_tmp isEvent] )//&& [[gc_tmp subfieldsWithType: @"OBJE"] count] > 0 )
       [events addObject: gc_tmp];
   }
   
+/*
   // If the current record is an indi then fullName is displayed
   if( [[record fieldType] isEqualToString: @"INDI"] )
     [title appendString: [record fullName]];
@@ -135,9 +152,31 @@ static ImageViewerController* shared_viewer = nil;
     [title appendString: [record fieldValue]];
   
   [headerText setStringValue: title];
-  
+*/  
   // Update outline view
   [imageOutline reloadData];
+}
+
+- (void) handleSelectSource: (id) sender
+{
+}
+
+- (void) handleChangeSource: (id) sender
+{
+  [NSApp beginSheet: [[sourceSelectorController sharedSelector] panel] modalForWindow: window modalDelegate: self didEndSelector: @selector( changeSourceSheetDidEnd ) contextInfo: nil];
+}
+
+- (void) changeSourceSheetDidEnd
+{
+  if( [[[imageOutline itemAtRow: [imageOutline selectedRow]] fieldType] isEqualToString: @"OBJE"] )
+	{
+		GCField* tmp = [[imageOutline itemAtRow: [imageOutline selectedRow]] subfieldWithType: @"SOUR"];
+		if( !tmp )
+			tmp = [[imageOutline itemAtRow: [imageOutline selectedRow]] addSubfield: @"SOUR" : @""];
+			
+		[tmp setFieldValue: [[[sourceSelectorController sharedSelector] selectedSource] fieldValue]];
+		[currentDoc handleContentChange];
+	}
 }
 
 - (void)addImagePanelDidClose:(NSOpenPanel *)sheet
@@ -150,7 +189,14 @@ static ImageViewerController* shared_viewer = nil;
   if (returnCode == NSOKButton)
   {
     [record setNeedSave: true];
-    gc_tmp = [record addSubfield: @"OBJE": @""];
+		
+		if( [imageOutline selectedRow] == -1 )
+      gc_tmp = [record addSubfield: @"OBJE": @""];
+		else if( [[imageOutline itemAtRow: [imageOutline selectedRow]] isEvent] )
+      gc_tmp = [[imageOutline itemAtRow: [imageOutline selectedRow]] addSubfield: @"OBJE": @""];
+		else
+		  return;
+		
     if( [file hasSuffix: @".jpg"] || [file hasSuffix: @"JPG"] )
       [gc_tmp addSubfield: @"FORM": @"jpeg"];
     else if( [file hasSuffix: @".gif"] || [file hasSuffix: @"GIF"] )
@@ -160,6 +206,7 @@ static ImageViewerController* shared_viewer = nil;
     else if( [file hasSuffix: @".tiff"] || [file hasSuffix: @"TIFF"] )
       [gc_tmp addSubfield: @"FORM": @"tiff"];
     [gc_tmp addSubfield: @"FILE": file];
+  	[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
   }
   
   // Send a notification to update the interface
@@ -228,7 +275,9 @@ static ImageViewerController* shared_viewer = nil;
 // Add an image to the current indi or to the current fam
 - (void) buttonPlusHasBeenClicked: (id) sender
 {
-  [self showAddImagePanel: self];
+  if( [imageOutline selectedRow] == -1
+	 || [[imageOutline itemAtRow: [imageOutline selectedRow]] isEvent] )
+    [self showAddImagePanel: self];
 }
 
 // buttonMinus has been clicked
@@ -236,28 +285,35 @@ static ImageViewerController* shared_viewer = nil;
 // Images owned by events cannot be deleted here
 - (void) buttonMinusHasBeenClicked: (id) sender
 {
-  GCField*		selectedField;
-  int			selectedRow;
+  GCField*		selectedField, *parentField;
+  int			selectedRow, i;
   
   // Get the selected record
   selectedRow = [imageOutline selectedRow];
-  if( selectedRow > -1 && [imageOutline levelForRow: selectedRow] == 0 )
+	i = selectedRow - 1;
+  if( selectedRow > -1 && [[[imageOutline itemAtRow: selectedRow] fieldType] isEqualToString: @"OBJE"] )
   {
     selectedField = [imageOutline itemAtRow: selectedRow];
-    if( [[selectedField fieldType] isEqualToString: @"OBJE"] )
-    {
-      [record removeSubfield: selectedField];
-      
-      // Send a notification to update the interface
-      [self notifyContentChange];
+		
+		parentField = [imageOutline itemAtRow: i];
+		while( ![parentField isEvent] && i > -1)
+		  parentField = [imageOutline itemAtRow: i--];
+		if( i == -1 )
+		  parentField = record;
+		
+		[parentField removeSubfield: selectedField];
+		
+		// Send a notification to update the interface
+//		[self notifyContentChange];
 
-      // Make the outlineview the first responder
-      [window makeFirstResponder: imageOutline];
-  
-      // Select the right row
-      if( selectedRow > [imageOutline numberOfRows] - 1 )
-        [imageOutline selectRow: [imageOutline numberOfRows] - 1 byExtendingSelection: NO];
-    }
+		// Make the outlineview the first responder
+		[window makeFirstResponder: imageOutline];
+
+		// Select the right row
+		if( selectedRow > [imageOutline numberOfRows] - 1 )
+			[imageOutline selectRow: [imageOutline numberOfRows] - 1 byExtendingSelection: NO];
+			
+		[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
   }
 }
 
@@ -277,9 +333,7 @@ static ImageViewerController* shared_viewer = nil;
 - (BOOL)outlineView:(NSOutlineView *)outlineView
   isItemExpandable:(GCField*)item
 {
-  if( item == nil && [events count] > 0)
-    return true;
-  else if( [[item subfieldsWithType: @"OBJE"] count] > 0 )
+  if( [[item subfieldsWithType: @"OBJE"] count] > 0 )
     return true;
   
   return false;
@@ -363,34 +417,38 @@ item: (id)item
 
   // Get the selected record
   selectedRow = [imageOutline selectedRow];
-  
-  // Update the up and down buttons state
-  if( selectedRow < 0 )
-  {
-    [buttonUp setEnabled: NO];
-    [buttonDown setEnabled: NO];
-  }
-  else if( selectedRow == 0 )
-  {
-    [buttonUp setEnabled: NO];
-    [buttonDown setEnabled: YES];
-  }
-  else if( selectedRow > [imageOutline numberOfRows] - 2 )
-  {
-    [buttonUp setEnabled: YES];
-    [buttonDown setEnabled: NO];
-  }
-  else
-  {
-    [buttonUp setEnabled: YES];
-    [buttonDown setEnabled: YES];
-  }
-  
+
+  if( [[[imageOutline itemAtRow: selectedRow] fieldType] isEqualToString: @"OBJE"]   
+   && (gc_tmp = [[imageOutline itemAtRow: selectedRow] subfieldWithType: @"SOUR"]) )  
+	{
+	  // if there's a linked in record
+	  if( [[gc_tmp fieldValue] hasPrefix: @"@"] )
+		  gc_tmp = [[currentDoc ged] recordWithLabel: [gc_tmp fieldValue]];
+
+	  if( [gc_tmp subfieldWithType: @"TITL"] )
+		  [sourceText setStringValue: [gc_tmp valueOfSubfieldWithType: @"TITL"]];
+		else if( [gc_tmp subfieldWithType: @"AUTH"] )
+		  [sourceText setStringValue: [gc_tmp valueOfSubfieldWithType: @"AUTH"]];
+		else
+		  [sourceText setStringValue: [gc_tmp fieldValue]];
+	}
+	else
+		[sourceText setStringValue: @"No source"];
+
+  // update the plus button state  
+	if( [imageOutline selectedRow] < 0)
+    [buttonPlus setEnabled: YES];
+	else if( [[imageOutline itemAtRow: [imageOutline selectedRow]] isEvent] )
+    [buttonPlus setEnabled: YES];
+	else
+    [buttonPlus setEnabled: NO];
+	
   // Update the minus buttons state
-  if( selectedRow < 0 )
-    [buttonMinus setEnabled: NO];
-  else
+  if( selectedRow > -1 
+	 && [[[imageOutline itemAtRow: selectedRow] fieldType] isEqualToString: @"OBJE"] )
     [buttonMinus setEnabled: YES];
+  else
+    [buttonMinus setEnabled: NO];
   
   gc_tmp = [imageOutline itemAtRow: selectedRow];
   imagePath = [gc_tmp valueOfSubfieldWithType: @"FILE"];

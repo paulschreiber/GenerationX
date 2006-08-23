@@ -110,6 +110,18 @@
   return [subfields count];
 }
 
+- (int) numEvents
+{
+  int i, result;
+	result = 0;
+	
+	for( i = 0; i < [subfields count]; i++ )
+	  if( [[subfields objectAtIndex: i] isEvent] )
+		  result++;
+	
+	return result;
+}
+
 - (GCField*) eventAtIndex: (int) index
 {
   int i;
@@ -145,6 +157,25 @@
   }
   
   return nil;
+}
+
+- (GCField*) subfieldWithType: (NSString*) t value: (NSString*) v
+{
+  int i;
+  
+  if( !t )
+    t = @"";
+  if( !v )
+    v = @"";
+
+  for( i = 0; i < [subfields count]; i++ )
+  {
+    GCField* tmp = [subfields objectAtIndex: i];
+    if( [[tmp fieldType] isEqual: t]
+     && [[tmp fieldValue] isEqual: v] )
+      return tmp;
+  } 
+	return nil;
 }
 
 - (NSMutableArray*) subfieldsWithType: (NSString*) my_type
@@ -330,7 +361,6 @@
    || [my_type isEqualToString: @"CHR"]
    || [my_type isEqualToString: @"ADOP"]
    || [my_type isEqualToString: @"MARR"]
-   || [my_type isEqualToString: @"FAMS"]
    || [my_type isEqualToString: @"ENGA"]
    || [my_type isEqualToString: @"DIV"]
    || [my_type isEqualToString: @"ANUL"]
@@ -375,45 +405,52 @@
   }
 }
 
-- (int)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSComparisonResult) compareAuthor: (GCField*) f;
 {
-  int i, result = 0;
-  
-  for( i = 0; i < [subfields count]; i++ )
-    if( [[subfields objectAtIndex: i] isEvent] )
-      result++;
-      
-  return result;
+  if( [self subfieldWithType: @"AUTH"] && ![f subfieldWithType: @"AUTH"] )
+	  return NSOrderedAscending;
+	else if( [f subfieldWithType: @"AUTH"] && ![self subfieldWithType: @"AUTH"] )
+	  return NSOrderedDescending;
+	else if( ![f subfieldWithType: @"AUTH"] && ![self subfieldWithType: @"AUTH"] )
+	  return NSOrderedSame;
+	else
+	  return [[self valueOfSubfieldWithType: @"AUTH"] compare: [f valueOfSubfieldWithType: @"AUTH"]];
 }
 
-- (id)tableView:(NSTableView *)aTableView
-  objectValueForTableColumn:(NSTableColumn *)aTableColumn
-  row:(int)rowIndex
+- (NSComparisonResult) compareAuthorReverse: (GCField*) f;
 {
-  GCField* tmp = [self eventAtIndex: rowIndex];
-  NSString* tmp_str;
-  NSMutableString* result = 
-    [[NSMutableString alloc] initWithString: 
-    [[GenXUtil sharedUtil] eventStringFromGEDCOM:
-    [[self eventAtIndex: rowIndex] fieldType]]];
-    
-  if( [[tmp fieldType] isEqualToString: @"EVEN"] )
-    [result setString: [tmp valueOfSubfieldWithType: @"TYPE"]];
-    
-  if( ! result )
-    [result setString: [tmp fieldType]];
-    
-  if( ! result )
-    [result setString: @""];
-    
-  if( tmp_str = [tmp valueOfSubfieldWithType: @"DATE"] )
-  {
-    [result appendString: @" ("];
-    [result appendString: tmp_str];
-    [result appendString: @")"];
-  }
-    
-  return result;
+  if( [self subfieldWithType: @"AUTH"] && ![f subfieldWithType: @"AUTH"] )
+	  return NSOrderedDescending;
+	else if( [f subfieldWithType: @"AUTH"] && ![self subfieldWithType: @"AUTH"] )
+	  return NSOrderedAscending;
+	else if( ![f subfieldWithType: @"AUTH"] && ![self subfieldWithType: @"AUTH"] )
+	  return NSOrderedSame;
+	else
+	  return [[f valueOfSubfieldWithType: @"AUTH"] compare: [self valueOfSubfieldWithType: @"AUTH"]];
+}
+
+- (NSComparisonResult) compareTitle: (GCField*) f
+{
+  if( [self subfieldWithType: @"TITL"] && ![f subfieldWithType: @"TITL"] )
+	  return NSOrderedAscending;
+	else if( [f subfieldWithType: @"TITL"] && ![self subfieldWithType: @"TITL"] )
+	  return NSOrderedDescending;
+	else if( ![f subfieldWithType: @"TITL"] && ![self subfieldWithType: @"TITL"] )
+	  return NSOrderedSame;
+	else
+	  return [[self valueOfSubfieldWithType: @"TITL"] compare: [f valueOfSubfieldWithType: @"TITL"]];
+}
+
+- (NSComparisonResult) compareTitleReverse: (GCField*) f
+{
+  if( [self subfieldWithType: @"TITL"] && ![f subfieldWithType: @"TITL"] )
+	  return NSOrderedDescending;
+	else if( [f subfieldWithType: @"TITL"] && ![self subfieldWithType: @"TITL"] )
+	  return NSOrderedAscending;
+	else if( ![f subfieldWithType: @"TITL"] && ![self subfieldWithType: @"TITL"] )
+	  return NSOrderedSame;
+	else
+	  return [[f valueOfSubfieldWithType: @"TITL"] compare: [self valueOfSubfieldWithType: @"TITL"]];
 }
 
 @end

@@ -34,5 +34,17 @@
 - (NSString*) ancestorsReportText: (id) my_ged: (NSString*) my_prefix;
 - (NSString*) htmlSummary: (id) my_ged;
 - (NSComparisonResult) compare: (id) my_field;
+- (NSComparisonResult) compareFirstName: (id) my_field;
+- (NSComparisonResult) compareFirstNameReverse: (id) my_field;
+- (NSComparisonResult) compareLastName: (id) my_field;
+- (NSComparisonResult) compareLastNameReverse: (id) my_field;
+- (NSComparisonResult) compareNameSuffix: (id) my_field;
+- (NSComparisonResult) compareNameSuffixReverse: (id) my_field;
+- (NSComparisonResult) compareBirthdays: (id) a;
+- (NSComparisonResult) compareBirthdaysReverse: (id) a;
+- (NSComparisonResult) compareDeathDates: (id) a;
+- (NSComparisonResult) compareDeathDatesReverse: (id) a;
+- (NSComparisonResult) compareSex: (id) a;
+- (NSComparisonResult) compareSexReverse: (id) a;
 
 @end

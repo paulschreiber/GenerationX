@@ -2,7 +2,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "GenerationXController.h"
+//#import "GenerationXController.h"
 #import "GenXUtil.h"
 #import "GCField.h"
 #import "INDI.h"
@@ -12,6 +12,7 @@
     // InterfaceBuilder outlets
     IBOutlet NSWindow* 		window;
     IBOutlet NSTextField* 	headerText;
+    IBOutlet NSTextField* 	sourceText;
     IBOutlet NSOutlineView*	imageOutline;
     IBOutlet NSImageView* 	imagePreview;
 
@@ -34,11 +35,15 @@
 - (void) setRecord: (id) aRecord;
 - (id) record;
 - (NSWindow*) window;
+- (void) toggle;
+- (BOOL) isVisible;
 
 // Others
 - (void) updateViewContent;
 
 // InterfaceBuilder actions
+- (void) handleSelectSource: (id) sender;
+- (void) handleChangeSource: (id) sender;
 - (void) imageHasBeenClicked: (id) sender;
 - (void) buttonUpHasBeenClicked: (id) sender;
 - (void) buttonDownHasBeenClicked: (id) sender;

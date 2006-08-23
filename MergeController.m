@@ -1,6 +1,7 @@
 #import "MergeController.h"
-#import "GenerationXController.h"
 #import "GCFile.h"
+
+#define currentDoc [[NSDocumentController sharedDocumentController] currentDocument]
 
 @implementation MergeController
 
@@ -66,7 +67,7 @@
   }
   
   [merge_window orderOut: self];
-  [sender refreshGUI];
+  [currentDoc handleContentChange];
 }
 
 // it would be nice to let the user choose to keep both records

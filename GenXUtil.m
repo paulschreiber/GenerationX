@@ -49,13 +49,12 @@
   [eventDict setObject: @"Graduation" forKey: @"GRAD"];
   [eventDict setObject: @"Occupation" forKey: @"OCCU"];
   [eventDict setObject: @"Retirement" forKey: @"RETI"];
-  [eventDict setObject: @"Generic Event" forKey: @"EVEN"];
   [eventDict setObject: @"Christening" forKey: @"CHR"];
   [eventDict setObject: @"Adoption" forKey: @"ADOP"];
-  [eventDict setObject: @"Marriage" forKey: @"MARR"];
-  [eventDict setObject: @"Marriage" forKey: @"FAMS"];
+//  [eventDict setObject: @"Marriage" forKey: @"FAMS"];
   
   //FAM Events
+  [eventDict setObject: @"Marriage" forKey: @"MARR"];
   [eventDict setObject: @"Engagement" forKey: @"ENGA"];
   [eventDict setObject: @"Divorce" forKey: @"DIV"];
   [eventDict setObject: @"Annulment" forKey: @"ANUL"];
@@ -64,13 +63,28 @@
   [eventDict setObject: @"Marriage Contract" forKey: @"MARC"];
   [eventDict setObject: @"Marriage License" forKey: @"MARL"];
   [eventDict setObject: @"Divorce Filing" forKey: @"DIVF"];
-  
+	[eventDict setObject: @"Other..." forKey: @"EVEN"];
+
   return self;
 }
 
 - (NSString*) eventStringFromGEDCOM: (NSString*) my_gedcom
 {
   return [eventDict objectForKey: my_gedcom];
+}
+
+- (NSString*) GEDCOMFromEventString: (NSString*) s
+{
+  NSArray* keys = [eventDict allKeys];
+	int i;
+	
+	for( i = 0; i < [keys count]; i++ )
+	{
+	  if( [[eventDict objectForKey: [keys objectAtIndex: i]] isEqualToString: s] )
+		  return [keys objectAtIndex: i];
+	}
+	
+	return @"";
 }
 
 - (NSDate*) dateFromGEDCOM: (NSString*) str

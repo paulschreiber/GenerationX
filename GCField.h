@@ -29,9 +29,11 @@
 - (void) setNeedSave: (BOOL) b;
 - (int) fieldLevel;
 - (int) numSubfields;
+- (int) numEvents;
 - (GCField*) subfieldAtIndex: (int) index;
 - (GCField*) eventAtIndex: (int) index;
 - (GCField*) subfieldWithType: (NSString*) my_type;
+- (GCField*) subfieldWithType: (NSString*) t value: (NSString*) v;
 - (NSMutableArray*) subfieldsWithType: (NSString*) my_type;
 - (NSMutableArray*) valuesOfSubfieldsWithType: (NSString*) my_type;
 - (NSString*) valueOfSubfieldWithType: (NSString*) my_type;
@@ -44,5 +46,9 @@
 - (BOOL) isEvent;
 - (void) sortEvents;
 - (NSComparisonResult) eventCompare: (GCField*) my_field;
+- (NSComparisonResult) compareAuthor: (GCField*) f;
+- (NSComparisonResult) compareAuthorReverse: (GCField*) f;
+- (NSComparisonResult) compareTitle: (GCField*) f;
+- (NSComparisonResult) compareTitleReverse: (GCField*) f;
 
 @end

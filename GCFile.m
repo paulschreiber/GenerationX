@@ -6,7 +6,7 @@
 //  Copyright (c) 2001 Nowhere Man. All rights reserved.
 //
 
-#import "PreferencesController.h"
+//#import "PreferencesController.h"
 #import "Util.h"
 #import "GCFile.h"
 #import "GCField.h"
@@ -45,6 +45,7 @@
   individuals =    [[NSMutableArray alloc] init];
   families =       [[NSMutableArray alloc] init];
   other_fields =   [[NSMutableArray alloc] init];
+  sources =   [[NSMutableArray alloc] init];
 //  deleted_fields = [[NSMutableArray alloc] init];
   
   num_indi = num_fam = num_other = 0;
@@ -56,7 +57,7 @@
   if( header = [self addRecord: @"HEAD": @"HEAD"] )
   {
     subm = [self addRecord: @"SUBM": subm_label];
-    [subm addSubfield: @"NAME": [[PreferencesController sharedPrefs] userName]];
+//    [subm addSubfield: @"NAME": [[PreferencesController sharedPrefs] userName]];
     if( tmp = [subm addSubfield: @"CHAN": @""] )
     {
       [tmp addSubfield: @"DATE": todays_date_str];
@@ -72,8 +73,8 @@
     [header addSubfield: @"CHAR": @"ASCII"];
   }
   
-  if( tmp = [self addRecord: @"INDI": @"1"] )
-    [tmp addSubfield: @"NAME" : @"Here /Start/"];
+  if( tmp = [self addRecord: @"INDI": @"@INDI_1@"] )
+    [tmp addSubfield: @"NAME" : @"given name /surname/"];
   
   [self addRecord: @"TRLR": @""];
   
@@ -86,6 +87,7 @@
   individuals =    [[NSMutableArray alloc] init];
   families =       [[NSMutableArray alloc] init];
   other_fields =   [[NSMutableArray alloc] init];
+  sources =   [[NSMutableArray alloc] init];
 //  deleted_fields = [[NSMutableArray alloc] init];
   
   num_indi = num_fam = num_other = 0;
@@ -110,7 +112,7 @@
 
 - (int) numRecords
 {
-  return ([individuals count] + [families count] + [other_fields count]);
+  return ([individuals count] + [families count] + [sources count] + [other_fields count]);
 }
 
 - (int) numFamilies
@@ -128,14 +130,21 @@
   return [individuals count];
 }
 
+- (int) numSources
+{
+  return [sources count];
+}
+
 - (GCField*) recordAtIndex: (int) index
 {
   if( index < [individuals count] )
     return [individuals objectAtIndex: index];
   else if( index < ( [individuals count] + [families count] ) )
     return [families objectAtIndex: (index - [individuals count])];
+  else if( index < ( [individuals count] + [families count] + [sources count] ) )
+    return [sources objectAtIndex: (index - [individuals count] - [families count])];
   else
-    return [other_fields objectAtIndex: (index - ([individuals count] + [families count]))];
+    return [other_fields objectAtIndex: (index - ([individuals count] + [families count] + [sources count]))];
 }
 
 - (INDI*) indiAtIndex: (int) index
@@ -191,6 +200,11 @@
 - (GCField*) otherAtIndex: (int) index
 {
   return [other_fields objectAtIndex: index];
+}
+
+- (GCField*) sourceAtIndex: (int) index
+{
+  return [sources objectAtIndex: index];
 }
 
 // find a record given its label
@@ -500,6 +514,11 @@
     num_fam++;
     return record;
   }
+  else if( [my_type isEqual: @"SOUR"] )
+  {
+    record = [[GCField alloc] init: 0 : my_type : my_value];
+    [sources addObject: record];
+  }
   else
   {
     record = [[GCField alloc] init: 0 : my_type : my_value];
@@ -527,6 +546,12 @@
     FAM* record = my_field;
     [families addObject: record];
     num_fam++;
+    return record;
+  }
+  else if( [[my_field fieldType] isEqual: @"SOUR"] )
+  {
+    record = my_field;
+    [sources addObject: record];
     return record;
   }
   else
@@ -586,6 +611,11 @@
     num_fam--;
     return record;
   }
+  else if( [[my_field fieldType] isEqual: @"SOUR"] )
+	{
+    record = my_field;
+    [sources removeObject: record];
+	}
   else
   {
     record = my_field;
@@ -610,6 +640,11 @@
     [families removeObject: old];
     [families addObject: new];
   }
+  else if( [[old fieldType] isEqual: @"SOUR"] )
+	{
+    [sources removeObject: old];
+    [sources addObject: new];
+	}
   else
   {
     [other_fields removeObject: old];
@@ -738,6 +773,10 @@
   for( i = 0; i < [families count]; i++ )
   {
     [out_text appendString: [[families objectAtIndex: i] dataForFile]];
+  }
+  for( i = 0; i < [sources count]; i++ )
+  {
+    [out_text appendString: [[sources objectAtIndex: i] dataForFile]];
   }
   for( i = 1; i < [other_fields count]; i++ )
   {

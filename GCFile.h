@@ -18,6 +18,7 @@
   
   NSMutableArray* individuals;
   NSMutableArray* families;
+  NSMutableArray* sources;
   NSMutableArray* other_fields;
 //  NSMutableArray* deleted_fields;
   
@@ -34,12 +35,14 @@
 - (int) numFamilies;
 - (int) numIndividuals;
 - (int) numOthers;
+- (int) numSources;
 - (GCField*) recordAtIndex: (int) index;
 - (INDI*) indiAtIndex: (int) index;
 - (INDI*) maleAtIndex: (int) index;
 - (INDI*) femaleAtIndex: (int) index;
 - (FAM*) famAtIndex: (int) index;
 - (GCField*) otherAtIndex: (int) index;
+- (GCField*) sourceAtIndex: (int) index;
 - (GCField*) recordWithLabel: (NSString*) my_label;
 - (INDI*) indiWithLabel: (NSString*) my_label;
 - (FAM*) famWithLabel: (NSString*) my_label;
