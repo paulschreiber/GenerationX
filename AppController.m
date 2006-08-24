@@ -29,12 +29,12 @@
 			 @"OK", @"Visit Website", nil );
 
     if( button == 0 )
-		  [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://homepage.mac.com/nowhereman77/hacks/"]];
+		  [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://thenowhereman.com/hacks/"]];
 		[NSApp terminate: nil];
 	}
 	  
-	[defaults setObject: @"user@mac.com" forKey: @"htmlEmailAddress"];
-	[defaults setObject: @"GenerationX 2.0" forKey: @"htmlTitle"];
+	[defaults setObject: @"user@mail.com" forKey: @"htmlEmailAddress"];
+	[defaults setObject: @"GenerationX 3.0" forKey: @"htmlTitle"];
 	[defaults setObject: [NSNumber numberWithBool: YES] forKey: @"htmlIncludeTimestamp"];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 	
