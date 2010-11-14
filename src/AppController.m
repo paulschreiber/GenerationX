@@ -10,19 +10,22 @@
 #define prefs [NSUserDefaults standardUserDefaults]
 #define currentDoc [[NSDocumentController sharedDocumentController] currentDocument]
 #define expire @"1 OCT 2006"
+#define SHOULD_EXPIRE 0
 
 @implementation AppController
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-  NSDate* date = [NSDate date];
-	NSDate* expires = [NSDate dateWithNaturalLanguageString: expire];
   NSMutableDictionary* defaults = [[NSMutableDictionary alloc] init];
 	
 //
 // alpha expiration code
 //
-  if( [date timeIntervalSinceDate: expires] > 0 )
+#if SHOULD_EXPIRE
+	NSDate* date = [NSDate date];
+	NSDate* expires = [NSDate dateWithNaturalLanguageString: expire];
+
+	if( [date timeIntervalSinceDate: expires] > 0 )
 	{
     int button = NSRunAlertPanel( @"Expired",
 			 @"This alpha version has expired. Please download the latest software from our website. The application will now quit.",
@@ -32,6 +35,7 @@
 		  [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://thenowhereman.com/hacks/"]];
 		[NSApp terminate: nil];
 	}
+#endif
 	  
 	[defaults setObject: @"user@mail.com" forKey: @"htmlEmailAddress"];
 	[defaults setObject: @"GenerationX 3.0" forKey: @"htmlTitle"];

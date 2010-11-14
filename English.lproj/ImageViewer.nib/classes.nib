@@ -7,6 +7,8 @@
                 buttonMinusHasBeenClicked = id; 
                 buttonPlusHasBeenClicked = id; 
                 buttonUpHasBeenClicked = id; 
+                handleChangeSource = id; 
+                handleSelectSource = id; 
                 imageHasBeenClicked = id; 
             }; 
             CLASS = ImageViewerController; 
@@ -19,6 +21,7 @@
                 headerText = NSTextField; 
                 imageOutline = NSOutlineView; 
                 imagePreview = NSImageView; 
+                sourceText = id; 
                 window = NSWindow; 
             }; 
             SUPERCLASS = NSObject; 

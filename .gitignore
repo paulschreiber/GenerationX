@@ -1,2 +1,4 @@
 .DS_Store
 build
+GenerationX.xcodeproj/*.mode1v3
+GenerationX.xcodeproj/*.pbxuser
