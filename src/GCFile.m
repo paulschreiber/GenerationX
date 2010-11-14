@@ -664,6 +664,7 @@
 // load data from a GEDCOM file
 - (BOOL)loadData
 {
+	NSError *error;
   NSString* line = [NSString alloc];
   NSString* level = [NSString alloc];
   NSString* type = [NSString alloc];
@@ -674,7 +675,7 @@
   int i;
   
   NSScanner* file_scanner = [NSScanner scannerWithString:
-    [NSString stringWithContentsOfFile: path]];
+    [NSString stringWithContentsOfFile: path encoding:NSUTF8StringEncoding error:&error]];
   NSScanner* line_scanner = [NSScanner alloc];
     
   // as long as we have stuff to crunch
@@ -739,6 +740,7 @@
 // write our data out to a file
 - (BOOL) saveToFile
 {
+	NSError *error;
   int i = 0;
   GCField* tmp;
   NSCalendarDate* todays_date = [NSCalendarDate calendarDate];
@@ -786,7 +788,7 @@
   
   [out_text appendString: @"0 TRLR\n"];
   
-  if( [out_text writeToFile: path atomically: false] )
+  if( [out_text writeToFile: path atomically: false encoding:NSUTF8StringEncoding error:&error] )
   {
     [self setNeedSave: false];
     return true;

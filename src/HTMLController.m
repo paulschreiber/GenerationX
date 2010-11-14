@@ -75,6 +75,7 @@
 
 - (BOOL) exportHTML: (NSString*) my_dir
 {
+	NSError *error;
   BOOL result = true;
   BOOL is_dir;
   NSMutableString* html_path = [[NSMutableString alloc] initWithString:
@@ -147,14 +148,14 @@
   [html_text appendString: @"\n"];
   [html_text appendString: @"</table></body></html>\n"];
     
-  if( ![html_text writeToFile: html_path atomically: true] )
+  if( ![html_text writeToFile: html_path atomically: true encoding:NSUTF8StringEncoding error:&error] )
     result = false;
 
   // surnames/index.html
   [html_path setString: [my_dir stringByAppendingString: @"/surnames"]];
 
   if( !( [manager fileExistsAtPath: html_path isDirectory: &is_dir] && is_dir ) )
-    [manager createDirectoryAtPath: html_path attributes: nil];
+	[manager createDirectoryAtPath:html_path withIntermediateDirectories:YES attributes:nil error:&error];
 
   [html_path appendString: @"/index.html"];
   
@@ -192,7 +193,7 @@
   [html_text appendString: @"\n"];
   [html_text appendString: @"</table></body></html>\n"];
 
-  if( ![html_text writeToFile: html_path atomically: true] )
+  if( ![html_text writeToFile: html_path atomically: true encoding:NSUTF8StringEncoding error:&error] )
     result = false;
   
   // surname pages
@@ -218,6 +219,7 @@
 
 - (BOOL) buildINDIIndexPage: (NSString*) my_prefix: (NSString*) my_dir
 {
+	NSError *error;
   INDI* tmp_indi;
   NSString* prefix;
   int i = 0;
@@ -230,7 +232,7 @@
   [html_path appendString: my_prefix];
   [html_path appendString: @".html"];
 
-NSLog( my_prefix );
+NSLog( @"%@", my_prefix );
   [html_text setString: [HTMLController HTMLHeader]];
   [html_text appendString: @"<body>\n<table border=0 width=600 cellpadding=10><tr><td bgcolor=#CCCCCC><font size=+2>"];
   [html_text appendString: [prefs objectForKey: @"htmlTitle"]];
@@ -284,7 +286,7 @@ NSLog( my_prefix );
   }
   [html_text appendString: @"</table></body></html>\n"];
   
-  if( ![html_text writeToFile: html_path atomically: true] )
+  if( ![html_text writeToFile: html_path atomically: true encoding:NSUTF8StringEncoding error:&error] )
     return false;
   
   return true;
@@ -292,6 +294,7 @@ NSLog( my_prefix );
 
 - (BOOL) buildINDIPages: (NSString*) my_dir
 {
+	NSError *error;
   INDI* tmp_indi;
   int i = 0;
   double progress_value;
@@ -305,7 +308,8 @@ NSLog( my_prefix );
   [html_path appendString: @"/INDI"];
 
   if( !( [manager fileExistsAtPath: indi_path isDirectory: &is_dir] && is_dir ) )
-    [manager createDirectoryAtPath: html_path attributes: nil];
+	[manager createDirectoryAtPath:html_path withIntermediateDirectories:YES attributes:nil error:&error];
+
     
   [header setStringValue: @"Building Individual Pages"];
   for( i = 0; i < num_indi; i++ )
@@ -318,13 +322,13 @@ NSLog( my_prefix );
       stripped_label = [[[tmp_indi fieldValue] componentsSeparatedByString: @"@"] objectAtIndex: 1];
     else
       stripped_label = [tmp_indi fieldValue];
-NSLog( stripped_label );
+NSLog( @"%@", stripped_label );
     [indi_path setString: html_path];
     [indi_path appendString: @"/"];
     [indi_path appendString: stripped_label];
     [indi_path appendString: @".html"];
     
-    if( ![[tmp_indi htmlSummary: ged] writeToFile: indi_path atomically: true] )
+    if( ![[tmp_indi htmlSummary: ged] writeToFile: indi_path atomically: true encoding:NSUTF8StringEncoding error:&error] )
       return false;
   }
   
@@ -333,6 +337,7 @@ NSLog( stripped_label );
 
 - (BOOL) buildSurnamePages: (NSString*) my_dir
 {
+	NSError *error;
   NSMutableArray* surnames = [ged surnames];
   NSMutableArray* indis = [[NSMutableString alloc] init];
   NSMutableString* html_path = [[NSMutableString alloc] initWithString: my_dir];
@@ -395,7 +400,7 @@ NSLog( stripped_label );
     [html_text appendString: @"\n"];
     [html_text appendString: @"</table></body></html>\n"];
 
-    if( ![html_text writeToFile: html_path atomically: true] )
+    if( ![html_text writeToFile: html_path atomically: true encoding:NSUTF8StringEncoding error:&error] )
       return false;
   }
 

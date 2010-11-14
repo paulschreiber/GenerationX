@@ -89,7 +89,7 @@ static ImageViewerController* shared_viewer = nil;
   [window makeFirstResponder: imageOutline];
   
   // Select the first row
-  [imageOutline selectRow: 0 byExtendingSelection: NO];
+  [imageOutline selectRowIndexes: [NSIndexSet indexSetWithIndex:0] byExtendingSelection: NO];
 }
 
 // Get the record that contains the multimedia files that should be displayed
@@ -122,7 +122,6 @@ static ImageViewerController* shared_viewer = nil;
 - (void) updateViewContent
 {
   GCField* gc_tmp;
-  NSMutableString* title = [NSMutableString stringWithString: @"Images for "];
   int i = 0;
   
   [events removeAllObjects];
@@ -213,7 +212,7 @@ static ImageViewerController* shared_viewer = nil;
   [self notifyContentChange];
 
   [window makeFirstResponder: imageOutline];
-  [imageOutline selectRow: [imageOutline numberOfRows] - 1 byExtendingSelection: NO];
+  [imageOutline selectRowIndexes: [NSIndexSet indexSetWithIndex:([imageOutline numberOfRows] - 1)] byExtendingSelection: NO];
 }
 
 - (void) showAddImagePanel:(id) sender
@@ -248,7 +247,7 @@ static ImageViewerController* shared_viewer = nil;
   else
     selectedRow--;
   
-  [imageOutline selectRow: selectedRow byExtendingSelection: NO];
+  [imageOutline selectRowIndexes: [NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection: NO];
   [imageOutline scrollRowToVisible: selectedRow];
   [window makeFirstResponder: imageOutline];
 }
@@ -266,7 +265,7 @@ static ImageViewerController* shared_viewer = nil;
   else
     selectedRow++;
 
-  [imageOutline selectRow: selectedRow byExtendingSelection: NO];
+  [imageOutline selectRowIndexes: [NSIndexSet indexSetWithIndex:selectedRow] byExtendingSelection: NO];
   [imageOutline scrollRowToVisible: selectedRow];
   [window makeFirstResponder: imageOutline];
 }
@@ -311,7 +310,7 @@ static ImageViewerController* shared_viewer = nil;
 
 		// Select the right row
 		if( selectedRow > [imageOutline numberOfRows] - 1 )
-			[imageOutline selectRow: [imageOutline numberOfRows] - 1 byExtendingSelection: NO];
+			[imageOutline selectRowIndexes: [NSIndexSet indexSetWithIndex:([imageOutline numberOfRows] - 1)] byExtendingSelection: NO];
 			
 		[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
   }

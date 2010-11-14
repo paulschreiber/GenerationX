@@ -368,6 +368,7 @@
   returnCode:(int)returnCode
   contextInfo:(void  *)contextInfo
 {
+	NSError *error;
   if (returnCode == NSOKButton)
   {
     NSMutableString* result = [[NSMutableString alloc] init];
@@ -389,7 +390,7 @@
       [result appendString: [root descendantsGEDCOM: ged]]; 
       [result appendString: @"0 TRLR\n"];
     }
-    [result writeToFile: [sheet filename] atomically: true];
+    [result writeToFile: [sheet filename] atomically: true encoding:NSUTF8StringEncoding error:&error];
   }
 }
 
@@ -409,6 +410,7 @@
   returnCode:(int)returnCode
   contextInfo:(void  *)contextInfo
 {
+	NSError *error;
   if (returnCode == NSOKButton)
   {
     NSMutableString* result = [[NSMutableString alloc] init];
@@ -431,7 +433,7 @@
       [result appendString: @"0 TRLR\n"];
     }
     
-    [result writeToFile: [sheet filename] atomically: true];
+    [result writeToFile: [sheet filename] atomically: true encoding:NSUTF8StringEncoding error:&error];
   }
 }
 
@@ -451,6 +453,7 @@
   returnCode:(int)returnCode
   contextInfo:(void  *)contextInfo
 {
+	NSError *error;
   if (returnCode == NSOKButton)
   {
     NSMutableString* result = [[NSMutableString alloc] init];
@@ -472,7 +475,7 @@
     [result appendString: [root descendantReportText: ged: 0]]; 
     }
     
-    if( [result writeToFile: [sheet filename] atomically: true] )
+    if( [result writeToFile: [sheet filename] atomically: true encoding:NSUTF8StringEncoding error:&error] )
       [[NSWorkspace sharedWorkspace] openFile: [sheet filename]];
   }
 }
@@ -493,6 +496,7 @@
   returnCode:(int)returnCode
   contextInfo:(void  *)contextInfo
 {
+	NSError *error;
   if (returnCode == NSOKButton)
   {
     NSMutableString* result = [[NSMutableString alloc] init];
@@ -514,7 +518,7 @@
       [result appendString: [root ancestorsReportText: ged: @""]]; 
     }
     
-    if( [result writeToFile: [sheet filename] atomically: true] )
+    if( [result writeToFile: [sheet filename] atomically: true encoding:NSUTF8StringEncoding error:&error] )
       [[NSWorkspace sharedWorkspace] openFile: [sheet filename]];
   }
 }

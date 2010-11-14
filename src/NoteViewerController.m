@@ -110,7 +110,7 @@
 	[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
   
   [panel makeFirstResponder: note_outline];
-  [note_outline selectRow: [note_outline numberOfRows] - 1 byExtendingSelection: NO];
+  [note_outline selectRowIndexes: [NSIndexSet indexSetWithIndex:([note_outline numberOfRows] - 1)] byExtendingSelection: NO];
 }
 
 - (void) handleDeleteNote: (id) sender
@@ -141,7 +141,7 @@
 
 		// Select the right row
 		if( selectedRow > [note_outline numberOfRows] - 1 )
-			[note_outline selectRow: [note_outline numberOfRows] - 1 byExtendingSelection: NO];
+			[note_outline selectRowIndexes: [NSIndexSet indexSetWithIndex:([note_outline numberOfRows] - 1)] byExtendingSelection: NO];
 			
 		[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
   }
@@ -186,9 +186,6 @@
   objectValueForTableColumn:(NSTableColumn *)tableColumn
   byItem:(GCField*)item
 {
-  NSImage* image; 
-  NSCell*  text_cell;
-  NSImageCell*  image_cell;
     
   if( item == nil )
   {
@@ -282,9 +279,9 @@
     [buttonMinus setEnabled: NO];
 }
 
-- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
-{
-}
+//- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+//{
+//}
 
 //- (void)textDidChange:(NSNotification *)aNotification
 - (void)textDidEndEditing:(NSNotification *)aNotification

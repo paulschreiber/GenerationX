@@ -53,7 +53,7 @@
     field = [[raw_outline dataSource] dataField];
     [field addSubfield: @"" : @""];
     [raw_outline reloadData];
-    [raw_outline selectRow: [raw_outline numberOfRows] - 1
+    [raw_outline selectRowIndexes: [NSIndexSet indexSetWithIndex:([raw_outline numberOfRows] - 1)]
                  byExtendingSelection: false];
     [raw_outline editColumn: 0 row: [raw_outline numberOfRows] - 1
                  withEvent: nil select: true ];
@@ -64,7 +64,7 @@
     added = [selected addSubfield: @"" : @""];
     [raw_outline reloadData];
     [raw_outline expandItem: selected];
-    [raw_outline selectRow: [raw_outline rowForItem: added]
+    [raw_outline selectRowIndexes: [NSIndexSet indexSetWithIndex:([raw_outline rowForItem: added])]
                  byExtendingSelection: false];
     [raw_outline editColumn: 0 row: [raw_outline rowForItem: added]
                  withEvent: nil select: true ];
