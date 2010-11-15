@@ -94,7 +94,6 @@ objectValueForTableColumn:(NSTableColumn *)tableColumn
 		return [NSString stringWithFormat: @"%@ %@", [item fullName], [item lifespan]];
 	}
 }
-}
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
