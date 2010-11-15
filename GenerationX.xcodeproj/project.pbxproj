@@ -204,6 +204,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* GenerationX */ = {
 			isa = PBXGroup;
 			children = (
+				DAC7E7911290B6A9008BA2E3 /* README.markdown */,
 				7413ABCF05DC12C200D6DE23 /* Controllers */,
 				7413AB9105DC128400D6DE23 /* DataStructures */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
@@ -306,7 +307,6 @@
 				7428714D05D9A781006A4EDC /* AppController.m */,
 				2A37F4AEFDCFA73011CA2CEA /* MyDocument.h */,
 				2A37F4ACFDCFA73011CA2CEA /* MyDocument.m */,
-				DAC7E7911290B6A9008BA2E3 /* README.markdown */,
 				744D67BE05DC3AA7005AF537 /* descOutlineController.h */,
 				744D67BF05DC3AA7005AF537 /* descOutlineController.m */,
 				74286F4A05D97D2D006A4EDC /* indiDetailPanelController.h */,

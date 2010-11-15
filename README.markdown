@@ -1,9 +1,9 @@
 # GenerationX
-  http://thenowhereman.com/hacks/
-  Written by Chris Hagedorn <nowhereman77@gmail.com>
-
-  14 November 2010 -- fork by Paul Schreiber
-  http://github.com/paulschreiber/GenerationX/
+  http://thenowhereman.com/hacks/  
+  Written by Chris Hagedorn <nowhereman77@gmail.com>  
+  
+  14 November 2010 -- fork by Paul Schreiber  
+  http://github.com/paulschreiber/GenerationX/  
 
 ## DESCRIPTION:
 

@@ -194,6 +194,7 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 
 - (void) tableViewSelectionDidChange:(NSNotification *)notification
 {
+	NSLog(@"Fam tableViewSelectionDidChange");
 	[currentDoc handleSelectFam: nil];
 }
 

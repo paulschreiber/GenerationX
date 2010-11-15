@@ -12,10 +12,10 @@
 
 @interface indiTableDataSource : NSObject
 {
-  NSTableColumn* sortedColumn;
+	NSTableColumn* sortedColumn;
 	BOOL sortDescending;
 	
-  GCFile* ged;
+	GCFile* ged;
 	NSMutableArray* displayedIndividuals;
 }
 

@@ -45,10 +45,11 @@
 	[[indiTable tableColumnWithIdentifier: @"sex"] setDataCell: [[[NSImageCell alloc] init] autorelease]];
 	[indiTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection: NO];
 	currentIndi = [indiDataSource indiAtIndex: 0];
-	if ( [indiDataSource numberTotal] == 1 )
+	if ( [indiDataSource numberTotal] == 1 ) {
 		[indiMessageText setStringValue: [NSString stringWithFormat: @"%@ person", [[NSNumber numberWithInteger: [indiDataSource numberTotal]] stringValue]]];
-	else
+	} else {
 		[indiMessageText setStringValue: [NSString stringWithFormat: @"%@ people", [[NSNumber numberWithInteger: [indiDataSource numberTotal]] stringValue]]];
+	}
 	
 	famDataSource = [[famTableDataSource alloc] initWithGED: ged];			
 	[famTable setDelegate: famDataSource];
@@ -69,12 +70,11 @@
 {
 	int i;
 	ged = [[GCFile alloc] initWithFile: fileName];
-	if ( ged )
-	{
-		for ( i = 0; i < [ged numRecords]; i++ )
-		{
-			if ( [[[ged recordAtIndex: i] fieldType] isEqual: @"FAM"] )
+	if ( ged ) {
+		for ( i = 0; i < [ged numRecords]; i++ ) {
+			if ( [[[ged recordAtIndex: i] fieldType] isEqual: @"FAM"] ) {
 				[[ged recordAtIndex: i] sortChildren: ged];
+			}
 			[[ged recordAtIndex: i] sortEvents];
 		}
 		return YES;
@@ -175,9 +175,10 @@
 	label = [NSString stringWithFormat: @"@INDI_%@@",
 			 [[NSNumber numberWithDouble: floor( [[NSDate date] timeIntervalSince1970] )] stringValue]];
 	
-	while ( [ged recordWithLabel: label] )		
+	while ( [ged recordWithLabel: label] ) {
 		label = [NSString stringWithFormat: @"@INDI_%@@",
 				 [[NSNumber numberWithDouble: floor( [[NSDate date] timeIntervalSince1970] )] stringValue]];
+	}
 	
 	new = [[[INDI alloc] init: 0 : @"INDI" : label] autorelease];
 	[new addSubfield: @"NAME" : @"given name /surname/"];
@@ -201,6 +202,7 @@
 
 - (void) handleSelectIndi: (id) sender
 {
+	NSLog(@"handleSelectIndi %@", sender);
 	INDI* selectedIndi;
 	
 	if ( [indiTable selectedRow] == -1 ) {
@@ -524,40 +526,40 @@
 		}
 	}
 }
+
+- (void) handleAllHTML:(id) sender
+{
+	NSOpenPanel* open;
 	
-	- (void) handleAllHTML:(id) sender
-	{
-		NSOpenPanel* open;
-		
-		// present a standard open dialog for merging 2 GEDCOM files
-		open = [NSOpenPanel openPanel];
-		[open setAllowsMultipleSelection:false];
-		[open setCanChooseDirectories:true];
-		[open setCanChooseFiles:false];
-		[open setPrompt: @"Choose"];
-		[open beginSheetForDirectory:NSHomeDirectory()
-								file:nil  types:nil
-					  modalForWindow: mainWindow modalDelegate: self
-					  didEndSelector: @selector(doAllHTML:returnCode:contextInfo:) contextInfo: nil];
-	}
+	// present a standard open dialog for merging 2 GEDCOM files
+	open = [NSOpenPanel openPanel];
+	[open setAllowsMultipleSelection:false];
+	[open setCanChooseDirectories:true];
+	[open setCanChooseFiles:false];
+	[open setPrompt: @"Choose"];
+	[open beginSheetForDirectory:NSHomeDirectory()
+							file:nil  types:nil
+				  modalForWindow: mainWindow modalDelegate: self
+				  didEndSelector: @selector(doAllHTML:returnCode:contextInfo:) contextInfo: nil];
+}
+
+- (void) doAllHTML:(NSOpenPanel *)sheet
+		returnCode:(NSInteger)returnCode
+	   contextInfo:(void  *)contextInfo
+{
+	// order the sheet out before we put up the progress dialog
+	[sheet orderOut: nil];
 	
-	- (void) doAllHTML:(NSOpenPanel *)sheet
-returnCode:(NSInteger)returnCode
-contextInfo:(void  *)contextInfo
-	{
-		// order the sheet out before we put up the progress dialog
-		[sheet orderOut: nil];
-		
-		// if the user selected a file and clicked "Open"
-		// export to the selected directory
-		if (returnCode == NSOKButton) {
-			[[HTMLController sharedHTML] setGED: ged];
-			if ( ![[HTMLController sharedHTML] exportHTML: [sheet directory]] ) {
-				NSBeginAlertSheet( nil, @"Ok", nil,
-								  nil, mainWindow, self, nil, nil, nil,
-								  @"The export did not complete successfully." );
-			}
+	// if the user selected a file and clicked "Open"
+	// export to the selected directory
+	if (returnCode == NSOKButton) {
+		[[HTMLController sharedHTML] setGED: ged];
+		if ( ![[HTMLController sharedHTML] exportHTML: [sheet directory]] ) {
+			NSBeginAlertSheet( nil, @"OK", nil,
+							  nil, mainWindow, self, nil, nil, nil,
+							  @"The export did not complete successfully." );
 		}
 	}
-	
-	@end
+}
+
+@end
