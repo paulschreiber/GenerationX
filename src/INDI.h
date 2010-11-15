@@ -13,7 +13,7 @@
 {
 }
 
-- (id)init: (int) my_level : (NSString*) my_type : (NSString*) my_value;
+- (id)init: (NSInteger) my_level : (NSString*) my_type : (NSString*) my_value;
 - (INDI*) father: (id) my_ged;
 - (INDI*) mother: (id) my_ged;
 - (NSArray*) INDIChildren: (id) my_ged;
@@ -30,7 +30,7 @@
 - (NSString*) textSummary: (id) my_ged;
 - (NSString*) descendantsGEDCOM: (id) my_ged;
 - (NSString*) ancestorsGEDCOM: (id) my_ged;
-- (NSString*) descendantReportText: (id) my_ged: (int) my_level;
+- (NSString*) descendantReportText: (id) my_ged: (NSInteger) my_level;
 - (NSString*) ancestorsReportText: (id) my_ged: (NSString*) my_prefix;
 - (NSString*) htmlSummary: (id) my_ged;
 - (NSComparisonResult) compare: (id) my_field;

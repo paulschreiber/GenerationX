@@ -11,7 +11,7 @@
 
 @interface GCField : NSObject
 {
-  int level;
+  NSInteger level;
   NSString* type;
   NSString* value;
   BOOL need_save;
@@ -19,7 +19,7 @@
   int num_subfields;
   NSMutableArray* subfields;
 }
-- (id)init: (int) my_level : (NSString*) my_type : (NSString*) my_value;
+- (id)init: (NSInteger) my_level : (NSString*) my_type : (NSString*) my_value;
 - (NSString*) fieldValue;
 - (NSString*) fieldType;
 - (NSString*) textValue;
@@ -27,11 +27,11 @@
 - (void) setFieldType: (NSString*) my_type;
 - (void) setFieldValue: (NSString*) my_value;
 - (void) setNeedSave: (BOOL) b;
-- (int) fieldLevel;
-- (int) numSubfields;
-- (int) numEvents;
-- (GCField*) subfieldAtIndex: (int) index;
-- (GCField*) eventAtIndex: (int) index;
+- (NSInteger) fieldLevel;
+- (NSUInteger) numSubfields;
+- (NSInteger) numEvents;
+- (GCField*) subfieldAtIndex: (NSInteger) index;
+- (GCField*) eventAtIndex: (NSInteger) index;
 - (GCField*) subfieldWithType: (NSString*) my_type;
 - (GCField*) subfieldWithType: (NSString*) t value: (NSString*) v;
 - (NSMutableArray*) subfieldsWithType: (NSString*) my_type;

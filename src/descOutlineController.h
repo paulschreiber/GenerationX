@@ -2,8 +2,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-#import "INDI.h";
-#import "FAM.h";
+#import "INDI.h"
+#import "FAM.h"
 
 @interface descOutlineController : NSObject
 {

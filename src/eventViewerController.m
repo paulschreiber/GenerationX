@@ -2,8 +2,8 @@
 #import "sourceSelectorController.h"
 #import "GenXUtil.h"
 #import "INDI.h"
-
-#define currentDoc [[NSDocumentController sharedDocumentController] currentDocument]
+#import "MyDocument.h"
+#define currentDoc (MyDocument *)[[NSDocumentController sharedDocumentController] currentDocument]
 
 @implementation eventViewerController
 
@@ -11,8 +11,9 @@
 {
 	static eventViewerController* sharedController = nil;
 	
-	if( ! sharedController )
+	if ( ! sharedController ) {
 		sharedController = [[eventViewerController alloc] init];
+	}
     
 	return sharedController;
 }
@@ -25,10 +26,11 @@
 
 - (void) toggle
 {
-	if( ![panel isVisible] )
+	if ( ![panel isVisible] ) {
 		[panel makeKeyAndOrderFront:self];
-	else
+	} else {
 		[panel orderOut:self];
+	}
 }
 
 - (void) updateWithRecord: (GCField*) r
@@ -45,8 +47,7 @@
 	//	[buttonCell setFont: [NSFont fontWithName: @"Lucida Grande" size: 9]];
 	//	[buttonCell setTarget: self];
 	//	[buttonCell setAction: @selector( handleSelectEventType: )];
-	if( [[currentRecord class] isEqual: [INDI class]] )
-	{
+	if ( [[currentRecord class] isEqual: [INDI class]] ) {
 		[addEventMenu addItemsWithTitles: [NSArray arrayWithObjects:
 										   @"Select event type",
 										   @"",
@@ -61,8 +62,7 @@
 										   @"",
 										   @"Other...",
 										   nil]];
-	}
-	else
+	} else {
 		[addEventMenu addItemsWithTitles: [NSArray arrayWithObjects:
 										   @"Select event type",
 										   @"",
@@ -73,10 +73,11 @@
 										   @"",
 										   @"Other...",
 										   nil]];
+	}
 	
 	/*
-	 for( i = 0; i < [currentRecord numEvents]; i++ )
-	 if( [[[currentRecord eventAtIndex: i] fieldType] isEqualToString: @"EVEN"]
+	 for ( i = 0; i < [currentRecord numEvents]; i++ )
+	 if ( [[[currentRecord eventAtIndex: i] fieldType] isEqualToString: @"EVEN"]
 	 && [[currentRecord eventAtIndex: i] subfieldWithType: @"TYPE"] )
 	 [addEventMenu addItemWithTitle: [[currentRecord eventAtIndex: i] valueOfSubfieldWithType: @"TYPE"]];
 	 */
@@ -107,8 +108,9 @@
 - (void) changeSourceSheetDidEnd
 {
 	GCField* tmp = [[currentRecord eventAtIndex: [eventTable selectedRow]] subfieldWithType: @"SOUR"];
-	if( !tmp )
+	if ( !tmp ) {
 		tmp = [[currentRecord eventAtIndex: [eventTable selectedRow]] addSubfield: @"SOUR" : @""];
+	}
 	
 	[tmp setFieldValue: [[[sourceSelectorController sharedSelector] selectedSource] fieldValue]];
 	[currentDoc handleContentChange];
@@ -131,14 +133,10 @@
 {
 	NSString* s = [NSString stringWithString: [sender titleOfSelectedItem]];
 	
-	if( ![s isEqualToString: @""] && ![s isEqualToString: @"Select event type"] )
-	{
-		if( ![s isEqualToString: @"Other..."] )
-		{
+	if ( ![s isEqualToString: @""] && ![s isEqualToString: @"Select event type"] ) {
+		if ( ![s isEqualToString: @"Other..."] ) {
 			[currentRecord addSubfield: [[GenXUtil sharedUtil] GEDCOMFromEventString: s] : @""];
-		}
-		else
-		{
+		} else {
 			GCField* g = [currentRecord addSubfield: @"EVEN" : @""];
 			[g addSubfield: @"TYPE" : @"unknown"];
 		}
@@ -152,27 +150,27 @@
 # pragma mark -
 # pragma mark NSTableView methods
 
-- (int)numberOfRowsInTableView: (NSTableView*)aTableView
+- (NSInteger)numberOfRowsInTableView: (NSTableView*)aTableView
 {
 	return [currentRecord numEvents];
 }
 
 - (id)tableView: (NSTableView *)aTableView
 objectValueForTableColumn: (NSTableColumn *)aTableColumn
-			row: (int)rowIndex
+			row: (NSInteger)rowIndex
 {
 	if ( [[aTableColumn identifier] isEqualToString: @"eventName"] ) {
-		if( ![[[currentRecord eventAtIndex: rowIndex] fieldType] isEqualToString: @"EVEN"] ) {
+		if ( ![[[currentRecord eventAtIndex: rowIndex] fieldType] isEqualToString: @"EVEN"] ) {
 			return [[GenXUtil sharedUtil] eventStringFromGEDCOM: [[currentRecord eventAtIndex: rowIndex] fieldType]];
-		} else if( [[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"TYPE"] ) {
+		} else if ( [[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"TYPE"] ) {
 			return [[currentRecord eventAtIndex: rowIndex] valueOfSubfieldWithType: @"TYPE"];
 		} else {
 			return @"unknown";
 		}
-	} else if( [[aTableColumn identifier] isEqualToString: @"eventDate"] ) {
+	} else if ( [[aTableColumn identifier] isEqualToString: @"eventDate"] ) {
 		NSDate* d = [NSDate dateWithNaturalLanguageString: [[currentRecord eventAtIndex: rowIndex] valueOfSubfieldWithType: @"DATE"]];
 		return [d descriptionWithCalendarFormat: @"%b %d, %Y" timeZone: nil locale: nil];
-	} else if( [[aTableColumn identifier] isEqualToString: @"eventPlace"] ) {
+	} else if ( [[aTableColumn identifier] isEqualToString: @"eventPlace"] ) {
 		return [[currentRecord eventAtIndex: rowIndex] valueOfSubfieldWithType: @"PLAC"];
 	}
 	
@@ -182,43 +180,43 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 - (void)tableView:(NSTableView *)aTableView 
    setObjectValue:(id)anObject 
    forTableColumn:(NSTableColumn *)aTableColumn 
-			  row:(int)rowIndex
+			  row:(NSInteger)rowIndex
 {
-	if( ![anObject isEqualToString: @""] ) {
-		if( [[aTableColumn identifier] isEqualToString: @"eventName"] ) {
+	if ( ![anObject isEqualToString: @""] ) {
+		if ( [[aTableColumn identifier] isEqualToString: @"eventName"] ) {
 			GCField* g;
-			if( ![[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"TYPE"] )
+			if ( ![[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"TYPE"] ) {
 				[[currentRecord eventAtIndex: rowIndex] addSubfield: @"TYPE" : @""];
+			}
 			g = [[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"TYPE"];
 			[g setFieldValue: anObject];
-		} else if( [[aTableColumn identifier] isEqualToString: @"eventDate"] ) {
+		} else if ( [[aTableColumn identifier] isEqualToString: @"eventDate"] ) {
 			NSDate* d = [NSDate dateWithNaturalLanguageString: anObject];
-			if( ![[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"DATE"] )
+			if ( ![[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"DATE"] ) {
 				[[currentRecord eventAtIndex: rowIndex] addSubfield: @"DATE" : @""];
+			}
 			[[[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"DATE"] setFieldValue:
 			 [NSString stringWithFormat: @"%@ %@ %@", 
 			  [d descriptionWithCalendarFormat: @"%d" timeZone: nil locale: nil],
 			  [[d descriptionWithCalendarFormat: @"%b" timeZone: nil locale: nil] uppercaseString],
 			  [d descriptionWithCalendarFormat: @"%Y" timeZone: nil locale: nil]]];
-		}
-		else if( [[aTableColumn identifier] isEqualToString: @"eventPlace"] )
-		{
-			if( ![[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"PLAC"] )
+		} else if ( [[aTableColumn identifier] isEqualToString: @"eventPlace"] ) {
+			if ( ![[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"PLAC"] ) {
 				[[currentRecord eventAtIndex: rowIndex] addSubfield: @"PLAC" : @""];
+			}
 			[[[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"PLAC"] setFieldValue: anObject];
 		}
-	}
-	else
-	{
-		if( [[aTableColumn identifier] isEqualToString: @"eventDate"] )
+	} else {
+		if ( [[aTableColumn identifier] isEqualToString: @"eventDate"] ) {
 			[[currentRecord eventAtIndex: rowIndex] removeSubfield: [[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"DATE"]];
-		else if( [[aTableColumn identifier] isEqualToString: @"eventPlace"] )
+		} else if ( [[aTableColumn identifier] isEqualToString: @"eventPlace"] ) {
 			[[currentRecord eventAtIndex: rowIndex] removeSubfield: [[currentRecord eventAtIndex: rowIndex] subfieldWithType: @"PLAC"]];
+		}
 	}
 	[[[NSDocumentController sharedDocumentController] currentDocument] handleContentChange];
 }
 
-- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
 }
 
@@ -228,30 +226,32 @@ objectValueForTableColumn: (NSTableColumn *)aTableColumn
 	
 	event = [currentRecord eventAtIndex: [eventTable selectedRow]];
 	
-	if( tmp = [event subfieldWithType: @"SOUR"] )
-	{
+	if ( (tmp = [event subfieldWithType: @"SOUR"]) ) {
 		// if there's a linked in record
-		if( [[tmp fieldValue] hasPrefix: @"@"] )
+		if ( [[tmp fieldValue] hasPrefix: @"@"] )
 			tmp = [[currentDoc ged] recordWithLabel: [tmp fieldValue]];
 		
-		if( [tmp subfieldWithType: @"TITL"] )
+		if ( [tmp subfieldWithType: @"TITL"] ) {
 			[sourceText setStringValue: [tmp valueOfSubfieldWithType: @"TITL"]];
-		else if( [tmp subfieldWithType: @"AUTH"] )
+		} else if ( [tmp subfieldWithType: @"AUTH"] ) {
 			[sourceText setStringValue: [tmp valueOfSubfieldWithType: @"AUTH"]];
-		else
+		} else {
 			[sourceText setStringValue: [tmp fieldValue]];
-	}
-	else
+		}
+	} else {
 		[sourceText setStringValue: @"No source"];
+	}
 }
 
-- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
+- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
-	if( [[aTableColumn identifier] isEqualToString: @"eventName"] )
-		if( [[[currentRecord eventAtIndex: rowIndex] fieldType] isEqualToString: @"EVEN"] )
+	if ( [[aTableColumn identifier] isEqualToString: @"eventName"] ) {
+		if ( [[[currentRecord eventAtIndex: rowIndex] fieldType] isEqualToString: @"EVEN"] ) {
 			return YES;
-		else
+		} else {
 			return NO;
+		}
+	}
 	
 	return YES;
 }

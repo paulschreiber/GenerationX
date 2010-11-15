@@ -1,7 +1,7 @@
 #import "MergeController.h"
 #import "GCFile.h"
-
-#define currentDoc [[NSDocumentController sharedDocumentController] currentDocument]
+#import "MyDocument.h"
+#define currentDoc (MyDocument *)[[NSDocumentController sharedDocumentController] currentDocument]
 
 @implementation MergeController
 
@@ -9,7 +9,7 @@
 {
   static MergeController* my_data = nil;
   
-  if( ! my_data )
+  if ( ! my_data )
     my_data = [[MergeController alloc] initNib];
     
   return my_data;
@@ -43,16 +43,16 @@
   merge_index++;
   
   // run through all the records
-  for( ; merge_index < [merge numRecords]; merge_index++ )
+  for ( ; merge_index < [merge numRecords]; merge_index++ )
   {
     // if there's no labeling conflict
     // just add the record being merged to the database
-    if( ! [original recordWithLabel:
+    if ( ! [original recordWithLabel:
           [[merge recordAtIndex: merge_index] fieldValue]] )
       [original addRecord: [merge recordAtIndex: merge_index]];
     // ...but if we find a record with a label that already exists
     // in our database, cry for help
-    else if( ! [[original recordWithLabel:
+    else if ( ! [[original recordWithLabel:
                [[merge recordAtIndex: merge_index] fieldValue]]
                isIdentical: [merge recordAtIndex: merge_index]] )
     {

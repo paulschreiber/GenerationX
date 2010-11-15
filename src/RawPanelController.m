@@ -6,7 +6,7 @@
 {
   static RawPanelController* shared_panel = nil;
   
-  if( ! shared_panel )
+  if ( ! shared_panel )
     shared_panel = [[RawPanelController alloc] initNib];
     
   return shared_panel;
@@ -30,7 +30,7 @@
 
 - (void) toggle
 {
-  if( ![raw_panel isVisible] )
+  if ( ![raw_panel isVisible] )
 	  [raw_panel makeKeyAndOrderFront:self];
 	else
 	  [raw_panel orderOut:self];
@@ -44,11 +44,11 @@
 - (void) handleNewFieldButton: (id) sender
 {
   GCField* selected = [raw_outline itemAtRow: [raw_outline selectedRow]];
-  GCField* added = [[GCField alloc] init];
+	GCField* added;
   
   // if nothing is selected in the panel
   // create a new level 1 field for the record
-  if( [raw_outline numberOfSelectedRows] == 0 )
+  if ( [raw_outline numberOfSelectedRows] == 0 )
   {
     field = [[raw_outline dataSource] dataField];
     [field addSubfield: @"" : @""];
@@ -76,30 +76,30 @@
 - (void) handleDeleteFieldButton: (id) sender
 {
   GCField* selected = [raw_outline itemAtRow: [raw_outline selectedRow]];
-  int selected_level = [raw_outline levelForItem: selected];
-  int i = [raw_outline selectedRow];
+  NSInteger selected_level = [raw_outline levelForItem: selected];
+  NSInteger i = [raw_outline selectedRow];
   NSString* type;
   
-  if( i == -1 )
+  if ( i == -1 )
     return;
 
   // don't let the user change
   // any link fields
   type = [selected fieldType];
-  if( [type isEqual: @"HUSB"] || [type isEqual: @"WIFE"]
+  if ( [type isEqual: @"HUSB"] || [type isEqual: @"WIFE"]
    || [type isEqual: @"CHIL"] || [type isEqual: @"FAMC"]
    || [type isEqual: @"FAMS"] )
     return;
   
   field = [[raw_outline dataSource] dataField];
   
-  if( selected_level == 0 )
+  if ( selected_level == 0 )
   {
     [field removeSubfield: selected];
   }
   else
   {
-    while( [raw_outline levelForRow: i] == selected_level )
+    while ( [raw_outline levelForRow: i] == selected_level )
       i--;
       
     [[raw_outline itemAtRow: i]
@@ -126,10 +126,10 @@
 // NSOutlineView methods
 //
 - (id)outlineView:(NSOutlineView *)outlineView
-  child:(int)index
+  child:(NSInteger)index
   ofItem:(GCField*)item
 {
-  if( item == nil )
+  if ( item == nil )
     return [field subfieldAtIndex: index];
   else
     return [item subfieldAtIndex: index];
@@ -138,18 +138,18 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView
   isItemExpandable:(GCField*)item
 {
-  if( item == nil && [field numSubfields] > 0)
+  if ( item == nil && [field numSubfields] > 0)
     return true;
-  else if( [item numSubfields] > 0 )
+  else if ( [item numSubfields] > 0 )
     return true;
   
   return false;
 }
 
-- (int)outlineView:(NSOutlineView *)outlineView
+- (NSInteger)outlineView:(NSOutlineView *)outlineView
   numberOfChildrenOfItem:(GCField*)item
 {
-  if( item == nil )
+  if ( item == nil )
     //return 1;
     return [field numSubfields];
   else
@@ -160,13 +160,13 @@
   objectValueForTableColumn:(NSTableColumn *)tableColumn
   byItem:(GCField*)item
 {
-  if( item == nil )
-    if( [[tableColumn identifier] isEqual: @"type"] )
+  if ( item == nil )
+    if ( [[tableColumn identifier] isEqual: @"type"] )
       return [field fieldType];
     else
       return [field fieldValue];
   else
-    if( [[tableColumn identifier] isEqual: @"type"] )
+    if ( [[tableColumn identifier] isEqual: @"type"] )
       return [item fieldType];
     else
       return [item fieldValue];  
@@ -180,7 +180,7 @@
   // don't let the user change
   // any link fields
   NSString* type = [item fieldType];
-  if( [type isEqual: @"HUSB"] || [type isEqual: @"WIFE"]
+  if ( [type isEqual: @"HUSB"] || [type isEqual: @"WIFE"]
    || [type isEqual: @"CHIL"] || [type isEqual: @"FAMC"]
    || [type isEqual: @"FAMS"]
    || [object isEqual: @"HUSB"] || [object isEqual: @"WIFE"]
@@ -188,7 +188,7 @@
    || [object isEqual: @"FAMS"] )
     return;
   
-  if( [[tableColumn identifier] isEqual: @"type"] )
+  if ( [[tableColumn identifier] isEqual: @"type"] )
     [item setFieldType: object];
   else
     [item setFieldValue: object];

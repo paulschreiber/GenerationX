@@ -8,7 +8,7 @@
 {
   static PrefsController* shared_panel = nil;
   
-  if( ! shared_panel )
+  if ( ! shared_panel )
     shared_panel = [[PrefsController alloc] initNib];
     
   return shared_panel;
@@ -26,7 +26,7 @@
   [htmlTitleText setStringValue: [prefs objectForKey: @"htmlTitle"]];
   [htmlEmailText setStringValue: [prefs objectForKey: @"htmlEmailAddress"]];
 	
-	if( [[prefs objectForKey: @"htmlIncludeTimestamp"] boolValue] )
+	if ( [[prefs objectForKey: @"htmlIncludeTimestamp"] boolValue] )
 	  [htmlTimestampSwitch setState: NSOnState];
 	else
 	  [htmlTimestampSwitch setState: NSOffState];

@@ -10,14 +10,13 @@
 #import "GCField.h"
 #import "INDI.h"
 
-
 @interface FAM : GCField
 {
   INDI* husband;
   INDI* wife;
 }
 
-- (id)init: (int) my_level : (NSString*) my_type : (NSString*) my_value;
+- (id)init: (NSInteger) my_level : (NSString*) my_type : (NSString*) my_value;
 - (void) forget;
 - (INDI*) wife: (id) my_ged;
 - (INDI*) husband: (id) my_ged;

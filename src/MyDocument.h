@@ -14,24 +14,24 @@
 
 @interface MyDocument : NSDocument
 {
-  IBOutlet id mainWindow;
-  IBOutlet id mainTabView;
-
-  IBOutlet id indiTable;
-  IBOutlet id indiSearchField;
-  IBOutlet id indiMessageText;
-  
-	IBOutlet id famTable;
-  IBOutlet id famSearchField;
-  IBOutlet id famMessageText;
-
-  IBOutlet id sourceMessageText;
-  IBOutlet id sourceSearchField;
-  IBOutlet id sourceDataSource;
+	IBOutlet id mainWindow;
+	IBOutlet id mainTabView;
 	
-  IBOutlet id descController;
-
-  GCFile* ged;
+	NSTableView *indiTable;
+	IBOutlet id indiSearchField;
+	IBOutlet id indiMessageText;
+	
+	NSTableView *famTable;
+	IBOutlet id famSearchField;
+	IBOutlet id famMessageText;
+	
+	IBOutlet id sourceMessageText;
+	IBOutlet id sourceSearchField;
+	IBOutlet id sourceDataSource;
+	
+	IBOutlet id descController;
+	
+	GCFile* ged;
 	INDI* currentIndi;
 	FAM* currentFam;
 	indiTableDataSource* indiDataSource;

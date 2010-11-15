@@ -28,6 +28,5 @@
 - (void) handleAddEvent: (id) sender;
 - (void) handleDeleteEvent: (id) sender;
 - (void) handleSelectEventType: (id) sender;
-- (void) addEventSheetDidEnd;
 
 @end

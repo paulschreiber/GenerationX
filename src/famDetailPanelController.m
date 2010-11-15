@@ -1,7 +1,7 @@
 #import "famDetailPanelController.h"
 #import "sourceSelectorController.h"
-
-#define currentDoc [[NSDocumentController sharedDocumentController] currentDocument]
+#import "MyDocument.h"
+#define currentDoc (MyDocument *)[[NSDocumentController sharedDocumentController] currentDocument]
 
 @implementation famDetailPanelController
 
@@ -9,7 +9,7 @@
 {
   static famDetailPanelController* sharedController = nil;
   
-  if( ! sharedController )
+  if ( ! sharedController )
     sharedController = [[famDetailPanelController alloc] init];
     
   return sharedController;
@@ -24,7 +24,7 @@
 
 - (void) setVisible: (BOOL) b
 {
-  if( b )
+  if ( b )
 	  [panel makeKeyAndOrderFront: nil];
 	else
 	  [panel orderOut: nil];
@@ -32,7 +32,7 @@
 
 - (void) toggle
 {
-  if( ![panel isVisible] )
+  if ( ![panel isVisible] )
 	  [panel makeKeyAndOrderFront:self];
 	else
 	  [panel orderOut:self];
@@ -47,36 +47,40 @@
 	[currentFam release];
 	currentFam = [i retain];
 	
-	if( husband )
+	if ( husband ) {
 	  [husbandText setStringValue: [husband fullName]];
-	else
+	} else {
 	  [husbandText setStringValue: @""];
-		
-	if( wife )
-	  [wifeText setStringValue: [wife fullName]];
-	else
-	  [wifeText setStringValue: @""];
-		
-	if( [i marriageDate] )
-	  [marriageDateText setStringValue: [[i marriageDate] descriptionWithCalendarFormat: @"%b %d, %Y" timeZone: nil locale: nil]];
-	else
-	  [marriageDateText setStringValue: @""];
-			
-	if( tmp = [currentFam subfieldWithType: @"SOUR"] )
-	{
-	  // if there's a linked in record
-	  if( [[tmp fieldValue] hasPrefix: @"@"] )
-		  tmp = [[currentDoc ged] recordWithLabel: [tmp fieldValue]];
-
-	  if( [tmp subfieldWithType: @"TITL"] )
-		  [sourceText setStringValue: [tmp valueOfSubfieldWithType: @"TITL"]];
-		else if( [tmp subfieldWithType: @"AUTH"] )
-		  [sourceText setStringValue: [tmp valueOfSubfieldWithType: @"AUTH"]];
-		else
-		  [sourceText setStringValue: [tmp fieldValue]];
 	}
-	else
+		
+	if ( wife ) {
+	  [wifeText setStringValue: [wife fullName]];
+	} else {
+	  [wifeText setStringValue: @""];
+	}
+		
+	if ( [i marriageDate] ) {
+	  [marriageDateText setStringValue: [[i marriageDate] descriptionWithCalendarFormat: @"%b %d, %Y" timeZone: nil locale: nil]];
+	} else {
+	  [marriageDateText setStringValue: @""];
+	}
+			
+	if ( (tmp = [currentFam subfieldWithType: @"SOUR"]) ) {
+	  // if there's a linked in record
+		if ( [[tmp fieldValue] hasPrefix: @"@"] ) {
+		  tmp = [[currentDoc ged] recordWithLabel: [tmp fieldValue]];
+		}
+
+		if ( [tmp subfieldWithType: @"TITL"] ) {
+		  [sourceText setStringValue: [tmp valueOfSubfieldWithType: @"TITL"]];
+		} else if ( [tmp subfieldWithType: @"AUTH"] ) {
+		  [sourceText setStringValue: [tmp valueOfSubfieldWithType: @"AUTH"]];
+		} else {
+		  [sourceText setStringValue: [tmp fieldValue]];
+		}
+	} else {
 		[sourceText setStringValue: @"No source"];
+	}
 
 	[childrenTable reloadData];
 	[panel display];
@@ -133,7 +137,7 @@
   [[[currentDoc ged] recordWithLabel: [currentFam valueOfSubfieldWithType: @"HUSB"]] removeSubfieldWithType: @"FAMS" Value: [currentFam fieldValue]];
 	[[husbandDataSource selectedIndi] addSubfield: @"FAMS" : [currentFam fieldValue]];
 	tmp = [currentFam subfieldWithType: @"HUSB"];
-	if( !tmp )
+	if ( !tmp )
 	  tmp = [currentFam addSubfield: @"HUSB" : @""];
 	[tmp setFieldValue: [[husbandDataSource selectedIndi] fieldValue]];
 	[currentDoc handleContentChange];
@@ -160,7 +164,7 @@
   [[[currentDoc ged] recordWithLabel: [currentFam valueOfSubfieldWithType: @"WIFE"]] removeSubfieldWithType: @"FAMS" Value: [currentFam fieldValue]];
 	[[wifeDataSource selectedIndi] addSubfield: @"FAMS" : [currentFam fieldValue]];
 	tmp = [currentFam subfieldWithType: @"WIFE"];
-	if( !tmp )
+	if ( !tmp )
 	  tmp = [currentFam addSubfield: @"WIFE" : @""];
 	[tmp setFieldValue: [[wifeDataSource selectedIndi] fieldValue]];
 	[currentDoc handleContentChange];
@@ -182,7 +186,7 @@
 
 - (void) handleChildOK: (id) sender
 {
-  if( [currentFam subfieldWithType: @"CHIL" value: [[childDataSource selectedIndi] fieldValue]] )
+  if ( [currentFam subfieldWithType: @"CHIL" value: [[childDataSource selectedIndi] fieldValue]] )
     NSRunAlertPanel( @"Error",
 			 @"The selected person is already a child of this family",
 			 @"OK", nil, nil );
@@ -223,7 +227,7 @@
 - (void) changeSourceSheetDidEnd
 {
   GCField* tmp = [currentFam subfieldWithType: @"SOUR"];
-	if( !tmp )
+	if ( !tmp )
 		tmp = [currentFam addSubfield: @"SOUR" : @""];
 		
   [tmp setFieldValue: [[[sourceSelectorController sharedSelector] selectedSource] fieldValue]];
@@ -233,14 +237,14 @@
 # pragma mark -
 # pragma mark NSTableView methods
 
-- (int)numberOfRowsInTableView: (NSTableView*)aTableView
+- (NSInteger)numberOfRowsInTableView: (NSTableView*)aTableView
 {
   return [[currentFam children: [currentDoc ged]] count];
 }
 
 - (id)tableView: (NSTableView *)aTableView
   objectValueForTableColumn: (NSTableColumn *)aTableColumn
-  row: (int)rowIndex
+  row: (NSInteger)rowIndex
 {
   return [[[currentFam children: [currentDoc ged]] objectAtIndex: rowIndex] fullName];
 }

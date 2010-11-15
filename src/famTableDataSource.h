@@ -12,10 +12,10 @@
 
 @interface famTableDataSource : NSObject
 {
-  NSTableColumn* sortedColumn;
+	NSTableColumn* sortedColumn;
 	BOOL sortDescending;
 	
-  GCFile* ged;
+	GCFile* ged;
 	NSMutableArray* displayedFams;
 }
 
@@ -23,8 +23,8 @@
 - (void) setGED: (GCFile*) my_ged;
 - (void) refresh;
 
-- (FAM*) famAtIndex: (int) i;
-- (int) indexOfFam: (FAM*) f;
+- (FAM*) famAtIndex: (NSInteger) i;
+- (NSInteger) indexOfFam: (FAM*) f;
 
 - (void) filterWithString: (NSString*) s;
 - (void) sortFamsUsingFieldId: (id)fieldId descending: (BOOL) sortDescending;

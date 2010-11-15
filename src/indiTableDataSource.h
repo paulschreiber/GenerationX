@@ -23,10 +23,10 @@
 - (void) setGED: (GCFile*) my_ged;
 - (void) refresh;
 
-- (INDI*) indiAtIndex: (int) i;
-- (int) indexOfIndi: (INDI*) i;
-- (int) numberDisplayed;
-- (int) numberTotal;
+- (INDI*) indiAtIndex: (NSInteger) i;
+- (NSInteger) indexOfIndi: (INDI*) i;
+- (NSInteger) numberDisplayed;
+- (NSInteger) numberTotal;
 
 - (void) filterWithString: (NSString*) s;
 - (void) sortIndisUsingFieldId: (id)fieldId descending: (BOOL) sortDescending;

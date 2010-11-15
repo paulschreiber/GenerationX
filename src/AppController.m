@@ -6,9 +6,10 @@
 #import "eventViewerController.h"
 #import "NoteViewerController.h"
 #import "PrefsController.h"
+#import "MyDocument.h"
 
 #define prefs [NSUserDefaults standardUserDefaults]
-#define currentDoc [[NSDocumentController sharedDocumentController] currentDocument]
+#define currentDoc (MyDocument *)[[NSDocumentController sharedDocumentController] currentDocument]
 #define expire @"1 OCT 2006"
 #define SHOULD_EXPIRE 0
 
@@ -16,7 +17,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-  NSMutableDictionary* defaults = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary* defaults = [NSMutableDictionary dictionary];
 	
 //
 // alpha expiration code
@@ -25,13 +26,13 @@
 	NSDate* date = [NSDate date];
 	NSDate* expires = [NSDate dateWithNaturalLanguageString: expire];
 
-	if( [date timeIntervalSinceDate: expires] > 0 )
+	if ( [date timeIntervalSinceDate: expires] > 0 )
 	{
     int button = NSRunAlertPanel( @"Expired",
 			 @"This alpha version has expired. Please download the latest software from our website. The application will now quit.",
 			 @"OK", @"Visit Website", nil );
 
-    if( button == 0 )
+    if ( button == 0 )
 		  [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://thenowhereman.com/hacks/"]];
 		[NSApp terminate: nil];
 	}
@@ -42,17 +43,17 @@
 	[defaults setObject: [NSNumber numberWithBool: YES] forKey: @"htmlIncludeTimestamp"];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 	
-  if( [prefs boolForKey: @"IndiPanelIsVisible"] )
+  if ( [prefs boolForKey: @"IndiPanelIsVisible"] )
 	  [[indiDetailPanelController sharedIndiDetailPanel] toggle];
-  if( [prefs boolForKey: @"FamPanelIsVisible"] )
+  if ( [prefs boolForKey: @"FamPanelIsVisible"] )
 	  [[famDetailPanelController sharedFamDetailPanel] toggle];
-  if( [prefs boolForKey: @"EventPanelIsVisible"] )
+  if ( [prefs boolForKey: @"EventPanelIsVisible"] )
 	  [[eventViewerController sharedEventPanel] toggle];
-  if( [prefs boolForKey: @"NotePanelIsVisible"] )
+  if ( [prefs boolForKey: @"NotePanelIsVisible"] )
 	  [[NoteViewerController sharedViewer] toggle];
-  if( [prefs boolForKey: @"ImagePanelIsVisible"] )
+  if ( [prefs boolForKey: @"ImagePanelIsVisible"] )
 	  [[ImageViewerController sharedViewer] toggle];
-  if( [prefs boolForKey: @"RawPanelIsVisible"] )
+  if ( [prefs boolForKey: @"RawPanelIsVisible"] )
 	  [[RawPanelController sharedRawPanel] toggle];
 }
 
