@@ -3,6 +3,8 @@
 #import <Cocoa/Cocoa.h>
 
 #import "FAM.h"
+#import "husbandSelectionDataSource.h"
+#import "wifeSelectionDataSource.h"
 
 @interface famDetailPanelController : NSObject
 {
@@ -11,19 +13,19 @@
     IBOutlet id wifeText;
     IBOutlet id marriageDateText;
     IBOutlet id childrenTable;
-		IBOutlet id progIndicator;
-		IBOutlet id sourceText;
-		
+	IBOutlet id progIndicator;
+	IBOutlet id sourceText;
+	
     IBOutlet id husbandSheet;
-    IBOutlet id husbandDataSource;
-		
+    husbandSelectionDataSource * husbandDataSource;
+	
     IBOutlet id wifeSheet;
-    IBOutlet id wifeDataSource;
-
+    wifeSelectionDataSource * wifeDataSource;
+	
     IBOutlet id childSheet;
     IBOutlet id childDataSource;
-		
-		FAM* currentFam;
+	
+	FAM* currentFam;
 }
 
 + (famDetailPanelController*) sharedFamDetailPanel;
